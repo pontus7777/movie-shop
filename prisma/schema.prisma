@@ -74,3 +74,26 @@ model Verification {
   @@index([identifier])
   @@map("verification")
 }
+
+model Movie {
+  id Int @id @default(autoincrement())
+
+  title       String  @db.VarChar(100)
+  description String
+  price       Decimal @db.Money
+  releaseYear Int     @map("release_year")
+  actors      Actor[]
+
+  // orderRows     OrderRow[]
+
+  // directors     MovieDirector[]
+  // genres        MovieGenre[]
+
+  @@map("movies")
+}
+
+model Actor {
+  id     String  @id
+  name   String
+  movies Movie[]
+}

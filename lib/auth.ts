@@ -8,7 +8,9 @@ import { ac, admin, user, myCustomRole } from "@/lib/permissions";
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: "postgresql" }),
   baseURL: process.env["BETTER_AUTH_URL"],
-  emailAndPassword: { enabled: true },
+  emailAndPassword: {
+    enabled: true,
+  },
   plugins: [
     adminPlugin({
       ac,
