@@ -3,7 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "./prisma";
 import "dotenv/config";
 import { admin as adminPlugin } from "better-auth/plugins";
-import { ac, admin, user } from "@/lib/permissions";
+import { ac, admin, user, myCustomRole } from "@/lib/permissions";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: "postgresql" }),
@@ -15,7 +15,7 @@ export const auth = betterAuth({
       roles: {
         admin,
         user,
-        // myCustomRole
+        myCustomRole,
       },
     }),
   ],
