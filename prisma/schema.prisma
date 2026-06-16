@@ -76,7 +76,7 @@ model Verification {
 }
 
 model Movie {
-  id Int @id @default(autoincrement())
+  id String @id
 
   title       String  @db.VarChar(100)
   description String
@@ -84,9 +84,10 @@ model Movie {
   releaseYear Int     @map("release_year")
   actors      Actor[]
 
+  directors Director[]
   // orderRows     OrderRow[]
 
-  // directors     MovieDirector[]
+  // directors MovieDirector[]
   // genres        MovieGenre[]
 
   @@map("movies")
@@ -96,4 +97,25 @@ model Actor {
   id     String  @id
   name   String
   movies Movie[]
+
+  @@map("actors")
 }
+
+model Director {
+  id     String  @id
+  name   String
+  movies Movie[]
+  // movies MovieDirector[]
+
+  @@map("directors")
+}
+
+// model MovieDirector {
+//   id         String    @id
+//   movie      Movie?    @relation(fields: [movieId], references: [id])
+//   movieId    String?
+//   director   Director? @relation(fields: [directorId], references: [id])
+//   directorId String?
+
+//   @@map("movie_directors")
+// }
