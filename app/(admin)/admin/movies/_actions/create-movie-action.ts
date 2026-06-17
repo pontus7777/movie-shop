@@ -12,7 +12,7 @@ const createMovieSchema = z.object({
   price: z.number().min(1),
   releaseYear: z.number().min(0).max(9999),
   stock: z.boolean(),
-  runtime: z.number(),
+  runtime: z.number().min(10),
 });
 
 export async function createMovie(values: z.infer<typeof createMovieSchema>) {
