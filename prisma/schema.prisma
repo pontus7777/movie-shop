@@ -88,8 +88,8 @@ model Movie {
   imageUrl    String
   stock       Boolean
   runtime     Int
-  actors      Actor[]     @relation("MovieActors")
-  directors   Director[]  @relation("MovieDirectors")
+  actors      Actor[]
+  directors   Director[]
   genre       Genre?      @relation(fields: [genreId], references: [id])
   genreId     Int?
   orderItems  OrderItem[]
@@ -101,7 +101,7 @@ model Movie {
 model Actor {
   id     String  @id @default(cuid())
   name   String
-  movies Movie[] @relation("MovieActors")
+  movies Movie[]
 
   @@map("actors")
 }
@@ -109,7 +109,7 @@ model Actor {
 model Director {
   id     String  @id @default(cuid())
   name   String
-  movies Movie[] @relation("MovieDirectors")
+  movies Movie[]
 
   @@map("directors")
 }
@@ -152,6 +152,8 @@ model Cart {
   userId String     @unique
   user   User       @relation(fields: [userId], references: [id])
   items  CartItem[]
+
+  @@map("carts")
 }
 
 model CartItem {
@@ -162,4 +164,6 @@ model CartItem {
 
   cart  Cart  @relation(fields: [cartId], references: [id])
   movie Movie @relation(fields: [movieId], references: [id])
+
+  @@map("cart_items")
 }
