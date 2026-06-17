@@ -83,7 +83,7 @@ model Movie {
 
   title       String      @db.VarChar(100)
   description String
-  price       Decimal     @db.Money
+  price       Decimal
   releaseDate Int         @map("release_year")
   imageUrl    String
   stock       Boolean
@@ -127,7 +127,7 @@ model Order {
   id        String      @id @default(cuid())
   userId    String
   createdAt DateTime    @default(now())
-  total     Float
+  total     Decimal
   items     OrderItem[]
   user      User        @relation(fields: [userId], references: [id])
 
@@ -135,11 +135,11 @@ model Order {
 }
 
 model OrderItem {
-  id       String @id @default(cuid())
-  orderId  String
-  movieId  String
+  id       String  @id @default(cuid())
+  orderId  String  @unique
+  movieId  String  @unique
   quantity Int
-  price    Float
+  price    Decimal
 
   order Order @relation(fields: [orderId], references: [id])
   movie Movie @relation(fields: [movieId], references: [id])
@@ -158,8 +158,8 @@ model Cart {
 
 model CartItem {
   id       String @id @default(cuid())
-  cartId   String
-  movieId  String
+  cartId   String @unique
+  movieId  String @unique
   quantity Int    @default(1)
 
   cart  Cart  @relation(fields: [cartId], references: [id])
