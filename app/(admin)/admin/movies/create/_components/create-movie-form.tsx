@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 const formSchema = z.object({
   title: z
     .string()
@@ -21,9 +22,9 @@ const formSchema = z.object({
     .max(32, "Title must be less than 32 characters"),
   description: z.string().min(1, "Description is required").max(1000),
   price: z.number().min(1),
-  releaseYear: z.number().min(4).max(4),
+  releaseYear: z.number().min(0).max(9999),
   stock: z.boolean(),
-  runtime: z.number(),
+  runtime: z.number().min(10),
 });
 
 function CreateMovieForm() {
@@ -34,10 +35,10 @@ function CreateMovieForm() {
     defaultValues: {
       title: "",
       description: "",
-      price: 0,
-      releaseYear: new Date().getFullYear(),
+      price: 1,
+      releaseYear: 1920,
       stock: false,
-      runtime: 0,
+      runtime: 10,
     },
     validators: {
       onSubmit: formSchema,
@@ -94,16 +95,76 @@ function CreateMovieForm() {
               );
             }}
           </form.Field>
+
+          <form.Field name="description">
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel htmlFor={field.name}>Description</FieldLabel>
+                  <Textarea
+                    id={field.name}
+                    name={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    aria-invalid={isInvalid}
+                    className="h-35"
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              );
+            }}
+          </form.Field>
+
+          <form.Field name="price">
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel htmlFor={field.name}>Price</FieldLabel>
+                  <Input
+                    id={field.name}
+                    name={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                    aria-invalid={isInvalid}
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              );
+            }}
+          </form.Field>
+
+          <form.Field name="releaseYear">
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel htmlFor={field.name}>Release year</FieldLabel>
+                  <Input
+                    id={field.name}
+                    name={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                    aria-invalid={isInvalid}
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              );
+            }}
+          </form.Field>
         </FieldGroup>
 
         <div className="flex justify-end gap-2">
-          {/* <Button variant="outline" type="button" asChild>
-              <Link href={`/admin/movies`}>
-                <MoveLeft className="ml-2" />
-                Back
-              </Link>
-            </Button> */}
-
           <Button type="submit" disabled={loading}>
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {loading ? "Creating..." : "Create Movie"}
