@@ -27,25 +27,25 @@ export type AggregateOrder = {
 }
 
 export type OrderAvgAggregateOutputType = {
-  total: number | null
+  total: runtime.Decimal | null
 }
 
 export type OrderSumAggregateOutputType = {
-  total: number | null
+  total: runtime.Decimal | null
 }
 
 export type OrderMinAggregateOutputType = {
   id: string | null
   userId: string | null
   createdAt: Date | null
-  total: number | null
+  total: runtime.Decimal | null
 }
 
 export type OrderMaxAggregateOutputType = {
   id: string | null
   userId: string | null
   createdAt: Date | null
-  total: number | null
+  total: runtime.Decimal | null
 }
 
 export type OrderCountAggregateOutputType = {
@@ -177,7 +177,7 @@ export type OrderGroupByOutputType = {
   id: string
   userId: string
   createdAt: Date
-  total: number
+  total: runtime.Decimal
   _count: OrderCountAggregateOutputType | null
   _avg: OrderAvgAggregateOutputType | null
   _sum: OrderSumAggregateOutputType | null
@@ -207,7 +207,7 @@ export type OrderWhereInput = {
   id?: Prisma.StringFilter<"Order"> | string
   userId?: Prisma.StringFilter<"Order"> | string
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
-  total?: Prisma.FloatFilter<"Order"> | number
+  total?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   items?: Prisma.OrderItemListRelationFilter
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -228,7 +228,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
   userId?: Prisma.StringFilter<"Order"> | string
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
-  total?: Prisma.FloatFilter<"Order"> | number
+  total?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   items?: Prisma.OrderItemListRelationFilter
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
@@ -252,13 +252,13 @@ export type OrderScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Order"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Order"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
-  total?: Prisma.FloatWithAggregatesFilter<"Order"> | number
+  total?: Prisma.DecimalWithAggregatesFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type OrderCreateInput = {
   id?: string
   createdAt?: Date | string
-  total: number
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
 }
@@ -267,14 +267,14 @@ export type OrderUncheckedCreateInput = {
   id?: string
   userId: string
   createdAt?: Date | string
-  total: number
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  total?: Prisma.FloatFieldUpdateOperationsInput | number
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
 }
@@ -283,7 +283,7 @@ export type OrderUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  total?: Prisma.FloatFieldUpdateOperationsInput | number
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
 }
 
@@ -291,20 +291,20 @@ export type OrderCreateManyInput = {
   id?: string
   userId: string
   createdAt?: Date | string
-  total: number
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type OrderUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  total?: Prisma.FloatFieldUpdateOperationsInput | number
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type OrderUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  total?: Prisma.FloatFieldUpdateOperationsInput | number
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type OrderListRelationFilter = {
@@ -393,14 +393,6 @@ export type OrderUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type OrderCreateNestedOneWithoutItemsInput = {
   create?: Prisma.XOR<Prisma.OrderCreateWithoutItemsInput, Prisma.OrderUncheckedCreateWithoutItemsInput>
   connectOrCreate?: Prisma.OrderCreateOrConnectWithoutItemsInput
@@ -418,14 +410,14 @@ export type OrderUpdateOneRequiredWithoutItemsNestedInput = {
 export type OrderCreateWithoutUserInput = {
   id?: string
   createdAt?: Date | string
-  total: number
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutUserInput = {
   id?: string
   createdAt?: Date | string
-  total: number
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
 }
 
@@ -462,13 +454,13 @@ export type OrderScalarWhereInput = {
   id?: Prisma.StringFilter<"Order"> | string
   userId?: Prisma.StringFilter<"Order"> | string
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
-  total?: Prisma.FloatFilter<"Order"> | number
+  total?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type OrderCreateWithoutItemsInput = {
   id?: string
   createdAt?: Date | string
-  total: number
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
 }
 
@@ -476,7 +468,7 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   id?: string
   userId: string
   createdAt?: Date | string
-  total: number
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type OrderCreateOrConnectWithoutItemsInput = {
@@ -498,7 +490,7 @@ export type OrderUpdateToOneWithWhereWithoutItemsInput = {
 export type OrderUpdateWithoutItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  total?: Prisma.FloatFieldUpdateOperationsInput | number
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
 }
 
@@ -506,33 +498,33 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  total?: Prisma.FloatFieldUpdateOperationsInput | number
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type OrderCreateManyUserInput = {
   id?: string
   createdAt?: Date | string
-  total: number
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type OrderUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  total?: Prisma.FloatFieldUpdateOperationsInput | number
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  total?: Prisma.FloatFieldUpdateOperationsInput | number
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  total?: Prisma.FloatFieldUpdateOperationsInput | number
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 
@@ -622,7 +614,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     id: string
     userId: string
     createdAt: Date
-    total: number
+    total: runtime.Decimal
   }, ExtArgs["result"]["order"]>
   composites: {}
 }
@@ -1051,7 +1043,7 @@ export interface OrderFieldRefs {
   readonly id: Prisma.FieldRef<"Order", 'String'>
   readonly userId: Prisma.FieldRef<"Order", 'String'>
   readonly createdAt: Prisma.FieldRef<"Order", 'DateTime'>
-  readonly total: Prisma.FieldRef<"Order", 'Float'>
+  readonly total: Prisma.FieldRef<"Order", 'Decimal'>
 }
     
 

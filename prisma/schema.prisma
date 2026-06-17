@@ -85,7 +85,7 @@ model Movie {
   description String
   price       Decimal
   releaseDate Int         @map("release_year")
-  imageUrl    String
+  imageUrl    String?
   stock       Boolean
   runtime     Int
   actors      Actor[]
