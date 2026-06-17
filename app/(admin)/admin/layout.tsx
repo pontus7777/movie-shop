@@ -1,4 +1,4 @@
-'use client';
+import '@/app/globals.css';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AdminSidebar } from './_components/admin-sidebar';
 

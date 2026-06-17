@@ -29,10 +29,10 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
       className={cn(
-        'antialiased',
         geistSans.variable,
-        'h-full',
         geistMono.variable,
+        'antialiased',
+        'h-full',
       )}
     >
       <body className="min-h-full flex flex-col">

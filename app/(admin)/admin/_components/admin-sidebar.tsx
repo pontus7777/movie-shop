@@ -1,3 +1,4 @@
+import { ThemeModeToggle } from '@/components/theme-mode-toggle';
 import {
   Sidebar,
   SidebarContent,
@@ -18,6 +19,7 @@ export function AdminSidebar() {
       <SidebarFooter>
         <div>
           <p>Footer</p>
+          <ThemeModeToggle />
         </div>
       </SidebarFooter>
     </Sidebar>
