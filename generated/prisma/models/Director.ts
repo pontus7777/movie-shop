@@ -193,13 +193,13 @@ export type DirectorScalarWhereWithAggregatesInput = {
 }
 
 export type DirectorCreateInput = {
-  id: string
+  id?: string
   name: string
   movies?: Prisma.MovieCreateNestedManyWithoutDirectorsInput
 }
 
 export type DirectorUncheckedCreateInput = {
-  id: string
+  id?: string
   name: string
   movies?: Prisma.MovieUncheckedCreateNestedManyWithoutDirectorsInput
 }
@@ -217,7 +217,7 @@ export type DirectorUncheckedUpdateInput = {
 }
 
 export type DirectorCreateManyInput = {
-  id: string
+  id?: string
   name: string
 }
 
@@ -295,12 +295,12 @@ export type DirectorUncheckedUpdateManyWithoutMoviesNestedInput = {
 }
 
 export type DirectorCreateWithoutMoviesInput = {
-  id: string
+  id?: string
   name: string
 }
 
 export type DirectorUncheckedCreateWithoutMoviesInput = {
-  id: string
+  id?: string
   name: string
 }
 

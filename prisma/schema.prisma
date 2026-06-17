@@ -22,6 +22,9 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  orders        Order[]
+  cartId        String
+  cart          Cart?
 
   @@unique([email])
   @@map("user")
@@ -76,46 +79,87 @@ model Verification {
 }
 
 model Movie {
-  id String @id
+  id String @id @default(cuid())
 
-  title       String  @db.VarChar(100)
+  title       String      @db.VarChar(100)
   description String
-  price       Decimal @db.Money
-  releaseYear Int     @map("release_year")
-  actors      Actor[]
-
-  directors Director[]
-  // orderRows     OrderRow[]
-
-  // directors MovieDirector[]
-  // genres        MovieGenre[]
+  price       Decimal     @db.Money
+  releaseDate Int         @map("release_year")
+  imageUrl    String
+  stock       Boolean
+  runtime     Int
+  actors      Actor[]     @relation("MovieActors")
+  directors   Director[]  @relation("MovieDirectors")
+  genre       Genre?      @relation(fields: [genreId], references: [id])
+  genreId     Int?
+  orderItems  OrderItem[]
+  cartItems   CartItem[]
 
   @@map("movies")
 }
 
 model Actor {
-  id     String  @id
+  id     String  @id @default(cuid())
   name   String
-  movies Movie[]
+  movies Movie[] @relation("MovieActors")
 
   @@map("actors")
 }
 
 model Director {
-  id     String  @id
+  id     String  @id @default(cuid())
   name   String
-  movies Movie[]
-  // movies MovieDirector[]
+  movies Movie[] @relation("MovieDirectors")
 
   @@map("directors")
 }
 
-// model MovieDirector {
-//   id         String    @id
-//   movie      Movie?    @relation(fields: [movieId], references: [id])
-//   movieId    String?
-//   director   Director? @relation(fields: [directorId], references: [id])
-//   directorId String?
+model Genre {
+  id          Int     @id @default(autoincrement())
+  name        String  @db.VarChar(50)
+  description String
+  movies      Movie[]
 
-//   @@map("movie_directors")
-// }
+  @@map("genres")
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  userId    String
+  createdAt DateTime    @default(now())
+  total     Float
+  items     OrderItem[]
+  user      User        @relation(fields: [userId], references: [id])
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id       String @id @default(cuid())
+  orderId  String
+  movieId  String
+  quantity Int
+  price    Float
+
+  order Order @relation(fields: [orderId], references: [id])
+  movie Movie @relation(fields: [movieId], references: [id])
+
+  @@map("order_items")
+}
+
+model Cart {
+  id     String     @id @default(cuid())
+  userId String     @unique
+  user   User       @relation(fields: [userId], references: [id])
+  items  CartItem[]
+}
+
+model CartItem {
+  id       String @id @default(cuid())
+  cartId   String
+  movieId  String
+  quantity Int    @default(1)
+
+  cart  Cart  @relation(fields: [cartId], references: [id])
+  movie Movie @relation(fields: [movieId], references: [id])
+}

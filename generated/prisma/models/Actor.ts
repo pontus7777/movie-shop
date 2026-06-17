@@ -193,13 +193,13 @@ export type ActorScalarWhereWithAggregatesInput = {
 }
 
 export type ActorCreateInput = {
-  id: string
+  id?: string
   name: string
   movies?: Prisma.MovieCreateNestedManyWithoutActorsInput
 }
 
 export type ActorUncheckedCreateInput = {
-  id: string
+  id?: string
   name: string
   movies?: Prisma.MovieUncheckedCreateNestedManyWithoutActorsInput
 }
@@ -217,7 +217,7 @@ export type ActorUncheckedUpdateInput = {
 }
 
 export type ActorCreateManyInput = {
-  id: string
+  id?: string
   name: string
 }
 
@@ -295,12 +295,12 @@ export type ActorUncheckedUpdateManyWithoutMoviesNestedInput = {
 }
 
 export type ActorCreateWithoutMoviesInput = {
-  id: string
+  id?: string
   name: string
 }
 
 export type ActorUncheckedCreateWithoutMoviesInput = {
-  id: string
+  id?: string
   name: string
 }
 

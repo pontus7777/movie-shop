@@ -28,12 +28,16 @@ export type AggregateMovie = {
 
 export type MovieAvgAggregateOutputType = {
   price: runtime.Decimal | null
-  releaseYear: number | null
+  releaseDate: number | null
+  runtime: number | null
+  genreId: number | null
 }
 
 export type MovieSumAggregateOutputType = {
   price: runtime.Decimal | null
-  releaseYear: number | null
+  releaseDate: number | null
+  runtime: number | null
+  genreId: number | null
 }
 
 export type MovieMinAggregateOutputType = {
@@ -41,7 +45,11 @@ export type MovieMinAggregateOutputType = {
   title: string | null
   description: string | null
   price: runtime.Decimal | null
-  releaseYear: number | null
+  releaseDate: number | null
+  imageUrl: string | null
+  stock: boolean | null
+  runtime: number | null
+  genreId: number | null
 }
 
 export type MovieMaxAggregateOutputType = {
@@ -49,7 +57,11 @@ export type MovieMaxAggregateOutputType = {
   title: string | null
   description: string | null
   price: runtime.Decimal | null
-  releaseYear: number | null
+  releaseDate: number | null
+  imageUrl: string | null
+  stock: boolean | null
+  runtime: number | null
+  genreId: number | null
 }
 
 export type MovieCountAggregateOutputType = {
@@ -57,19 +69,27 @@ export type MovieCountAggregateOutputType = {
   title: number
   description: number
   price: number
-  releaseYear: number
+  releaseDate: number
+  imageUrl: number
+  stock: number
+  runtime: number
+  genreId: number
   _all: number
 }
 
 
 export type MovieAvgAggregateInputType = {
   price?: true
-  releaseYear?: true
+  releaseDate?: true
+  runtime?: true
+  genreId?: true
 }
 
 export type MovieSumAggregateInputType = {
   price?: true
-  releaseYear?: true
+  releaseDate?: true
+  runtime?: true
+  genreId?: true
 }
 
 export type MovieMinAggregateInputType = {
@@ -77,7 +97,11 @@ export type MovieMinAggregateInputType = {
   title?: true
   description?: true
   price?: true
-  releaseYear?: true
+  releaseDate?: true
+  imageUrl?: true
+  stock?: true
+  runtime?: true
+  genreId?: true
 }
 
 export type MovieMaxAggregateInputType = {
@@ -85,7 +109,11 @@ export type MovieMaxAggregateInputType = {
   title?: true
   description?: true
   price?: true
-  releaseYear?: true
+  releaseDate?: true
+  imageUrl?: true
+  stock?: true
+  runtime?: true
+  genreId?: true
 }
 
 export type MovieCountAggregateInputType = {
@@ -93,7 +121,11 @@ export type MovieCountAggregateInputType = {
   title?: true
   description?: true
   price?: true
-  releaseYear?: true
+  releaseDate?: true
+  imageUrl?: true
+  stock?: true
+  runtime?: true
+  genreId?: true
   _all?: true
 }
 
@@ -188,7 +220,11 @@ export type MovieGroupByOutputType = {
   title: string
   description: string
   price: runtime.Decimal
-  releaseYear: number
+  releaseDate: number
+  imageUrl: string
+  stock: boolean
+  runtime: number
+  genreId: number | null
   _count: MovieCountAggregateOutputType | null
   _avg: MovieAvgAggregateOutputType | null
   _sum: MovieSumAggregateOutputType | null
@@ -219,9 +255,16 @@ export type MovieWhereInput = {
   title?: Prisma.StringFilter<"Movie"> | string
   description?: Prisma.StringFilter<"Movie"> | string
   price?: Prisma.DecimalFilter<"Movie"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear?: Prisma.IntFilter<"Movie"> | number
+  releaseDate?: Prisma.IntFilter<"Movie"> | number
+  imageUrl?: Prisma.StringFilter<"Movie"> | string
+  stock?: Prisma.BoolFilter<"Movie"> | boolean
+  runtime?: Prisma.IntFilter<"Movie"> | number
+  genreId?: Prisma.IntNullableFilter<"Movie"> | number | null
   actors?: Prisma.ActorListRelationFilter
   directors?: Prisma.DirectorListRelationFilter
+  genre?: Prisma.XOR<Prisma.GenreNullableScalarRelationFilter, Prisma.GenreWhereInput> | null
+  orderItems?: Prisma.OrderItemListRelationFilter
+  cartItems?: Prisma.CartItemListRelationFilter
 }
 
 export type MovieOrderByWithRelationInput = {
@@ -229,9 +272,16 @@ export type MovieOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
-  releaseYear?: Prisma.SortOrder
+  releaseDate?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  stock?: Prisma.SortOrder
+  runtime?: Prisma.SortOrder
+  genreId?: Prisma.SortOrderInput | Prisma.SortOrder
   actors?: Prisma.ActorOrderByRelationAggregateInput
   directors?: Prisma.DirectorOrderByRelationAggregateInput
+  genre?: Prisma.GenreOrderByWithRelationInput
+  orderItems?: Prisma.OrderItemOrderByRelationAggregateInput
+  cartItems?: Prisma.CartItemOrderByRelationAggregateInput
 }
 
 export type MovieWhereUniqueInput = Prisma.AtLeast<{
@@ -242,9 +292,16 @@ export type MovieWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Movie"> | string
   description?: Prisma.StringFilter<"Movie"> | string
   price?: Prisma.DecimalFilter<"Movie"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear?: Prisma.IntFilter<"Movie"> | number
+  releaseDate?: Prisma.IntFilter<"Movie"> | number
+  imageUrl?: Prisma.StringFilter<"Movie"> | string
+  stock?: Prisma.BoolFilter<"Movie"> | boolean
+  runtime?: Prisma.IntFilter<"Movie"> | number
+  genreId?: Prisma.IntNullableFilter<"Movie"> | number | null
   actors?: Prisma.ActorListRelationFilter
   directors?: Prisma.DirectorListRelationFilter
+  genre?: Prisma.XOR<Prisma.GenreNullableScalarRelationFilter, Prisma.GenreWhereInput> | null
+  orderItems?: Prisma.OrderItemListRelationFilter
+  cartItems?: Prisma.CartItemListRelationFilter
 }, "id">
 
 export type MovieOrderByWithAggregationInput = {
@@ -252,7 +309,11 @@ export type MovieOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
-  releaseYear?: Prisma.SortOrder
+  releaseDate?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  stock?: Prisma.SortOrder
+  runtime?: Prisma.SortOrder
+  genreId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.MovieCountOrderByAggregateInput
   _avg?: Prisma.MovieAvgOrderByAggregateInput
   _max?: Prisma.MovieMaxOrderByAggregateInput
@@ -268,27 +329,43 @@ export type MovieScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"Movie"> | string
   description?: Prisma.StringWithAggregatesFilter<"Movie"> | string
   price?: Prisma.DecimalWithAggregatesFilter<"Movie"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear?: Prisma.IntWithAggregatesFilter<"Movie"> | number
+  releaseDate?: Prisma.IntWithAggregatesFilter<"Movie"> | number
+  imageUrl?: Prisma.StringWithAggregatesFilter<"Movie"> | string
+  stock?: Prisma.BoolWithAggregatesFilter<"Movie"> | boolean
+  runtime?: Prisma.IntWithAggregatesFilter<"Movie"> | number
+  genreId?: Prisma.IntNullableWithAggregatesFilter<"Movie"> | number | null
 }
 
 export type MovieCreateInput = {
-  id: string
+  id?: string
   title: string
   description: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear: number
+  releaseDate: number
+  imageUrl: string
+  stock: boolean
+  runtime: number
   actors?: Prisma.ActorCreateNestedManyWithoutMoviesInput
   directors?: Prisma.DirectorCreateNestedManyWithoutMoviesInput
+  genre?: Prisma.GenreCreateNestedOneWithoutMoviesInput
+  orderItems?: Prisma.OrderItemCreateNestedManyWithoutMovieInput
+  cartItems?: Prisma.CartItemCreateNestedManyWithoutMovieInput
 }
 
 export type MovieUncheckedCreateInput = {
-  id: string
+  id?: string
   title: string
   description: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear: number
+  releaseDate: number
+  imageUrl: string
+  stock: boolean
+  runtime: number
+  genreId?: number | null
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutMoviesInput
   directors?: Prisma.DirectorUncheckedCreateNestedManyWithoutMoviesInput
+  orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutMovieInput
+  cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutMovieInput
 }
 
 export type MovieUpdateInput = {
@@ -296,9 +373,15 @@ export type MovieUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear?: Prisma.IntFieldUpdateOperationsInput | number
+  releaseDate?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  runtime?: Prisma.IntFieldUpdateOperationsInput | number
   actors?: Prisma.ActorUpdateManyWithoutMoviesNestedInput
   directors?: Prisma.DirectorUpdateManyWithoutMoviesNestedInput
+  genre?: Prisma.GenreUpdateOneWithoutMoviesNestedInput
+  orderItems?: Prisma.OrderItemUpdateManyWithoutMovieNestedInput
+  cartItems?: Prisma.CartItemUpdateManyWithoutMovieNestedInput
 }
 
 export type MovieUncheckedUpdateInput = {
@@ -306,17 +389,27 @@ export type MovieUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear?: Prisma.IntFieldUpdateOperationsInput | number
+  releaseDate?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  genreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actors?: Prisma.ActorUncheckedUpdateManyWithoutMoviesNestedInput
   directors?: Prisma.DirectorUncheckedUpdateManyWithoutMoviesNestedInput
+  orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutMovieNestedInput
+  cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutMovieNestedInput
 }
 
 export type MovieCreateManyInput = {
-  id: string
+  id?: string
   title: string
   description: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear: number
+  releaseDate: number
+  imageUrl: string
+  stock: boolean
+  runtime: number
+  genreId?: number | null
 }
 
 export type MovieUpdateManyMutationInput = {
@@ -324,7 +417,10 @@ export type MovieUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear?: Prisma.IntFieldUpdateOperationsInput | number
+  releaseDate?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  runtime?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type MovieUncheckedUpdateManyInput = {
@@ -332,7 +428,11 @@ export type MovieUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear?: Prisma.IntFieldUpdateOperationsInput | number
+  releaseDate?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  genreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type MovieCountOrderByAggregateInput = {
@@ -340,12 +440,18 @@ export type MovieCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
-  releaseYear?: Prisma.SortOrder
+  releaseDate?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  stock?: Prisma.SortOrder
+  runtime?: Prisma.SortOrder
+  genreId?: Prisma.SortOrder
 }
 
 export type MovieAvgOrderByAggregateInput = {
   price?: Prisma.SortOrder
-  releaseYear?: Prisma.SortOrder
+  releaseDate?: Prisma.SortOrder
+  runtime?: Prisma.SortOrder
+  genreId?: Prisma.SortOrder
 }
 
 export type MovieMaxOrderByAggregateInput = {
@@ -353,7 +459,11 @@ export type MovieMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
-  releaseYear?: Prisma.SortOrder
+  releaseDate?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  stock?: Prisma.SortOrder
+  runtime?: Prisma.SortOrder
+  genreId?: Prisma.SortOrder
 }
 
 export type MovieMinOrderByAggregateInput = {
@@ -361,12 +471,18 @@ export type MovieMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
-  releaseYear?: Prisma.SortOrder
+  releaseDate?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  stock?: Prisma.SortOrder
+  runtime?: Prisma.SortOrder
+  genreId?: Prisma.SortOrder
 }
 
 export type MovieSumOrderByAggregateInput = {
   price?: Prisma.SortOrder
-  releaseYear?: Prisma.SortOrder
+  releaseDate?: Prisma.SortOrder
+  runtime?: Prisma.SortOrder
+  genreId?: Prisma.SortOrder
 }
 
 export type MovieListRelationFilter = {
@@ -379,6 +495,11 @@ export type MovieOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type MovieScalarRelationFilter = {
+  is?: Prisma.MovieWhereInput
+  isNot?: Prisma.MovieWhereInput
+}
+
 export type DecimalFieldUpdateOperationsInput = {
   set?: runtime.Decimal | runtime.DecimalJsLike | number | string
   increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -389,6 +510,14 @@ export type DecimalFieldUpdateOperationsInput = {
 
 export type IntFieldUpdateOperationsInput = {
   set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
   increment?: number
   decrement?: number
   multiply?: number
@@ -471,22 +600,104 @@ export type MovieUncheckedUpdateManyWithoutDirectorsNestedInput = {
   deleteMany?: Prisma.MovieScalarWhereInput | Prisma.MovieScalarWhereInput[]
 }
 
+export type MovieCreateNestedManyWithoutGenreInput = {
+  create?: Prisma.XOR<Prisma.MovieCreateWithoutGenreInput, Prisma.MovieUncheckedCreateWithoutGenreInput> | Prisma.MovieCreateWithoutGenreInput[] | Prisma.MovieUncheckedCreateWithoutGenreInput[]
+  connectOrCreate?: Prisma.MovieCreateOrConnectWithoutGenreInput | Prisma.MovieCreateOrConnectWithoutGenreInput[]
+  createMany?: Prisma.MovieCreateManyGenreInputEnvelope
+  connect?: Prisma.MovieWhereUniqueInput | Prisma.MovieWhereUniqueInput[]
+}
+
+export type MovieUncheckedCreateNestedManyWithoutGenreInput = {
+  create?: Prisma.XOR<Prisma.MovieCreateWithoutGenreInput, Prisma.MovieUncheckedCreateWithoutGenreInput> | Prisma.MovieCreateWithoutGenreInput[] | Prisma.MovieUncheckedCreateWithoutGenreInput[]
+  connectOrCreate?: Prisma.MovieCreateOrConnectWithoutGenreInput | Prisma.MovieCreateOrConnectWithoutGenreInput[]
+  createMany?: Prisma.MovieCreateManyGenreInputEnvelope
+  connect?: Prisma.MovieWhereUniqueInput | Prisma.MovieWhereUniqueInput[]
+}
+
+export type MovieUpdateManyWithoutGenreNestedInput = {
+  create?: Prisma.XOR<Prisma.MovieCreateWithoutGenreInput, Prisma.MovieUncheckedCreateWithoutGenreInput> | Prisma.MovieCreateWithoutGenreInput[] | Prisma.MovieUncheckedCreateWithoutGenreInput[]
+  connectOrCreate?: Prisma.MovieCreateOrConnectWithoutGenreInput | Prisma.MovieCreateOrConnectWithoutGenreInput[]
+  upsert?: Prisma.MovieUpsertWithWhereUniqueWithoutGenreInput | Prisma.MovieUpsertWithWhereUniqueWithoutGenreInput[]
+  createMany?: Prisma.MovieCreateManyGenreInputEnvelope
+  set?: Prisma.MovieWhereUniqueInput | Prisma.MovieWhereUniqueInput[]
+  disconnect?: Prisma.MovieWhereUniqueInput | Prisma.MovieWhereUniqueInput[]
+  delete?: Prisma.MovieWhereUniqueInput | Prisma.MovieWhereUniqueInput[]
+  connect?: Prisma.MovieWhereUniqueInput | Prisma.MovieWhereUniqueInput[]
+  update?: Prisma.MovieUpdateWithWhereUniqueWithoutGenreInput | Prisma.MovieUpdateWithWhereUniqueWithoutGenreInput[]
+  updateMany?: Prisma.MovieUpdateManyWithWhereWithoutGenreInput | Prisma.MovieUpdateManyWithWhereWithoutGenreInput[]
+  deleteMany?: Prisma.MovieScalarWhereInput | Prisma.MovieScalarWhereInput[]
+}
+
+export type MovieUncheckedUpdateManyWithoutGenreNestedInput = {
+  create?: Prisma.XOR<Prisma.MovieCreateWithoutGenreInput, Prisma.MovieUncheckedCreateWithoutGenreInput> | Prisma.MovieCreateWithoutGenreInput[] | Prisma.MovieUncheckedCreateWithoutGenreInput[]
+  connectOrCreate?: Prisma.MovieCreateOrConnectWithoutGenreInput | Prisma.MovieCreateOrConnectWithoutGenreInput[]
+  upsert?: Prisma.MovieUpsertWithWhereUniqueWithoutGenreInput | Prisma.MovieUpsertWithWhereUniqueWithoutGenreInput[]
+  createMany?: Prisma.MovieCreateManyGenreInputEnvelope
+  set?: Prisma.MovieWhereUniqueInput | Prisma.MovieWhereUniqueInput[]
+  disconnect?: Prisma.MovieWhereUniqueInput | Prisma.MovieWhereUniqueInput[]
+  delete?: Prisma.MovieWhereUniqueInput | Prisma.MovieWhereUniqueInput[]
+  connect?: Prisma.MovieWhereUniqueInput | Prisma.MovieWhereUniqueInput[]
+  update?: Prisma.MovieUpdateWithWhereUniqueWithoutGenreInput | Prisma.MovieUpdateWithWhereUniqueWithoutGenreInput[]
+  updateMany?: Prisma.MovieUpdateManyWithWhereWithoutGenreInput | Prisma.MovieUpdateManyWithWhereWithoutGenreInput[]
+  deleteMany?: Prisma.MovieScalarWhereInput | Prisma.MovieScalarWhereInput[]
+}
+
+export type MovieCreateNestedOneWithoutOrderItemsInput = {
+  create?: Prisma.XOR<Prisma.MovieCreateWithoutOrderItemsInput, Prisma.MovieUncheckedCreateWithoutOrderItemsInput>
+  connectOrCreate?: Prisma.MovieCreateOrConnectWithoutOrderItemsInput
+  connect?: Prisma.MovieWhereUniqueInput
+}
+
+export type MovieUpdateOneRequiredWithoutOrderItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.MovieCreateWithoutOrderItemsInput, Prisma.MovieUncheckedCreateWithoutOrderItemsInput>
+  connectOrCreate?: Prisma.MovieCreateOrConnectWithoutOrderItemsInput
+  upsert?: Prisma.MovieUpsertWithoutOrderItemsInput
+  connect?: Prisma.MovieWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MovieUpdateToOneWithWhereWithoutOrderItemsInput, Prisma.MovieUpdateWithoutOrderItemsInput>, Prisma.MovieUncheckedUpdateWithoutOrderItemsInput>
+}
+
+export type MovieCreateNestedOneWithoutCartItemsInput = {
+  create?: Prisma.XOR<Prisma.MovieCreateWithoutCartItemsInput, Prisma.MovieUncheckedCreateWithoutCartItemsInput>
+  connectOrCreate?: Prisma.MovieCreateOrConnectWithoutCartItemsInput
+  connect?: Prisma.MovieWhereUniqueInput
+}
+
+export type MovieUpdateOneRequiredWithoutCartItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.MovieCreateWithoutCartItemsInput, Prisma.MovieUncheckedCreateWithoutCartItemsInput>
+  connectOrCreate?: Prisma.MovieCreateOrConnectWithoutCartItemsInput
+  upsert?: Prisma.MovieUpsertWithoutCartItemsInput
+  connect?: Prisma.MovieWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MovieUpdateToOneWithWhereWithoutCartItemsInput, Prisma.MovieUpdateWithoutCartItemsInput>, Prisma.MovieUncheckedUpdateWithoutCartItemsInput>
+}
+
 export type MovieCreateWithoutActorsInput = {
-  id: string
+  id?: string
   title: string
   description: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear: number
+  releaseDate: number
+  imageUrl: string
+  stock: boolean
+  runtime: number
   directors?: Prisma.DirectorCreateNestedManyWithoutMoviesInput
+  genre?: Prisma.GenreCreateNestedOneWithoutMoviesInput
+  orderItems?: Prisma.OrderItemCreateNestedManyWithoutMovieInput
+  cartItems?: Prisma.CartItemCreateNestedManyWithoutMovieInput
 }
 
 export type MovieUncheckedCreateWithoutActorsInput = {
-  id: string
+  id?: string
   title: string
   description: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear: number
+  releaseDate: number
+  imageUrl: string
+  stock: boolean
+  runtime: number
+  genreId?: number | null
   directors?: Prisma.DirectorUncheckedCreateNestedManyWithoutMoviesInput
+  orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutMovieInput
+  cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutMovieInput
 }
 
 export type MovieCreateOrConnectWithoutActorsInput = {
@@ -518,25 +729,41 @@ export type MovieScalarWhereInput = {
   title?: Prisma.StringFilter<"Movie"> | string
   description?: Prisma.StringFilter<"Movie"> | string
   price?: Prisma.DecimalFilter<"Movie"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear?: Prisma.IntFilter<"Movie"> | number
+  releaseDate?: Prisma.IntFilter<"Movie"> | number
+  imageUrl?: Prisma.StringFilter<"Movie"> | string
+  stock?: Prisma.BoolFilter<"Movie"> | boolean
+  runtime?: Prisma.IntFilter<"Movie"> | number
+  genreId?: Prisma.IntNullableFilter<"Movie"> | number | null
 }
 
 export type MovieCreateWithoutDirectorsInput = {
-  id: string
+  id?: string
   title: string
   description: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear: number
+  releaseDate: number
+  imageUrl: string
+  stock: boolean
+  runtime: number
   actors?: Prisma.ActorCreateNestedManyWithoutMoviesInput
+  genre?: Prisma.GenreCreateNestedOneWithoutMoviesInput
+  orderItems?: Prisma.OrderItemCreateNestedManyWithoutMovieInput
+  cartItems?: Prisma.CartItemCreateNestedManyWithoutMovieInput
 }
 
 export type MovieUncheckedCreateWithoutDirectorsInput = {
-  id: string
+  id?: string
   title: string
   description: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear: number
+  releaseDate: number
+  imageUrl: string
+  stock: boolean
+  runtime: number
+  genreId?: number | null
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutMoviesInput
+  orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutMovieInput
+  cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutMovieInput
 }
 
 export type MovieCreateOrConnectWithoutDirectorsInput = {
@@ -560,13 +787,227 @@ export type MovieUpdateManyWithWhereWithoutDirectorsInput = {
   data: Prisma.XOR<Prisma.MovieUpdateManyMutationInput, Prisma.MovieUncheckedUpdateManyWithoutDirectorsInput>
 }
 
+export type MovieCreateWithoutGenreInput = {
+  id?: string
+  title: string
+  description: string
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  releaseDate: number
+  imageUrl: string
+  stock: boolean
+  runtime: number
+  actors?: Prisma.ActorCreateNestedManyWithoutMoviesInput
+  directors?: Prisma.DirectorCreateNestedManyWithoutMoviesInput
+  orderItems?: Prisma.OrderItemCreateNestedManyWithoutMovieInput
+  cartItems?: Prisma.CartItemCreateNestedManyWithoutMovieInput
+}
+
+export type MovieUncheckedCreateWithoutGenreInput = {
+  id?: string
+  title: string
+  description: string
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  releaseDate: number
+  imageUrl: string
+  stock: boolean
+  runtime: number
+  actors?: Prisma.ActorUncheckedCreateNestedManyWithoutMoviesInput
+  directors?: Prisma.DirectorUncheckedCreateNestedManyWithoutMoviesInput
+  orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutMovieInput
+  cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutMovieInput
+}
+
+export type MovieCreateOrConnectWithoutGenreInput = {
+  where: Prisma.MovieWhereUniqueInput
+  create: Prisma.XOR<Prisma.MovieCreateWithoutGenreInput, Prisma.MovieUncheckedCreateWithoutGenreInput>
+}
+
+export type MovieCreateManyGenreInputEnvelope = {
+  data: Prisma.MovieCreateManyGenreInput | Prisma.MovieCreateManyGenreInput[]
+  skipDuplicates?: boolean
+}
+
+export type MovieUpsertWithWhereUniqueWithoutGenreInput = {
+  where: Prisma.MovieWhereUniqueInput
+  update: Prisma.XOR<Prisma.MovieUpdateWithoutGenreInput, Prisma.MovieUncheckedUpdateWithoutGenreInput>
+  create: Prisma.XOR<Prisma.MovieCreateWithoutGenreInput, Prisma.MovieUncheckedCreateWithoutGenreInput>
+}
+
+export type MovieUpdateWithWhereUniqueWithoutGenreInput = {
+  where: Prisma.MovieWhereUniqueInput
+  data: Prisma.XOR<Prisma.MovieUpdateWithoutGenreInput, Prisma.MovieUncheckedUpdateWithoutGenreInput>
+}
+
+export type MovieUpdateManyWithWhereWithoutGenreInput = {
+  where: Prisma.MovieScalarWhereInput
+  data: Prisma.XOR<Prisma.MovieUpdateManyMutationInput, Prisma.MovieUncheckedUpdateManyWithoutGenreInput>
+}
+
+export type MovieCreateWithoutOrderItemsInput = {
+  id?: string
+  title: string
+  description: string
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  releaseDate: number
+  imageUrl: string
+  stock: boolean
+  runtime: number
+  actors?: Prisma.ActorCreateNestedManyWithoutMoviesInput
+  directors?: Prisma.DirectorCreateNestedManyWithoutMoviesInput
+  genre?: Prisma.GenreCreateNestedOneWithoutMoviesInput
+  cartItems?: Prisma.CartItemCreateNestedManyWithoutMovieInput
+}
+
+export type MovieUncheckedCreateWithoutOrderItemsInput = {
+  id?: string
+  title: string
+  description: string
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  releaseDate: number
+  imageUrl: string
+  stock: boolean
+  runtime: number
+  genreId?: number | null
+  actors?: Prisma.ActorUncheckedCreateNestedManyWithoutMoviesInput
+  directors?: Prisma.DirectorUncheckedCreateNestedManyWithoutMoviesInput
+  cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutMovieInput
+}
+
+export type MovieCreateOrConnectWithoutOrderItemsInput = {
+  where: Prisma.MovieWhereUniqueInput
+  create: Prisma.XOR<Prisma.MovieCreateWithoutOrderItemsInput, Prisma.MovieUncheckedCreateWithoutOrderItemsInput>
+}
+
+export type MovieUpsertWithoutOrderItemsInput = {
+  update: Prisma.XOR<Prisma.MovieUpdateWithoutOrderItemsInput, Prisma.MovieUncheckedUpdateWithoutOrderItemsInput>
+  create: Prisma.XOR<Prisma.MovieCreateWithoutOrderItemsInput, Prisma.MovieUncheckedCreateWithoutOrderItemsInput>
+  where?: Prisma.MovieWhereInput
+}
+
+export type MovieUpdateToOneWithWhereWithoutOrderItemsInput = {
+  where?: Prisma.MovieWhereInput
+  data: Prisma.XOR<Prisma.MovieUpdateWithoutOrderItemsInput, Prisma.MovieUncheckedUpdateWithoutOrderItemsInput>
+}
+
+export type MovieUpdateWithoutOrderItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  releaseDate?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  actors?: Prisma.ActorUpdateManyWithoutMoviesNestedInput
+  directors?: Prisma.DirectorUpdateManyWithoutMoviesNestedInput
+  genre?: Prisma.GenreUpdateOneWithoutMoviesNestedInput
+  cartItems?: Prisma.CartItemUpdateManyWithoutMovieNestedInput
+}
+
+export type MovieUncheckedUpdateWithoutOrderItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  releaseDate?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  genreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actors?: Prisma.ActorUncheckedUpdateManyWithoutMoviesNestedInput
+  directors?: Prisma.DirectorUncheckedUpdateManyWithoutMoviesNestedInput
+  cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutMovieNestedInput
+}
+
+export type MovieCreateWithoutCartItemsInput = {
+  id?: string
+  title: string
+  description: string
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  releaseDate: number
+  imageUrl: string
+  stock: boolean
+  runtime: number
+  actors?: Prisma.ActorCreateNestedManyWithoutMoviesInput
+  directors?: Prisma.DirectorCreateNestedManyWithoutMoviesInput
+  genre?: Prisma.GenreCreateNestedOneWithoutMoviesInput
+  orderItems?: Prisma.OrderItemCreateNestedManyWithoutMovieInput
+}
+
+export type MovieUncheckedCreateWithoutCartItemsInput = {
+  id?: string
+  title: string
+  description: string
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  releaseDate: number
+  imageUrl: string
+  stock: boolean
+  runtime: number
+  genreId?: number | null
+  actors?: Prisma.ActorUncheckedCreateNestedManyWithoutMoviesInput
+  directors?: Prisma.DirectorUncheckedCreateNestedManyWithoutMoviesInput
+  orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutMovieInput
+}
+
+export type MovieCreateOrConnectWithoutCartItemsInput = {
+  where: Prisma.MovieWhereUniqueInput
+  create: Prisma.XOR<Prisma.MovieCreateWithoutCartItemsInput, Prisma.MovieUncheckedCreateWithoutCartItemsInput>
+}
+
+export type MovieUpsertWithoutCartItemsInput = {
+  update: Prisma.XOR<Prisma.MovieUpdateWithoutCartItemsInput, Prisma.MovieUncheckedUpdateWithoutCartItemsInput>
+  create: Prisma.XOR<Prisma.MovieCreateWithoutCartItemsInput, Prisma.MovieUncheckedCreateWithoutCartItemsInput>
+  where?: Prisma.MovieWhereInput
+}
+
+export type MovieUpdateToOneWithWhereWithoutCartItemsInput = {
+  where?: Prisma.MovieWhereInput
+  data: Prisma.XOR<Prisma.MovieUpdateWithoutCartItemsInput, Prisma.MovieUncheckedUpdateWithoutCartItemsInput>
+}
+
+export type MovieUpdateWithoutCartItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  releaseDate?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  actors?: Prisma.ActorUpdateManyWithoutMoviesNestedInput
+  directors?: Prisma.DirectorUpdateManyWithoutMoviesNestedInput
+  genre?: Prisma.GenreUpdateOneWithoutMoviesNestedInput
+  orderItems?: Prisma.OrderItemUpdateManyWithoutMovieNestedInput
+}
+
+export type MovieUncheckedUpdateWithoutCartItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  releaseDate?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  genreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actors?: Prisma.ActorUncheckedUpdateManyWithoutMoviesNestedInput
+  directors?: Prisma.DirectorUncheckedUpdateManyWithoutMoviesNestedInput
+  orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutMovieNestedInput
+}
+
 export type MovieUpdateWithoutActorsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear?: Prisma.IntFieldUpdateOperationsInput | number
+  releaseDate?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  runtime?: Prisma.IntFieldUpdateOperationsInput | number
   directors?: Prisma.DirectorUpdateManyWithoutMoviesNestedInput
+  genre?: Prisma.GenreUpdateOneWithoutMoviesNestedInput
+  orderItems?: Prisma.OrderItemUpdateManyWithoutMovieNestedInput
+  cartItems?: Prisma.CartItemUpdateManyWithoutMovieNestedInput
 }
 
 export type MovieUncheckedUpdateWithoutActorsInput = {
@@ -574,8 +1015,14 @@ export type MovieUncheckedUpdateWithoutActorsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear?: Prisma.IntFieldUpdateOperationsInput | number
+  releaseDate?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  genreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   directors?: Prisma.DirectorUncheckedUpdateManyWithoutMoviesNestedInput
+  orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutMovieNestedInput
+  cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutMovieNestedInput
 }
 
 export type MovieUncheckedUpdateManyWithoutActorsInput = {
@@ -583,7 +1030,11 @@ export type MovieUncheckedUpdateManyWithoutActorsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear?: Prisma.IntFieldUpdateOperationsInput | number
+  releaseDate?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  genreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type MovieUpdateWithoutDirectorsInput = {
@@ -591,8 +1042,14 @@ export type MovieUpdateWithoutDirectorsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear?: Prisma.IntFieldUpdateOperationsInput | number
+  releaseDate?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  runtime?: Prisma.IntFieldUpdateOperationsInput | number
   actors?: Prisma.ActorUpdateManyWithoutMoviesNestedInput
+  genre?: Prisma.GenreUpdateOneWithoutMoviesNestedInput
+  orderItems?: Prisma.OrderItemUpdateManyWithoutMovieNestedInput
+  cartItems?: Prisma.CartItemUpdateManyWithoutMovieNestedInput
 }
 
 export type MovieUncheckedUpdateWithoutDirectorsInput = {
@@ -600,8 +1057,14 @@ export type MovieUncheckedUpdateWithoutDirectorsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear?: Prisma.IntFieldUpdateOperationsInput | number
+  releaseDate?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  genreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actors?: Prisma.ActorUncheckedUpdateManyWithoutMoviesNestedInput
+  orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutMovieNestedInput
+  cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutMovieNestedInput
 }
 
 export type MovieUncheckedUpdateManyWithoutDirectorsInput = {
@@ -609,7 +1072,63 @@ export type MovieUncheckedUpdateManyWithoutDirectorsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  releaseYear?: Prisma.IntFieldUpdateOperationsInput | number
+  releaseDate?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  genreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type MovieCreateManyGenreInput = {
+  id?: string
+  title: string
+  description: string
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  releaseDate: number
+  imageUrl: string
+  stock: boolean
+  runtime: number
+}
+
+export type MovieUpdateWithoutGenreInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  releaseDate?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  actors?: Prisma.ActorUpdateManyWithoutMoviesNestedInput
+  directors?: Prisma.DirectorUpdateManyWithoutMoviesNestedInput
+  orderItems?: Prisma.OrderItemUpdateManyWithoutMovieNestedInput
+  cartItems?: Prisma.CartItemUpdateManyWithoutMovieNestedInput
+}
+
+export type MovieUncheckedUpdateWithoutGenreInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  releaseDate?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  actors?: Prisma.ActorUncheckedUpdateManyWithoutMoviesNestedInput
+  directors?: Prisma.DirectorUncheckedUpdateManyWithoutMoviesNestedInput
+  orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutMovieNestedInput
+  cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutMovieNestedInput
+}
+
+export type MovieUncheckedUpdateManyWithoutGenreInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  releaseDate?: Prisma.IntFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  runtime?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -620,11 +1139,15 @@ export type MovieUncheckedUpdateManyWithoutDirectorsInput = {
 export type MovieCountOutputType = {
   actors: number
   directors: number
+  orderItems: number
+  cartItems: number
 }
 
 export type MovieCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   actors?: boolean | MovieCountOutputTypeCountActorsArgs
   directors?: boolean | MovieCountOutputTypeCountDirectorsArgs
+  orderItems?: boolean | MovieCountOutputTypeCountOrderItemsArgs
+  cartItems?: boolean | MovieCountOutputTypeCountCartItemsArgs
 }
 
 /**
@@ -651,15 +1174,36 @@ export type MovieCountOutputTypeCountDirectorsArgs<ExtArgs extends runtime.Types
   where?: Prisma.DirectorWhereInput
 }
 
+/**
+ * MovieCountOutputType without action
+ */
+export type MovieCountOutputTypeCountOrderItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderItemWhereInput
+}
+
+/**
+ * MovieCountOutputType without action
+ */
+export type MovieCountOutputTypeCountCartItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CartItemWhereInput
+}
+
 
 export type MovieSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   title?: boolean
   description?: boolean
   price?: boolean
-  releaseYear?: boolean
+  releaseDate?: boolean
+  imageUrl?: boolean
+  stock?: boolean
+  runtime?: boolean
+  genreId?: boolean
   actors?: boolean | Prisma.Movie$actorsArgs<ExtArgs>
   directors?: boolean | Prisma.Movie$directorsArgs<ExtArgs>
+  genre?: boolean | Prisma.Movie$genreArgs<ExtArgs>
+  orderItems?: boolean | Prisma.Movie$orderItemsArgs<ExtArgs>
+  cartItems?: boolean | Prisma.Movie$cartItemsArgs<ExtArgs>
   _count?: boolean | Prisma.MovieCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["movie"]>
 
@@ -668,7 +1212,12 @@ export type MovieSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   title?: boolean
   description?: boolean
   price?: boolean
-  releaseYear?: boolean
+  releaseDate?: boolean
+  imageUrl?: boolean
+  stock?: boolean
+  runtime?: boolean
+  genreId?: boolean
+  genre?: boolean | Prisma.Movie$genreArgs<ExtArgs>
 }, ExtArgs["result"]["movie"]>
 
 export type MovieSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -676,7 +1225,12 @@ export type MovieSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   title?: boolean
   description?: boolean
   price?: boolean
-  releaseYear?: boolean
+  releaseDate?: boolean
+  imageUrl?: boolean
+  stock?: boolean
+  runtime?: boolean
+  genreId?: boolean
+  genre?: boolean | Prisma.Movie$genreArgs<ExtArgs>
 }, ExtArgs["result"]["movie"]>
 
 export type MovieSelectScalar = {
@@ -684,30 +1238,48 @@ export type MovieSelectScalar = {
   title?: boolean
   description?: boolean
   price?: boolean
-  releaseYear?: boolean
+  releaseDate?: boolean
+  imageUrl?: boolean
+  stock?: boolean
+  runtime?: boolean
+  genreId?: boolean
 }
 
-export type MovieOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "price" | "releaseYear", ExtArgs["result"]["movie"]>
+export type MovieOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "price" | "releaseDate" | "imageUrl" | "stock" | "runtime" | "genreId", ExtArgs["result"]["movie"]>
 export type MovieInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   actors?: boolean | Prisma.Movie$actorsArgs<ExtArgs>
   directors?: boolean | Prisma.Movie$directorsArgs<ExtArgs>
+  genre?: boolean | Prisma.Movie$genreArgs<ExtArgs>
+  orderItems?: boolean | Prisma.Movie$orderItemsArgs<ExtArgs>
+  cartItems?: boolean | Prisma.Movie$cartItemsArgs<ExtArgs>
   _count?: boolean | Prisma.MovieCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type MovieIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type MovieIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type MovieIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  genre?: boolean | Prisma.Movie$genreArgs<ExtArgs>
+}
+export type MovieIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  genre?: boolean | Prisma.Movie$genreArgs<ExtArgs>
+}
 
 export type $MoviePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Movie"
   objects: {
     actors: Prisma.$ActorPayload<ExtArgs>[]
     directors: Prisma.$DirectorPayload<ExtArgs>[]
+    genre: Prisma.$GenrePayload<ExtArgs> | null
+    orderItems: Prisma.$OrderItemPayload<ExtArgs>[]
+    cartItems: Prisma.$CartItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     title: string
     description: string
     price: runtime.Decimal
-    releaseYear: number
+    releaseDate: number
+    imageUrl: string
+    stock: boolean
+    runtime: number
+    genreId: number | null
   }, ExtArgs["result"]["movie"]>
   composites: {}
 }
@@ -1104,6 +1676,9 @@ export interface Prisma__MovieClient<T, Null = never, ExtArgs extends runtime.Ty
   readonly [Symbol.toStringTag]: "PrismaPromise"
   actors<T extends Prisma.Movie$actorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Movie$actorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   directors<T extends Prisma.Movie$directorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Movie$directorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DirectorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  genre<T extends Prisma.Movie$genreArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Movie$genreArgs<ExtArgs>>): Prisma.Prisma__GenreClient<runtime.Types.Result.GetResult<Prisma.$GenrePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  orderItems<T extends Prisma.Movie$orderItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Movie$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  cartItems<T extends Prisma.Movie$cartItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Movie$cartItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CartItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1137,7 +1712,11 @@ export interface MovieFieldRefs {
   readonly title: Prisma.FieldRef<"Movie", 'String'>
   readonly description: Prisma.FieldRef<"Movie", 'String'>
   readonly price: Prisma.FieldRef<"Movie", 'Decimal'>
-  readonly releaseYear: Prisma.FieldRef<"Movie", 'Int'>
+  readonly releaseDate: Prisma.FieldRef<"Movie", 'Int'>
+  readonly imageUrl: Prisma.FieldRef<"Movie", 'String'>
+  readonly stock: Prisma.FieldRef<"Movie", 'Boolean'>
+  readonly runtime: Prisma.FieldRef<"Movie", 'Int'>
+  readonly genreId: Prisma.FieldRef<"Movie", 'Int'>
 }
     
 
@@ -1392,6 +1971,10 @@ export type MovieCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    */
   data: Prisma.MovieCreateManyInput | Prisma.MovieCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MovieIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1462,6 +2045,10 @@ export type MovieUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many Movies to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MovieIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1576,6 +2163,73 @@ export type Movie$directorsArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.DirectorScalarFieldEnum | Prisma.DirectorScalarFieldEnum[]
+}
+
+/**
+ * Movie.genre
+ */
+export type Movie$genreArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Genre
+   */
+  select?: Prisma.GenreSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Genre
+   */
+  omit?: Prisma.GenreOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GenreInclude<ExtArgs> | null
+  where?: Prisma.GenreWhereInput
+}
+
+/**
+ * Movie.orderItems
+ */
+export type Movie$orderItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderItem
+   */
+  select?: Prisma.OrderItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrderItem
+   */
+  omit?: Prisma.OrderItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderItemInclude<ExtArgs> | null
+  where?: Prisma.OrderItemWhereInput
+  orderBy?: Prisma.OrderItemOrderByWithRelationInput | Prisma.OrderItemOrderByWithRelationInput[]
+  cursor?: Prisma.OrderItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderItemScalarFieldEnum | Prisma.OrderItemScalarFieldEnum[]
+}
+
+/**
+ * Movie.cartItems
+ */
+export type Movie$cartItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CartItem
+   */
+  select?: Prisma.CartItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CartItem
+   */
+  omit?: Prisma.CartItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CartItemInclude<ExtArgs> | null
+  where?: Prisma.CartItemWhereInput
+  orderBy?: Prisma.CartItemOrderByWithRelationInput | Prisma.CartItemOrderByWithRelationInput[]
+  cursor?: Prisma.CartItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CartItemScalarFieldEnum | Prisma.CartItemScalarFieldEnum[]
 }
 
 /**
