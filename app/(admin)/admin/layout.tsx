@@ -1,6 +1,8 @@
+import { Toaster } from "sonner";
 import '@/app/globals.css';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AdminSidebar } from './_components/admin-sidebar';
+
 
 export default function AdminLayout({
   children,
@@ -13,6 +15,7 @@ export default function AdminLayout({
         <AdminSidebar />
         <main className="flex-1">
           <SidebarTrigger />
+           <Toaster position="bottom-right" richColors />
           {children}
         </main>
       </div>

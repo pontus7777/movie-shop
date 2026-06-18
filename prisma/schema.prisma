@@ -84,8 +84,8 @@ model Movie {
   title       String      @db.VarChar(100)
   description String
   price       Decimal
-  releaseDate Int         @map("release_year")
-  imageUrl    String
+  releaseYear Int         @map("release_year")
+  imageUrl    String?
   stock       Boolean
   runtime     Int
   actors      Actor[]
