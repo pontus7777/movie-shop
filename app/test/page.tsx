@@ -1,11 +1,11 @@
 import MovieCard, { Movie } from "@/components/moviecard";
 
 const movie: Movie = {
-  title: "Movie",
-  description: "test",
+  title: "Batman",
+  description: "A superhero action movie",
   genre: "action",
   imageUrl: "https://picsum.photos/200/300",
-  price: 4561,
+  price: 20,
 };
 
 export default function TestPage() {

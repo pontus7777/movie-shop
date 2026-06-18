@@ -1,5 +1,9 @@
 import Image from "next/image";
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+import { Button } from "@/components/ui/button";
+
 export type Movie = {
   title: string;
   description: string;
@@ -14,7 +18,7 @@ type Props = {
 
 export default function MovieCard({ movie }: Props) {
   return (
-    <div className="rounded-xl border border-gray-200 shadow-md overflow-hidden w-64">
+    <Card className="w-72 overflow-hidden">
       {/* Movie Poster */}
       <Image
         src={movie.imageUrl}
@@ -25,17 +29,18 @@ export default function MovieCard({ movie }: Props) {
       />
 
       {/* Info Section */}
-      <div className="p-4 flex flex-col gap-2">
-        <h2 className="text-lg font-bold">{movie.title}</h2>
-        <span className="text-sm text-gray-500">{movie.genre}</span>
-        <p className="text-sm text-gray-600 line-clamp-2">
-          {movie.description}
-        </p>
-        <p className="text-green-600 font-semibold">${movie.price}</p>
-        <button className="mt-2 bg-blue-600 text-white rounded-lg py-2 hover:bg-blue-700">
-          Add to Cart
-        </button>
-      </div>
-    </div>
+      <CardHeader>
+        <CardTitle>{movie.title}</CardTitle>
+        <p className="text-sm text-muted-foreground">{movie.genre}</p>
+      </CardHeader>
+
+      <CardContent>
+        <p className="text-sm mb-3">{movie.description}</p>
+
+        <p className="font-bold text-lg mb-3">${movie.price}</p>
+
+        <Button className="w-full">Add to Cart</Button>
+      </CardContent>
+    </Card>
   );
 }
