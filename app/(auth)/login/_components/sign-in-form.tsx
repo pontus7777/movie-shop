@@ -1,4 +1,6 @@
 "use client";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Field,
   FieldError,
@@ -13,7 +15,6 @@ import { toast } from "sonner";
 import z from "zod";
 
 const formSchema = z.object({
-  name: z.string().min(1).max(20),
   email: z.email(),
   password: z.string().min(1),
   rememberMe: z.boolean(),
@@ -81,6 +82,66 @@ function SignInForm() {
               );
             }}
           </form.Field>
+
+          <form.Field name="password">
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                  <Input
+                    id={field.name}
+                    name={field.name}
+                    type="password"
+                    value={field.state.value}
+                    onChange={(ev) => field.handleChange(ev.target.value)}
+                    onBlur={field.handleBlur}
+                    aria-invalid={isInvalid}
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              );
+            }}
+          </form.Field>
+
+          <form.Field name="rememberMe">
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+
+              return (
+                <Field data-invalid={isInvalid} orientation="horizontal">
+                  <Checkbox
+                    id={field.name}
+                    name={field.name}
+                    checked={field.state.value}
+                    onCheckedChange={(checked) => {
+                      if (checked === "indeterminate") {
+                        return;
+                      }
+                      field.handleChange(checked);
+                    }}
+                    onBlur={field.handleBlur}
+                    aria-invalid={isInvalid}
+                  />
+
+                  <FieldLabel htmlFor={field.name}>Remember Me</FieldLabel>
+                </Field>
+              );
+            }}
+          </form.Field>
+
+          <form.Subscribe selector={(state) => state.isSubmitting}>
+            {(isSubmitting) => (
+              <Field orientation="horizontal">
+                <Button type="submit" disabled={isSubmitting}>
+                  Sign in
+                </Button>
+              </Field>
+            )}
+          </form.Subscribe>
         </FieldGroup>
       </form>
     </>
