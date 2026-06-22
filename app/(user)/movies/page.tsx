@@ -256,6 +256,8 @@ const movies = [
   },
 ];
 
+// This is currently being a client side pagination, can change it to server component with data in the db (Pontus)
+
 export default function MoviesPage({}) {
   const [page, setPage] = useState(1);
   const pageSize = 12;
