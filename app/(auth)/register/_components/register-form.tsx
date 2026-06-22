@@ -36,7 +36,6 @@ function RegisterForm() {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
       const result = await authClient.signUp.email({
         name: value.name,
         email: value.email,

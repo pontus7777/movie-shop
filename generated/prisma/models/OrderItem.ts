@@ -236,16 +236,17 @@ export type OrderItemOrderByWithRelationInput = {
 
 export type OrderItemWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  orderId?: string
-  movieId?: string
+  orderId_movieId?: Prisma.OrderItemOrderIdMovieIdCompoundUniqueInput
   AND?: Prisma.OrderItemWhereInput | Prisma.OrderItemWhereInput[]
   OR?: Prisma.OrderItemWhereInput[]
   NOT?: Prisma.OrderItemWhereInput | Prisma.OrderItemWhereInput[]
+  orderId?: Prisma.StringFilter<"OrderItem"> | string
+  movieId?: Prisma.StringFilter<"OrderItem"> | string
   quantity?: Prisma.IntFilter<"OrderItem"> | number
   price?: Prisma.DecimalFilter<"OrderItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
   movie?: Prisma.XOR<Prisma.MovieScalarRelationFilter, Prisma.MovieWhereInput>
-}, "id" | "orderId" | "movieId">
+}, "id" | "orderId_movieId">
 
 export type OrderItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -333,6 +334,11 @@ export type OrderItemListRelationFilter = {
 
 export type OrderItemOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type OrderItemOrderIdMovieIdCompoundUniqueInput = {
+  orderId: string
+  movieId: string
 }
 
 export type OrderItemCountOrderByAggregateInput = {
