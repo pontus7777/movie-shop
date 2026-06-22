@@ -13,18 +13,26 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String   @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean  @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-  accounts      Account[]
-  orders        Order[]
-  cartId        String
-  cart          Cart?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  //admin plugin fields
+  role       String?   @default("user")
+  banned     Boolean?  @default(false)
+  banReason  String?
+  banExpires DateTime?
+
+  sessions Session[]
+  accounts Account[]
+  orders   Order[]
+
+  // cartId String?
+  cart Cart?
 
   @@unique([email])
   @@map("user")
@@ -136,14 +144,15 @@ model Order {
 
 model OrderItem {
   id       String  @id @default(cuid())
-  orderId  String  @unique
-  movieId  String  @unique
+  orderId  String //@unique
+  movieId  String //@unique
   quantity Int
   price    Decimal
 
   order Order @relation(fields: [orderId], references: [id])
   movie Movie @relation(fields: [movieId], references: [id])
 
+  @@unique([orderId, movieId])
   @@map("order_items")
 }
 
@@ -158,12 +167,13 @@ model Cart {
 
 model CartItem {
   id       String @id @default(cuid())
-  cartId   String @unique
-  movieId  String @unique
+  cartId   String //@unique
+  movieId  String //@unique
   quantity Int    @default(1)
 
   cart  Cart  @relation(fields: [cartId], references: [id])
   movie Movie @relation(fields: [movieId], references: [id])
 
+  @@unique([cartId, movieId])
   @@map("cart_items")
 }
