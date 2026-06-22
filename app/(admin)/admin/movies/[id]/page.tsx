@@ -54,6 +54,7 @@ export default async function MovieDetailsPage(
           width={300}
           height={450}
           className="rounded-lg object-cover"
+          priority
         />
 
         <div className="space-y-4">
