@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export type Movie = {
   id: string;
@@ -15,7 +16,7 @@ export type Movie = {
   genreId: number | null;
   createdAt: Date;
   updatedAt: Date;
-  //Maybe no need for this , but it's ok to use it in admin sites!
+/*** All relations in */
   genre: {
     id: number;
     name: string;
@@ -60,7 +61,11 @@ export default function MovieCard({ movie }: Props) {
 
       {/* Info Section */}
       <CardHeader>
-        <CardTitle>{movie.title}</CardTitle>
+        <CardTitle>
+          <Link href={`/admin/movies/${movie.id}`} className="font-semibold hover:underline">
+            {movie.title}
+          </Link>
+          </CardTitle>
         <p className="text-sm text-muted-foreground">{movie.genre?.name ?? "No genre"}</p>
       </CardHeader>
 
