@@ -17,13 +17,14 @@ import { Loader2 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
+import { Decimal } from "@prisma/client/runtime/client";
 const formSchema = z.object({
   title: z
     .string()
     .min(1, "Title is required")
     .max(32, "Title must be less than 32 characters"),
   description: z.string().min(1, "Description is required").max(1000),
-  price: z.number().min(1),
+  price: z.string().regex(/^\d+(\.\d{1,2})?$/),
   releaseYear: z.number().min(0).max(9999),
   stock: z.boolean(),
   runtime: z.number().min(10),
@@ -37,7 +38,7 @@ function CreateMovieForm() {
     defaultValues: {
       title: "",
       description: "",
-      price: 1,
+      price: "1",
       releaseYear: 1920,
       stock: false,
       runtime: 10,
@@ -53,7 +54,7 @@ function CreateMovieForm() {
 
         toast.success("Movie created successfully");
 
-        // router.push(`/admin/movies/${newMovie.id}`); //need and issue to work on that!!!
+        router.push(`/admin/movies/${newMovie.id}`); //need and issue to work on that!!!
       } catch (err) {
         console.log(err);
         toast.error("Failed to submit form", {
@@ -132,9 +133,10 @@ function CreateMovieForm() {
                   <Input
                     id={field.name}
                     name={field.name}
+                    type={"text"}
                     value={field.state.value}
                     onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                    onChange={(e) => field.handleChange(e.target.value)}
                     aria-invalid={isInvalid}
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
