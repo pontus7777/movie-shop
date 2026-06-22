@@ -9,8 +9,8 @@ import { CreateMovieForm } from "./_components/create-movie-form";
 
 export default function CreateMoviePage() {
   return (
-    <div className="mx-auto mt-10 flex w-full max-w-lg justify-center px-4">
-      <Card className="w-full">
+    <div className="mx-auto mt-10 flex w-full justify-center px-4">
+      <Card className="w-full max-w-2xl">
         <CardHeader>
           <CardTitle>Create Movie</CardTitle>
           <CardDescription>Add a new movie </CardDescription>
