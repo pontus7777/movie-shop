@@ -50,16 +50,22 @@ export default function Footer() {
               Home
             </Link>
             <Link
-              href="/movies"
+              href="/trending"
               className="text-sm hover:text-purple-400 transition-colors"
             >
-              Movies
+              Trending
             </Link>
             <Link
-              href="/genres"
+              href="/popular"
               className="text-sm hover:text-purple-400 transition-colors"
             >
-              Genres
+              Popular
+            </Link>
+            <Link
+              href="/top-rated"
+              className="text-sm hover:text-purple-400 transition-colors"
+            >
+              Top-rated
             </Link>
             <Link
               href="/cart"

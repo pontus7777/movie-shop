@@ -35,14 +35,19 @@ export default function Header() {
               Home
             </Button>
           </Link>
-          <Link href="/movies">
+          <Link href="/trending">
             <Button variant="ghost" className="font-medium">
-              Movies
+              Trending
             </Button>
           </Link>
-          <Link href="/genres">
+          <Link href="/popular">
             <Button variant="ghost" className="font-medium">
-              Genres
+              Popular
+            </Button>
+          </Link>
+          <Link href="/top-rated">
+            <Button variant="ghost" className="font-medium">
+              Top-rated
             </Button>
           </Link>
         </nav>
@@ -74,33 +79,6 @@ export default function Header() {
 
           {/* Theme Toggle */}
           <ThemeModeToggle />
-
-          {/* Language Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="flex items-center gap-1 rounded-full"
-              >
-                EN
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
-                EN (United State)
-              </DropdownMenuItem>
-              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
-                SV (Swedish)
-              </DropdownMenuItem>
-              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
-                FR (French)
-              </DropdownMenuItem>
-              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
-                DE (German)
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
 
           {/* Divider */}
           <div className="h-6 w-px bg-gray-300 dark:bg-gray-600 mx-1" />
