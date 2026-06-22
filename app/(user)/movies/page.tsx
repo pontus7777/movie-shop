@@ -265,14 +265,16 @@ export default function MoviesPage({}) {
   const paginatedMovies = movies.slice((page - 1) * pageSize, page * pageSize);
 
   return (
-    <div className="space-y-6 min-h-lvh">
+    <div className="space-y-6 min-h-lvh p-6">
       <h1 className="text-3xl font-bold">Movies</h1>
 
       {/* Movie Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        {paginatedMovies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
+      <div className="flex justify-center">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl w-full">
+          {paginatedMovies.map((movie) => (
+            <MovieCard key={movie.id} movie={movie} />
+          ))}
+        </div>
       </div>
 
       <MoviesPagination page={page} totalPages={totalPages} setPage={setPage} />
