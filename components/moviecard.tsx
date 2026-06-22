@@ -4,12 +4,39 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 export type Movie = {
+  id: string;
   title: string;
   description: string;
   price: number;
-  imageUrl: string;
-  genre: string;
+  releaseYear: number;
+  imageUrl: string | null;
+  stock: boolean;
+  runtime: number;
+  genreId: number | null;
+  createdAt: Date;
+  updatedAt: Date;
+  genre: {
+    id: number;
+    name: string;
+    description: string;
+  } | null;
+  actors: {
+    id: string;
+    name: string;
+  }[];
+  directors: {
+    id: string;
+    name: string;
+  }[];
 };
+
+// {
+//   title: string;
+//   description: string;
+//   price: number;
+//   imageUrl: string;
+//   genre: string;
+// };
 
 
 
@@ -23,7 +50,7 @@ export default function MovieCard({ movie }: Props) {
     <Card className="w-72 overflow-hidden">
       {/* Movie Poster */}
       <Image
-        src={movie.imageUrl}
+        src={movie.imageUrl ?? "/placeholder-movie.jpg"}
         alt={movie.title}
         width={300}
         height={200}
@@ -33,13 +60,13 @@ export default function MovieCard({ movie }: Props) {
       {/* Info Section */}
       <CardHeader>
         <CardTitle>{movie.title}</CardTitle>
-        <p className="text-sm text-muted-foreground">{movie.genre}</p>
+        <p className="text-sm text-muted-foreground">{movie.genre?.name ?? "No genre"}</p>
       </CardHeader>
 
       <CardContent>
         <p className="text-sm mb-3">{movie.description}</p>
 
-        <p className="font-bold text-lg mb-3">${movie.price}</p>
+        <p className="font-bold text-lg mb-3">${movie.price.toString()}</p>
 
         <Button className="w-full">Add to Cart</Button>
       </CardContent>
