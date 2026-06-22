@@ -10,8 +10,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ThemeModeToggle } from "../theme-mode-toggle";
+import { useState } from "react";
 
 export default function Header() {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-background/80 backdrop-blur-md">
       <div className="container mx-auto flex items-center justify-between px-6 py-3">
@@ -49,10 +51,26 @@ export default function Header() {
 
         {/* ===== RIGHT SIDE ACTIONS ===== */}
         <div className="flex items-center gap-2">
-          {/* Search Icon Button */}
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <Search className="h-5 w-5" />
-          </Button>
+          <div className="flex items-center">
+            {/* Expandable Search Input */}
+            <input
+              type="text"
+              placeholder="Search movies..."
+              className={`transition-all duration-300 ease-in-out bg-muted border border-border rounded-full text-sm px-3 py-1.5 outline-none focus:border-purple-500 ${
+                isSearchOpen ? "w-48 opacity-100 mr-2" : "w-0 opacity-0"
+              }`}
+            />
+
+            {/* Search Icon Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+            >
+              <Search className="h-5 w-5" />
+            </Button>
+          </div>
 
           {/* Cart with badge */}
           <Link href="/cart">
