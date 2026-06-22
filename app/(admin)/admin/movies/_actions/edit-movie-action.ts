@@ -1,4 +1,5 @@
-"use client";
+"use server";
+import { Prisma } from "@/generated/prisma/client";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { Decimal } from "@prisma/client/runtime/client";
@@ -21,6 +22,7 @@ const editMovieSchema = z.object({
   releaseYear: z.number().min(0).max(9999),
   stock: z.boolean(),
   runtime: z.number().min(10),
+  imageUrl: z.string(),
 });
 
 export async function editMovie(values: z.infer<typeof editMovieSchema>) {
@@ -29,12 +31,12 @@ export async function editMovie(values: z.infer<typeof editMovieSchema>) {
   });
 
   if (!session) {
-    redirect("/sign-in");
+    redirect("/login");
   }
 
   const data = editMovieSchema.parse(values);
 
-  try {
+
     const updatedMovie = await prisma.movie.update({
       where: {
         id: data.id,
@@ -42,16 +44,17 @@ export async function editMovie(values: z.infer<typeof editMovieSchema>) {
       data: {
         title: data.title,
         description: data.description,
-        price: new Decimal(data.price),
+        price: new Prisma.Decimal(data.price),
         releaseYear: data.releaseYear,
         stock: data.stock,
         runtime: data.runtime,
+        imageUrl: data.imageUrl.trim() || null,
       },
     });
-    revalidatePath(`/admin/movies`);
-    return updatedMovie;
-  } catch (error) {
-    console.log("Error editing a movie", error);
-    throw new Error("Faild to edit a movie: ");
-  }
+    revalidatePath("/admin/movies");
+   
+    return  {
+      ...updatedMovie,
+      price: data.price.toString(),
+    };
 }

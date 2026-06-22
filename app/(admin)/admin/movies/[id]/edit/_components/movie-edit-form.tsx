@@ -31,6 +31,7 @@ const formSchema = z.object({
   releaseYear: z.number().min(0).max(9999),
   stock: z.boolean(),
   runtime: z.number().min(10),
+  imageUrl: z.string(),
 });
 
 type Props = {
@@ -42,10 +43,14 @@ type Props = {
     releaseYear: number;
     stock: boolean;
     runtime: number;
+    imageUrl: string | null;
   };
 };
 
 function EditMovieForm({ movie }: Props) {
+   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
   const form = useForm({
     defaultValues: {
       title: movie.title,
@@ -54,6 +59,7 @@ function EditMovieForm({ movie }: Props) {
       releaseYear: movie.releaseYear,
       stock: movie.stock,
       runtime: movie.runtime,
+      imageUrl: movie.imageUrl ?? "",
     },
     validators: {
       onSubmit: formSchema,
@@ -61,6 +67,8 @@ function EditMovieForm({ movie }: Props) {
     },
 
     onSubmit: async ({ value, formApi }) => {
+      setLoading(true);
+
       const updatedMovie = await editMovie({
         ...value,
         id: movie.id,
@@ -73,192 +81,204 @@ function EditMovieForm({ movie }: Props) {
         releaseYear: movie.releaseYear,
         stock: movie.stock,
         runtime: movie.runtime,
+        imageUrl: updatedMovie.imageUrl ?? "",
       });
 
       toast.success("Form edited successfully", {});
-      //router.push(`/posts/${updatedPost.id}/edit`)
+      router.push(`/admin/movies/${updatedMovie.id}`);
+      router.refresh();
     },
   });
 
-  return (
-    <>
-      <form
-        method="POST"
-        onSubmit={(e) => {
-          e.preventDefault();
-          form.handleSubmit();
-        }}
-        className="space-y-4"
-      >
-        <FieldGroup>
-          <form.Field name="title">
-            {(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid;
+ return (
+    <form
+      method="POST"
+      onSubmit={(e) => {
+        e.preventDefault();
+        form.handleSubmit();
+      }}
+      className="space-y-4"
+    >
+      <FieldGroup>
+        <form.Field name="title">
+          {(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
 
-              return (
-                <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor={field.name}>Title</FieldLabel>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    aria-invalid={isInvalid}
-                  />
-                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                </Field>
-              );
-            }}
-          </form.Field>
-
-          <form.Field name="description">
-            {(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid;
-
-              return (
-                <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor={field.name}>Description</FieldLabel>
-                  <Textarea
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    aria-invalid={isInvalid}
-                    className="h-35"
-                  />
-                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                </Field>
-              );
-            }}
-          </form.Field>
-
-          <form.Field name="price">
-            {(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid;
-
-              return (
-                <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor={field.name}>Price</FieldLabel>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    type={"text"}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    aria-invalid={isInvalid}
-                  />
-                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                </Field>
-              );
-            }}
-          </form.Field>
-
-          <form.Field name="releaseYear">
-            {(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid;
-
-              return (
-                <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor={field.name}>Release year</FieldLabel>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(Number(e.target.value))}
-                    aria-invalid={isInvalid}
-                  />
-                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                </Field>
-              );
-            }}
-          </form.Field>
-
-          <form.Field name="stock">
-            {(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid;
-
-              return (
-                <Field data-invalid={isInvalid} orientation="horizontal">
-                  <Switch
-                    id={field.name}
-                    name={field.name}
-                    checked={field.state.value}
-                    onCheckedChange={(checked) => {
-                      field.handleChange(checked);
-                    }}
-                    onBlur={field.handleBlur}
-                    aria-invalid={isInvalid}
-                  />
-
-                  <FieldLabel htmlFor={field.name}>In stock</FieldLabel>
-                </Field>
-              );
-            }}
-          </form.Field>
-
-          <form.Field name="runtime">
-            {(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid;
-
-              return (
-                <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor={field.name}>Runtime</FieldLabel>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(Number(e.target.value))}
-                    aria-invalid={isInvalid}
-                  />
-                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                </Field>
-              );
-            }}
-          </form.Field>
-
-          <FieldSeparator />
-          <form.Subscribe selector={(state) => [state.isSubmitting] as const}>
-            {([isSubmitting]) => (
-              <Field orientation="horizontal">
-                <Button
-                  type="reset"
-                  disabled={isSubmitting}
-                  onClick={(ev) => {
-                    ev.preventDefault();
-                    form.reset();
-                  }}
-                  variant="outline"
-                >
-                  Reset
-                </Button>
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? <Spinner /> : <Save />}
-                  Save Movie
-                </Button>
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Title</FieldLabel>
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
-            )}
-          </form.Subscribe>
-        </FieldGroup>
+            );
+          }}
+        </form.Field>
 
-        {/* <div className="flex justify-end gap-2">
-          <Button type="submit" disabled={loading}>
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {loading ? "Creating..." : "Create Movie"}
-          </Button>
-        </div> */}
-      </form>
-    </>
+        <form.Field name="description">
+          {(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Description</FieldLabel>
+                <Textarea
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
+                  className="h-35"
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
+          }}
+        </form.Field>
+
+        <form.Field name="price">
+          {(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Price</FieldLabel>
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  type="text"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
+          }}
+        </form.Field>
+
+        <form.Field name="imageUrl">
+          {(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Image URL</FieldLabel>
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  type="text"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
+          }}
+        </form.Field>
+
+        <form.Field name="releaseYear">
+          {(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Release year</FieldLabel>
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  type="number"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(Number(e.target.value))}
+                  aria-invalid={isInvalid}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
+          }}
+        </form.Field>
+
+        <form.Field name="runtime">
+          {(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Runtime</FieldLabel>
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  type="number"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(Number(e.target.value))}
+                  aria-invalid={isInvalid}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
+          }}
+        </form.Field>
+
+        <form.Field name="stock">
+          {(field) => (
+            <Field orientation="horizontal">
+              <Switch
+                id={field.name}
+                name={field.name}
+                checked={field.state.value}
+                onCheckedChange={(checked) => field.handleChange(checked)}
+                onBlur={field.handleBlur}
+              />
+
+              <FieldLabel htmlFor={field.name}>In stock</FieldLabel>
+            </Field>
+          )}
+        </form.Field>
+
+        <FieldSeparator />
+
+        <form.Subscribe selector={(state) => state.isSubmitting}>
+          {(isSubmitting) => (
+            <Field orientation="horizontal">
+              <Button
+                type="reset"
+                disabled={isSubmitting}
+                onClick={(e) => {
+                  e.preventDefault();
+                  form.reset();
+                }}
+                variant="outline"
+              >
+                Reset
+              </Button>
+
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? <Spinner /> : <Save />}
+                Save Movie
+              </Button>
+            </Field>
+          )}
+        </form.Subscribe>
+      </FieldGroup>
+    </form>
   );
 }
 
