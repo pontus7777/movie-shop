@@ -1,22 +1,24 @@
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
-import './globals.css';
-import { cn } from '@/lib/utils';
-import { ThemeProvider } from '@/components/theme-provider';
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@/components/theme-provider";
+import Header from '@/components/ui/header';
+import Footer from '@/components/ui/footer';
 
 const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: 'Movie Shop App',
-  description: 'Shop made by group Charlie',
+  title: "Movie Shop App",
+  description: "Shop made by group Charlie",
 };
 
 export default function RootLayout({
@@ -31,12 +33,18 @@ export default function RootLayout({
       className={cn(
         geistSans.variable,
         geistMono.variable,
-        'antialiased',
-        'h-full',
+        "antialiased",
+        "h-full",
       )}
     >
       <body className="min-h-full flex flex-col">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <Header />
+
+          <main className="flex-1">{children}</main>
+
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

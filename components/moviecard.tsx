@@ -1,7 +1,6 @@
 import Image from "next/image";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
 import { Button } from "@/components/ui/button";
 
 export type Movie = {
@@ -11,6 +10,9 @@ export type Movie = {
   imageUrl: string;
   genre: string;
 };
+
+
+
 
 type Props = {
   movie: Movie;
