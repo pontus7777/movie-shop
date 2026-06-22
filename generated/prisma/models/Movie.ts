@@ -50,6 +50,8 @@ export type MovieMinAggregateOutputType = {
   stock: boolean | null
   runtime: number | null
   genreId: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type MovieMaxAggregateOutputType = {
@@ -62,6 +64,8 @@ export type MovieMaxAggregateOutputType = {
   stock: boolean | null
   runtime: number | null
   genreId: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type MovieCountAggregateOutputType = {
@@ -74,6 +78,8 @@ export type MovieCountAggregateOutputType = {
   stock: number
   runtime: number
   genreId: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -102,6 +108,8 @@ export type MovieMinAggregateInputType = {
   stock?: true
   runtime?: true
   genreId?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type MovieMaxAggregateInputType = {
@@ -114,6 +122,8 @@ export type MovieMaxAggregateInputType = {
   stock?: true
   runtime?: true
   genreId?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type MovieCountAggregateInputType = {
@@ -126,6 +136,8 @@ export type MovieCountAggregateInputType = {
   stock?: true
   runtime?: true
   genreId?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -225,6 +237,8 @@ export type MovieGroupByOutputType = {
   stock: boolean
   runtime: number
   genreId: number | null
+  createdAt: Date
+  updatedAt: Date
   _count: MovieCountAggregateOutputType | null
   _avg: MovieAvgAggregateOutputType | null
   _sum: MovieSumAggregateOutputType | null
@@ -260,6 +274,8 @@ export type MovieWhereInput = {
   stock?: Prisma.BoolFilter<"Movie"> | boolean
   runtime?: Prisma.IntFilter<"Movie"> | number
   genreId?: Prisma.IntNullableFilter<"Movie"> | number | null
+  createdAt?: Prisma.DateTimeFilter<"Movie"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Movie"> | Date | string
   actors?: Prisma.ActorListRelationFilter
   directors?: Prisma.DirectorListRelationFilter
   genre?: Prisma.XOR<Prisma.GenreNullableScalarRelationFilter, Prisma.GenreWhereInput> | null
@@ -277,6 +293,8 @@ export type MovieOrderByWithRelationInput = {
   stock?: Prisma.SortOrder
   runtime?: Prisma.SortOrder
   genreId?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   actors?: Prisma.ActorOrderByRelationAggregateInput
   directors?: Prisma.DirectorOrderByRelationAggregateInput
   genre?: Prisma.GenreOrderByWithRelationInput
@@ -297,6 +315,8 @@ export type MovieWhereUniqueInput = Prisma.AtLeast<{
   stock?: Prisma.BoolFilter<"Movie"> | boolean
   runtime?: Prisma.IntFilter<"Movie"> | number
   genreId?: Prisma.IntNullableFilter<"Movie"> | number | null
+  createdAt?: Prisma.DateTimeFilter<"Movie"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Movie"> | Date | string
   actors?: Prisma.ActorListRelationFilter
   directors?: Prisma.DirectorListRelationFilter
   genre?: Prisma.XOR<Prisma.GenreNullableScalarRelationFilter, Prisma.GenreWhereInput> | null
@@ -314,6 +334,8 @@ export type MovieOrderByWithAggregationInput = {
   stock?: Prisma.SortOrder
   runtime?: Prisma.SortOrder
   genreId?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.MovieCountOrderByAggregateInput
   _avg?: Prisma.MovieAvgOrderByAggregateInput
   _max?: Prisma.MovieMaxOrderByAggregateInput
@@ -334,6 +356,8 @@ export type MovieScalarWhereWithAggregatesInput = {
   stock?: Prisma.BoolWithAggregatesFilter<"Movie"> | boolean
   runtime?: Prisma.IntWithAggregatesFilter<"Movie"> | number
   genreId?: Prisma.IntNullableWithAggregatesFilter<"Movie"> | number | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Movie"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Movie"> | Date | string
 }
 
 export type MovieCreateInput = {
@@ -345,6 +369,8 @@ export type MovieCreateInput = {
   imageUrl?: string | null
   stock: boolean
   runtime: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   actors?: Prisma.ActorCreateNestedManyWithoutMoviesInput
   directors?: Prisma.DirectorCreateNestedManyWithoutMoviesInput
   genre?: Prisma.GenreCreateNestedOneWithoutMoviesInput
@@ -362,6 +388,8 @@ export type MovieUncheckedCreateInput = {
   stock: boolean
   runtime: number
   genreId?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutMoviesInput
   directors?: Prisma.DirectorUncheckedCreateNestedManyWithoutMoviesInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutMovieInput
@@ -377,6 +405,8 @@ export type MovieUpdateInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
   runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actors?: Prisma.ActorUpdateManyWithoutMoviesNestedInput
   directors?: Prisma.DirectorUpdateManyWithoutMoviesNestedInput
   genre?: Prisma.GenreUpdateOneWithoutMoviesNestedInput
@@ -394,6 +424,8 @@ export type MovieUncheckedUpdateInput = {
   stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
   runtime?: Prisma.IntFieldUpdateOperationsInput | number
   genreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actors?: Prisma.ActorUncheckedUpdateManyWithoutMoviesNestedInput
   directors?: Prisma.DirectorUncheckedUpdateManyWithoutMoviesNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutMovieNestedInput
@@ -410,6 +442,8 @@ export type MovieCreateManyInput = {
   stock: boolean
   runtime: number
   genreId?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type MovieUpdateManyMutationInput = {
@@ -421,6 +455,8 @@ export type MovieUpdateManyMutationInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
   runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MovieUncheckedUpdateManyInput = {
@@ -433,6 +469,8 @@ export type MovieUncheckedUpdateManyInput = {
   stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
   runtime?: Prisma.IntFieldUpdateOperationsInput | number
   genreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MovieCountOrderByAggregateInput = {
@@ -445,6 +483,8 @@ export type MovieCountOrderByAggregateInput = {
   stock?: Prisma.SortOrder
   runtime?: Prisma.SortOrder
   genreId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type MovieAvgOrderByAggregateInput = {
@@ -464,6 +504,8 @@ export type MovieMaxOrderByAggregateInput = {
   stock?: Prisma.SortOrder
   runtime?: Prisma.SortOrder
   genreId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type MovieMinOrderByAggregateInput = {
@@ -476,6 +518,8 @@ export type MovieMinOrderByAggregateInput = {
   stock?: Prisma.SortOrder
   runtime?: Prisma.SortOrder
   genreId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type MovieSumOrderByAggregateInput = {
@@ -679,6 +723,8 @@ export type MovieCreateWithoutActorsInput = {
   imageUrl?: string | null
   stock: boolean
   runtime: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   directors?: Prisma.DirectorCreateNestedManyWithoutMoviesInput
   genre?: Prisma.GenreCreateNestedOneWithoutMoviesInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutMovieInput
@@ -695,6 +741,8 @@ export type MovieUncheckedCreateWithoutActorsInput = {
   stock: boolean
   runtime: number
   genreId?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   directors?: Prisma.DirectorUncheckedCreateNestedManyWithoutMoviesInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutMovieInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutMovieInput
@@ -734,6 +782,8 @@ export type MovieScalarWhereInput = {
   stock?: Prisma.BoolFilter<"Movie"> | boolean
   runtime?: Prisma.IntFilter<"Movie"> | number
   genreId?: Prisma.IntNullableFilter<"Movie"> | number | null
+  createdAt?: Prisma.DateTimeFilter<"Movie"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Movie"> | Date | string
 }
 
 export type MovieCreateWithoutDirectorsInput = {
@@ -745,6 +795,8 @@ export type MovieCreateWithoutDirectorsInput = {
   imageUrl?: string | null
   stock: boolean
   runtime: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   actors?: Prisma.ActorCreateNestedManyWithoutMoviesInput
   genre?: Prisma.GenreCreateNestedOneWithoutMoviesInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutMovieInput
@@ -761,6 +813,8 @@ export type MovieUncheckedCreateWithoutDirectorsInput = {
   stock: boolean
   runtime: number
   genreId?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutMoviesInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutMovieInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutMovieInput
@@ -796,6 +850,8 @@ export type MovieCreateWithoutGenreInput = {
   imageUrl?: string | null
   stock: boolean
   runtime: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   actors?: Prisma.ActorCreateNestedManyWithoutMoviesInput
   directors?: Prisma.DirectorCreateNestedManyWithoutMoviesInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutMovieInput
@@ -811,6 +867,8 @@ export type MovieUncheckedCreateWithoutGenreInput = {
   imageUrl?: string | null
   stock: boolean
   runtime: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutMoviesInput
   directors?: Prisma.DirectorUncheckedCreateNestedManyWithoutMoviesInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutMovieInput
@@ -852,6 +910,8 @@ export type MovieCreateWithoutOrderItemsInput = {
   imageUrl?: string | null
   stock: boolean
   runtime: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   actors?: Prisma.ActorCreateNestedManyWithoutMoviesInput
   directors?: Prisma.DirectorCreateNestedManyWithoutMoviesInput
   genre?: Prisma.GenreCreateNestedOneWithoutMoviesInput
@@ -868,6 +928,8 @@ export type MovieUncheckedCreateWithoutOrderItemsInput = {
   stock: boolean
   runtime: number
   genreId?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutMoviesInput
   directors?: Prisma.DirectorUncheckedCreateNestedManyWithoutMoviesInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutMovieInput
@@ -898,6 +960,8 @@ export type MovieUpdateWithoutOrderItemsInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
   runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actors?: Prisma.ActorUpdateManyWithoutMoviesNestedInput
   directors?: Prisma.DirectorUpdateManyWithoutMoviesNestedInput
   genre?: Prisma.GenreUpdateOneWithoutMoviesNestedInput
@@ -914,6 +978,8 @@ export type MovieUncheckedUpdateWithoutOrderItemsInput = {
   stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
   runtime?: Prisma.IntFieldUpdateOperationsInput | number
   genreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actors?: Prisma.ActorUncheckedUpdateManyWithoutMoviesNestedInput
   directors?: Prisma.DirectorUncheckedUpdateManyWithoutMoviesNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutMovieNestedInput
@@ -928,6 +994,8 @@ export type MovieCreateWithoutCartItemsInput = {
   imageUrl?: string | null
   stock: boolean
   runtime: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   actors?: Prisma.ActorCreateNestedManyWithoutMoviesInput
   directors?: Prisma.DirectorCreateNestedManyWithoutMoviesInput
   genre?: Prisma.GenreCreateNestedOneWithoutMoviesInput
@@ -944,6 +1012,8 @@ export type MovieUncheckedCreateWithoutCartItemsInput = {
   stock: boolean
   runtime: number
   genreId?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutMoviesInput
   directors?: Prisma.DirectorUncheckedCreateNestedManyWithoutMoviesInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutMovieInput
@@ -974,6 +1044,8 @@ export type MovieUpdateWithoutCartItemsInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
   runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actors?: Prisma.ActorUpdateManyWithoutMoviesNestedInput
   directors?: Prisma.DirectorUpdateManyWithoutMoviesNestedInput
   genre?: Prisma.GenreUpdateOneWithoutMoviesNestedInput
@@ -990,6 +1062,8 @@ export type MovieUncheckedUpdateWithoutCartItemsInput = {
   stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
   runtime?: Prisma.IntFieldUpdateOperationsInput | number
   genreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actors?: Prisma.ActorUncheckedUpdateManyWithoutMoviesNestedInput
   directors?: Prisma.DirectorUncheckedUpdateManyWithoutMoviesNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutMovieNestedInput
@@ -1004,6 +1078,8 @@ export type MovieUpdateWithoutActorsInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
   runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   directors?: Prisma.DirectorUpdateManyWithoutMoviesNestedInput
   genre?: Prisma.GenreUpdateOneWithoutMoviesNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutMovieNestedInput
@@ -1020,6 +1096,8 @@ export type MovieUncheckedUpdateWithoutActorsInput = {
   stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
   runtime?: Prisma.IntFieldUpdateOperationsInput | number
   genreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   directors?: Prisma.DirectorUncheckedUpdateManyWithoutMoviesNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutMovieNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutMovieNestedInput
@@ -1035,6 +1113,8 @@ export type MovieUncheckedUpdateManyWithoutActorsInput = {
   stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
   runtime?: Prisma.IntFieldUpdateOperationsInput | number
   genreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MovieUpdateWithoutDirectorsInput = {
@@ -1046,6 +1126,8 @@ export type MovieUpdateWithoutDirectorsInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
   runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actors?: Prisma.ActorUpdateManyWithoutMoviesNestedInput
   genre?: Prisma.GenreUpdateOneWithoutMoviesNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutMovieNestedInput
@@ -1062,6 +1144,8 @@ export type MovieUncheckedUpdateWithoutDirectorsInput = {
   stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
   runtime?: Prisma.IntFieldUpdateOperationsInput | number
   genreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actors?: Prisma.ActorUncheckedUpdateManyWithoutMoviesNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutMovieNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutMovieNestedInput
@@ -1077,6 +1161,8 @@ export type MovieUncheckedUpdateManyWithoutDirectorsInput = {
   stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
   runtime?: Prisma.IntFieldUpdateOperationsInput | number
   genreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MovieCreateManyGenreInput = {
@@ -1088,6 +1174,8 @@ export type MovieCreateManyGenreInput = {
   imageUrl?: string | null
   stock: boolean
   runtime: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type MovieUpdateWithoutGenreInput = {
@@ -1099,6 +1187,8 @@ export type MovieUpdateWithoutGenreInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
   runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actors?: Prisma.ActorUpdateManyWithoutMoviesNestedInput
   directors?: Prisma.DirectorUpdateManyWithoutMoviesNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutMovieNestedInput
@@ -1114,6 +1204,8 @@ export type MovieUncheckedUpdateWithoutGenreInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
   runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   actors?: Prisma.ActorUncheckedUpdateManyWithoutMoviesNestedInput
   directors?: Prisma.DirectorUncheckedUpdateManyWithoutMoviesNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutMovieNestedInput
@@ -1129,6 +1221,8 @@ export type MovieUncheckedUpdateManyWithoutGenreInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.BoolFieldUpdateOperationsInput | boolean
   runtime?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -1199,6 +1293,8 @@ export type MovieSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   stock?: boolean
   runtime?: boolean
   genreId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   actors?: boolean | Prisma.Movie$actorsArgs<ExtArgs>
   directors?: boolean | Prisma.Movie$directorsArgs<ExtArgs>
   genre?: boolean | Prisma.Movie$genreArgs<ExtArgs>
@@ -1217,6 +1313,8 @@ export type MovieSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   stock?: boolean
   runtime?: boolean
   genreId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   genre?: boolean | Prisma.Movie$genreArgs<ExtArgs>
 }, ExtArgs["result"]["movie"]>
 
@@ -1230,6 +1328,8 @@ export type MovieSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   stock?: boolean
   runtime?: boolean
   genreId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   genre?: boolean | Prisma.Movie$genreArgs<ExtArgs>
 }, ExtArgs["result"]["movie"]>
 
@@ -1243,9 +1343,11 @@ export type MovieSelectScalar = {
   stock?: boolean
   runtime?: boolean
   genreId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type MovieOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "price" | "releaseYear" | "imageUrl" | "stock" | "runtime" | "genreId", ExtArgs["result"]["movie"]>
+export type MovieOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "price" | "releaseYear" | "imageUrl" | "stock" | "runtime" | "genreId" | "createdAt" | "updatedAt", ExtArgs["result"]["movie"]>
 export type MovieInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   actors?: boolean | Prisma.Movie$actorsArgs<ExtArgs>
   directors?: boolean | Prisma.Movie$directorsArgs<ExtArgs>
@@ -1280,6 +1382,8 @@ export type $MoviePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     stock: boolean
     runtime: number
     genreId: number | null
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["movie"]>
   composites: {}
 }
@@ -1717,6 +1821,8 @@ export interface MovieFieldRefs {
   readonly stock: Prisma.FieldRef<"Movie", 'Boolean'>
   readonly runtime: Prisma.FieldRef<"Movie", 'Int'>
   readonly genreId: Prisma.FieldRef<"Movie", 'Int'>
+  readonly createdAt: Prisma.FieldRef<"Movie", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Movie", 'DateTime'>
 }
     
 

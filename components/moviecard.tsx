@@ -15,6 +15,7 @@ export type Movie = {
   genreId: number | null;
   createdAt: Date;
   updatedAt: Date;
+  //Maybe no need for this , but it's ok to use it in admin sites!
   genre: {
     id: number;
     name: string;
