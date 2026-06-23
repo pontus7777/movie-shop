@@ -13,7 +13,9 @@ npx prisma migrate dev
 ```bash
 npx prisma generate
 ```
-
+```bash
+npx prisma db seed
+```
 ---
 
 Run the development server:

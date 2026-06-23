@@ -11,11 +11,11 @@ const prisma = new PrismaClient({
 });
 
 export async function main() {
-  // Genres
   const sciFi = await prisma.genre.upsert({
     where: { id: 1 },
     update: {},
     create: {
+      id: 1,
       name: "Science Fiction",
       description: "Movies featuring futuristic technology and science.",
     },
@@ -25,74 +25,96 @@ export async function main() {
     where: { id: 2 },
     update: {},
     create: {
+      id: 2,
       name: "Action",
       description: "Fast-paced movies with thrilling sequences.",
     },
   });
-  // Actors
-  const keanu = await prisma.actor
-    .create({
-      data: { name: "Keanu Reeves" },
-    })
-    .catch(() =>
-      prisma.actor.findFirstOrThrow({ where: { name: "Keanu Reeves" } }),
-    );
-  const carrie = await prisma.actor
-    .create({
-      data: { name: "Carrie-Anne Moss" },
-    })
-    .catch(() =>
-      prisma.actor.findFirstOrThrow({ where: { name: "Carrie-Anne Moss" } }),
-    );
-  const leo = await prisma.actor
-    .create({
-      data: { name: "Leonardo DiCaprio" },
-    })
-    .catch(() =>
-      prisma.actor.findFirstOrThrow({ where: { name: "Leonardo DiCaprio" } }),
-    );
-  const joseph = await prisma.actor
-    .create({
-      data: {
-        name: "Joseph Gordon-Levitt",
+
+  const keanu = await prisma.actor.upsert({
+    where: { id: "actor-keanu-reeves" },
+    update: {},
+    create: {
+      id: "actor-keanu-reeves",
+      name: "Keanu Reeves",
+    },
+  });
+
+  const carrie = await prisma.actor.upsert({
+    where: { id: "actor-carrie-anne-moss" },
+    update: {},
+    create: {
+      id: "actor-carrie-anne-moss",
+      name: "Carrie-Anne Moss",
+    },
+  });
+
+  const leo = await prisma.actor.upsert({
+    where: { id: "actor-leonardo-dicaprio" },
+    update: {},
+    create: {
+      id: "actor-leonardo-dicaprio",
+      name: "Leonardo DiCaprio",
+    },
+  });
+
+  const joseph = await prisma.actor.upsert({
+    where: { id: "actor-joseph-gordon-levitt" },
+    update: {},
+    create: {
+      id: "actor-joseph-gordon-levitt",
+      name: "Joseph Gordon-Levitt",
+    },
+  });
+
+  const lana = await prisma.director.upsert({
+    where: { id: "director-lana-wachowski" },
+    update: {},
+    create: {
+      id: "director-lana-wachowski",
+      name: "Lana Wachowski",
+    },
+  });
+
+  const lilly = await prisma.director.upsert({
+    where: { id: "director-lilly-wachowski" },
+    update: {},
+    create: {
+      id: "director-lilly-wachowski",
+      name: "Lilly Wachowski",
+    },
+  });
+
+  const nolan = await prisma.director.upsert({
+    where: { id: "director-christopher-nolan" },
+    update: {},
+    create: {
+      id: "director-christopher-nolan",
+      name: "Christopher Nolan",
+    },
+  });
+
+  await prisma.movie.upsert({
+    where: { id: "movie-the-matrix" },
+    update: {
+      title: "The Matrix",
+      description:
+        "A hacker discovers reality is a simulation and joins the resistance.",
+      price: new Prisma.Decimal(14.99),
+      releaseYear: 1999,
+      imageUrl: "https://picsum.photos/400/600?random=1",
+      stock: true,
+      runtime: 136,
+      genreId: sciFi.id,
+      actors: {
+        set: [{ id: keanu.id }, { id: carrie.id }],
       },
-    })
-    .catch(() =>
-      prisma.actor.findFirstOrThrow({
-        where: { name: "Joseph Gordon-Levitt" },
-      }),
-    );
-
-  // Directors
-  const lana = await prisma.director
-    .create({
-      data: { name: "Lana Wachowski" },
-    })
-    .catch(() =>
-      prisma.director.findFirstOrThrow({ where: { name: "Lana Wachowski" } }),
-    );
-
-  const lilly = await prisma.director
-    .create({
-      data: { name: "Lilly Wachowski" },
-    })
-    .catch(() =>
-      prisma.director.findFirstOrThrow({ where: { name: "Lilly Wachowski" } }),
-    );
-
-  const nolan = await prisma.director
-    .create({
-      data: { name: "Christopher Nolan" },
-    })
-    .catch(() =>
-      prisma.director.findFirstOrThrow({
-        where: { name: "Christopher Nolan" },
-      }),
-    );
-
-  // Movies
-  await prisma.movie.create({
-    data: {
+      directors: {
+        set: [{ id: lana.id }, { id: lilly.id }],
+      },
+    },
+    create: {
+      id: "movie-the-matrix",
       title: "The Matrix",
       description:
         "A hacker discovers reality is a simulation and joins the resistance.",
@@ -102,13 +124,36 @@ export async function main() {
       stock: true,
       runtime: 136,
       genre: { connect: { id: sciFi.id } },
-      actors: { connect: [{ id: keanu.id }, { id: carrie.id }] },
-      directors: { connect: [{ id: lana.id }, { id: lilly.id }] },
+      actors: {
+        connect: [{ id: keanu.id }, { id: carrie.id }],
+      },
+      directors: {
+        connect: [{ id: lana.id }, { id: lilly.id }],
+      },
     },
   });
 
-  await prisma.movie.create({
-    data: {
+  await prisma.movie.upsert({
+    where: { id: "movie-inception" },
+    update: {
+      title: "Inception",
+      description:
+        "A skilled thief enters dreams to steal secrets from targets.",
+      price: new Prisma.Decimal(16.99),
+      releaseYear: 2010,
+      imageUrl: "https://picsum.photos/400/600?random=2",
+      stock: true,
+      runtime: 148,
+      genreId: sciFi.id,
+      actors: {
+        set: [{ id: leo.id }, { id: joseph.id }],
+      },
+      directors: {
+        set: [{ id: nolan.id }],
+      },
+    },
+    create: {
+      id: "movie-inception",
       title: "Inception",
       description:
         "A skilled thief enters dreams to steal secrets from targets.",
@@ -118,10 +163,16 @@ export async function main() {
       stock: true,
       runtime: 148,
       genre: { connect: { id: sciFi.id } },
-      actors: { connect: [{ id: leo.id }, { id: joseph.id }] },
-      directors: { connect: [{ id: nolan.id }] },
+      actors: {
+        connect: [{ id: leo.id }, { id: joseph.id }],
+      },
+      directors: {
+        connect: [{ id: nolan.id }],
+      },
     },
   });
+
+  console.log("Seed finished");
 }
 
 main()
