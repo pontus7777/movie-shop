@@ -1,11 +1,6 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { CreateMovieForm } from "./_components/create-movie-form";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+
+import { CreateMovieForm } from './_components/create-movie-form'
 
 export default function CreateMoviePage() {
   return (
@@ -21,5 +16,5 @@ export default function CreateMoviePage() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

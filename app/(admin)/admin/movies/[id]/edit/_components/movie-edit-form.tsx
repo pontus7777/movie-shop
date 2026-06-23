@@ -1,55 +1,47 @@
-"use client";
-import { useRouter } from "next/navigation";
-import { z } from "zod";
-import { useForm } from "@tanstack/react-form";
-import { toast } from "sonner";
-import { useState } from "react";
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldSeparator,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Loader2, Save } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Switch } from "@/components/ui/switch";
-import { Decimal } from "@prisma/client/runtime/client";
-import { editMovie } from "../../../_actions/edit-movie-action";
-import { Spinner } from "@/components/ui/spinner";
+'use client'
+
+import { useForm } from '@tanstack/react-form'
+import { Save } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { z } from 'zod'
+
+import { Button } from '@/components/ui/button'
+import { Field, FieldError, FieldGroup, FieldLabel, FieldSeparator } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
+import { Spinner } from '@/components/ui/spinner'
+import { Switch } from '@/components/ui/switch'
+import { Textarea } from '@/components/ui/textarea'
+
+import { editMovie } from '../../../_actions/edit-movie-action'
 
 const formSchema = z.object({
-  title: z
-    .string()
-    .min(1, "Title is required")
-    .max(32, "Title must be less than 32 characters"),
-  description: z.string().min(1, "Description is required").max(1000),
+  title: z.string().min(1, 'Title is required').max(32, 'Title must be less than 32 characters'),
+  description: z.string().min(1, 'Description is required').max(1000),
   price: z.string().regex(/^\d+(\.\d{1,2})?$/),
   releaseYear: z.number().min(0).max(9999),
   stock: z.boolean(),
   runtime: z.number().min(10),
   imageUrl: z.string(),
-});
+})
 
 type Props = {
   movie: {
-    id: string;
-    title: string;
-    description: string;
-    price: string;
-    releaseYear: number;
-    stock: boolean;
-    runtime: number;
-    imageUrl: string | null;
-  };
-};
+    id: string
+    title: string
+    description: string
+    price: string
+    releaseYear: number
+    stock: boolean
+    runtime: number
+    imageUrl: string | null
+  }
+}
 
 function EditMovieForm({ movie }: Props) {
-   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
 
   const form = useForm({
     defaultValues: {
@@ -59,7 +51,7 @@ function EditMovieForm({ movie }: Props) {
       releaseYear: movie.releaseYear,
       stock: movie.stock,
       runtime: movie.runtime,
-      imageUrl: movie.imageUrl ?? "",
+      imageUrl: movie.imageUrl ?? '',
     },
     validators: {
       onSubmit: formSchema,
@@ -67,12 +59,12 @@ function EditMovieForm({ movie }: Props) {
     },
 
     onSubmit: async ({ value, formApi }) => {
-      setLoading(true);
+      setLoading(true)
 
       const updatedMovie = await editMovie({
         ...value,
         id: movie.id,
-      });
+      })
 
       formApi.reset({
         title: updatedMovie.title,
@@ -81,29 +73,28 @@ function EditMovieForm({ movie }: Props) {
         releaseYear: movie.releaseYear,
         stock: movie.stock,
         runtime: movie.runtime,
-        imageUrl: updatedMovie.imageUrl ?? "",
-      });
+        imageUrl: updatedMovie.imageUrl ?? '',
+      })
 
-      toast.success("Form edited successfully", {});
-      router.push(`/admin/movies/${updatedMovie.id}`);
-      router.refresh();
+      toast.success('Form edited successfully', {})
+      router.push(`/admin/movies/${updatedMovie.id}`)
+      router.refresh()
     },
-  });
+  })
 
- return (
+  return (
     <form
       method="POST"
       onSubmit={(e) => {
-        e.preventDefault();
-        form.handleSubmit();
+        e.preventDefault()
+        form.handleSubmit()
       }}
       className="space-y-4"
     >
       <FieldGroup>
         <form.Field name="title">
           {(field) => {
-            const isInvalid =
-              field.state.meta.isTouched && !field.state.meta.isValid;
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
 
             return (
               <Field data-invalid={isInvalid}>
@@ -118,14 +109,13 @@ function EditMovieForm({ movie }: Props) {
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
-            );
+            )
           }}
         </form.Field>
 
         <form.Field name="description">
           {(field) => {
-            const isInvalid =
-              field.state.meta.isTouched && !field.state.meta.isValid;
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
 
             return (
               <Field data-invalid={isInvalid}>
@@ -141,14 +131,13 @@ function EditMovieForm({ movie }: Props) {
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
-            );
+            )
           }}
         </form.Field>
 
         <form.Field name="price">
           {(field) => {
-            const isInvalid =
-              field.state.meta.isTouched && !field.state.meta.isValid;
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
 
             return (
               <Field data-invalid={isInvalid}>
@@ -164,14 +153,13 @@ function EditMovieForm({ movie }: Props) {
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
-            );
+            )
           }}
         </form.Field>
 
         <form.Field name="imageUrl">
           {(field) => {
-            const isInvalid =
-              field.state.meta.isTouched && !field.state.meta.isValid;
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
 
             return (
               <Field data-invalid={isInvalid}>
@@ -187,14 +175,13 @@ function EditMovieForm({ movie }: Props) {
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
-            );
+            )
           }}
         </form.Field>
 
         <form.Field name="releaseYear">
           {(field) => {
-            const isInvalid =
-              field.state.meta.isTouched && !field.state.meta.isValid;
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
 
             return (
               <Field data-invalid={isInvalid}>
@@ -210,14 +197,13 @@ function EditMovieForm({ movie }: Props) {
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
-            );
+            )
           }}
         </form.Field>
 
         <form.Field name="runtime">
           {(field) => {
-            const isInvalid =
-              field.state.meta.isTouched && !field.state.meta.isValid;
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
 
             return (
               <Field data-invalid={isInvalid}>
@@ -233,7 +219,7 @@ function EditMovieForm({ movie }: Props) {
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
-            );
+            )
           }}
         </form.Field>
 
@@ -262,8 +248,8 @@ function EditMovieForm({ movie }: Props) {
                 type="reset"
                 disabled={isSubmitting}
                 onClick={(e) => {
-                  e.preventDefault();
-                  form.reset();
+                  e.preventDefault()
+                  form.reset()
                 }}
                 variant="outline"
               >
@@ -279,7 +265,7 @@ function EditMovieForm({ movie }: Props) {
         </form.Subscribe>
       </FieldGroup>
     </form>
-  );
+  )
 }
 
-export { EditMovieForm };
+export { EditMovieForm }

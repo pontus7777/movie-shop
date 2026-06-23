@@ -1,9 +1,10 @@
-import { createAuthClient } from "better-auth/react";
-import { adminClient } from "better-auth/client/plugins";
-import { ac, admin, user, myCustomRole } from "@/lib/permissions";
+import { adminClient } from 'better-auth/client/plugins'
+import { createAuthClient } from 'better-auth/react'
+
+import { ac, admin, user, myCustomRole } from '@/lib/permissions'
 
 export const authClient = createAuthClient({
-  baseURL: process.env["BETTER_AUTH_URL"],
+  baseURL: process.env['BETTER_AUTH_URL'],
   plugins: [
     adminClient({
       ac,
@@ -14,4 +15,4 @@ export const authClient = createAuthClient({
       },
     }),
   ],
-});
+})

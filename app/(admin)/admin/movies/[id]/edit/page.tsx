@@ -1,20 +1,20 @@
-import prisma from "@/lib/prisma";
-import { notFound } from "next/navigation";
-import { EditMovieForm } from "./_components/movie-edit-form";
+import { notFound } from 'next/navigation'
 
-export default async function EditMoviePage(
-  props: PageProps<"/admin/movies/[id]/edit">,
-) {
-  const params = await props.params;
+import prisma from '@/lib/prisma'
+
+import { EditMovieForm } from './_components/movie-edit-form'
+
+export default async function EditMoviePage(props: PageProps<'/admin/movies/[id]/edit'>) {
+  const params = await props.params
 
   const movie = await prisma.movie.findUnique({
     where: {
       id: params.id,
     },
-  });
+  })
 
   if (!movie) {
-    notFound();
+    notFound()
   }
 
   return (
@@ -31,5 +31,5 @@ export default async function EditMoviePage(
         }}
       />
     </div>
-  );
+  )
 }
