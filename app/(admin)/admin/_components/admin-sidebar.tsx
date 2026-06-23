@@ -84,9 +84,9 @@ export function AdminSidebar() {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                isActive={pathname === '/admin/create'}
+                isActive={pathname === '/admin/movies/create'}
               >
-                <Link href={'/admin/create'}>Add Movie</Link>
+                <Link href={'/admin/movies/create'}>Add Movie</Link>
               </SidebarMenuButton>
               <SidebarMenuBadge>
                 <Plus />
