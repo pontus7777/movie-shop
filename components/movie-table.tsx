@@ -1,34 +1,45 @@
 "use client"
 
-import { Movie } from "@/generated/prisma/client"
+import { Movie, Prisma } from "@/generated/prisma/client"
 import { Button } from "./ui/button"
 import Link from "next/link"
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "./ui/table"
 import { Avatar, AvatarImage } from "./ui/avatar"
 import { MoveRight } from "lucide-react"
 import { Field, FieldLabel } from "./ui/field"
+import placeHolder from '@/public/file.svg'
+import { getMovieImageSrc } from "@/lib/image-utils";
+
+type MovieWithRelations = Prisma.MovieGetPayload<{
+  include: {
+    genre: true;
+    actors: true;
+    directors: true;
+  };
+}>;
 
 type Props = {
-  movies: Movie[]
+  movies: MovieWithRelations[]
 //   page: number
 //   pageSize: number
 //   totalPages: number
 }
 function MovieTable({movies}:Props){
+
       return (
     <div className="rounded-xl border bg-card p-6 shadow-sm">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Book Collection</h2>
+          <h2 className="text-2xl font-bold">Movie</h2>
           <p className="text-muted-foreground">
-            Manage your books and their details
+            Manage movies!
           </p>
         </div>
         <Button
           asChild
           className="bg-emerald-750 border-emerald-500 text-emerald-600 hover:bg-emerald-700 hover:text-emerald-100"
         >
-          <Link href="/admin/movies/create">Add Book</Link>
+          <Link href="/admin/movies/create">Add Movie</Link>
         </Button>
       </div>
 
@@ -57,29 +68,27 @@ function MovieTable({movies}:Props){
           </TableRow>
         </TableHeader>
         <TableBody>
-          {movies.map((movie) => (
+          {movies.map((movie) => {
+            const imageSrc = getMovieImageSrc(movie.imageUrl);
+            return(
             <TableRow key={movie.id}>
               <TableCell>
                 <Avatar>
                   <AvatarImage
-                    src={movie.imageUrl ?? "placeHolder"} 
-                    alt="@shadcn"
+                    src={movie.imageUrl  || placeHolder.src} 
+                    alt={movie.title}
                     className="grayscale"
                   />
                 </Avatar>
               </TableCell>
               <TableCell className="font-medium">{movie.title}</TableCell>
               <TableCell>{movie.genre?.name ?? 'No genre'}</TableCell>
-              <TableCell>
-                 
-              </TableCell>
-
-              <TableCell>movie</TableCell>
+              <TableCell>{Number(movie.price)} kr</TableCell>
+              <TableCell>{movie.releaseYear}</TableCell>
 
               <TableCell className="text-right">
                 <Button
                   asChild
-                  className="border-blue-900 text-blue-700 hover:bg-blue-900 hover:text-blue-100"
                   variant="secondary"
                 >
                   <Link href={`/admin/movies/${movie.id}`}>
@@ -89,7 +98,8 @@ function MovieTable({movies}:Props){
                 </Button>
               </TableCell>
             </TableRow>
-          ))}
+          );
+        })}
         </TableBody>
 
      
