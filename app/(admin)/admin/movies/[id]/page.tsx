@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
+import { DeleteMovieBtn } from './_components/delete-movie-btn'
 
 export default async function MovieDetailsPage(props: PageProps<'/admin/movies/[id]'>) {
   const params = await props.params
@@ -36,12 +37,26 @@ export default async function MovieDetailsPage(props: PageProps<'/admin/movies/[
           <p className="text-muted-foreground">{movie.genre?.name ?? 'No genre'}</p>
         </div>
 
-        <Button variant="secondary" asChild>
-          <Link href={`/admin/movies/${movie.id}/edit`}>
-            <Edit />
-            Edit
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="secondary" asChild>
+            <Link href={`/admin/movies/${movie.id}/edit`}>
+              <Edit />
+              Edit
+            </Link>
+          </Button>
+
+          <DeleteMovieBtn
+            action={async () => {
+              "use server"
+
+              await prisma.movie.delete({
+                where: {
+                  id: movie.id,
+                },
+              })
+            }}
+          />
+        </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-[300px_1fr]">
