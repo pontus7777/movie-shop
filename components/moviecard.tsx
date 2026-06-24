@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
+import placeHolder from '@/public/file.svg'
+
 export type Movie = {
   id: string
   title: string
@@ -31,15 +33,6 @@ export type Movie = {
     name: string
   }[]
 }
-
-// {
-//   title: string;
-//   description: string;
-//   price: number;
-//   imageUrl: string;
-//   genre: string;
-// };
-
 type Props = {
   movie: Movie
 }
@@ -49,8 +42,9 @@ export default function MovieCard({ movie }: Props) {
     <Card className="w-72 overflow-hidden">
       {/* Movie Poster */}
       <Image
-        src={movie.imageUrl ?? '/placeholder-movie.jpg'}
+        src={movie.imageUrl ?? placeHolder}
         alt={movie.title}
+        loading="eager" // something with LCP
         width={300}
         height={200}
         className="h-48 w-full object-cover"
