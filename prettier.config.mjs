@@ -1,3 +1,5 @@
+import tailwind from 'prettier-plugin-tailwindcss'
+
 /** @type {import("prettier").Config} */
 const config = {
   semi: false,
@@ -7,7 +9,7 @@ const config = {
   printWidth: 100,
   bracketSpacing: true,
   arrowParens: 'always',
-  plugins: ['prettier-plugin-tailwindcss'],
+  plugins: [tailwind],
 }
 
 export default config

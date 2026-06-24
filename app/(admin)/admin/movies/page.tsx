@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Moviecard from '@/components/moviecard'
 import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
+import { convertToSek } from '@/lib/priceUtils'
 
 export default async function Page() {
   const movies = await prisma.movie.findMany({
@@ -35,7 +36,7 @@ export default async function Page() {
             key={m.id}
             movie={{
               ...m,
-              price: m.price,
+              price: convertToSek(m.price),
             }}
           />
         ))}

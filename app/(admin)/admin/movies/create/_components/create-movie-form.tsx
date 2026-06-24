@@ -18,7 +18,7 @@ import { createMovie } from '../../_actions/create-movie-action'
 const formSchema = z.object({
   title: z.string().min(1, 'Title is required').max(32, 'Title must be less than 32 characters'),
   description: z.string().min(1, 'Description is required').max(1000),
-  price: z.int().min(1),
+  price: z.number(),
   releaseYear: z.number().min(0).max(9999),
   stock: z.boolean(),
   runtime: z.number().min(10),
@@ -123,7 +123,7 @@ function CreateMovieForm() {
                 <Input
                   id={field.name}
                   name={field.name}
-                  type={'text'}
+                  type={'number'}
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(Number(e.target.value))}

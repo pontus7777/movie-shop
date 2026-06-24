@@ -1,15 +1,5 @@
-import { PrismaPg } from '@prisma/adapter-pg'
-
-import { PrismaClient, Prisma } from '../generated/prisma/client'
+import prisma from '@/lib/prisma'
 import 'dotenv/config'
-
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
-})
-
-const prisma = new PrismaClient({
-  adapter,
-})
 
 export async function main() {
   const sciFi = await prisma.genre.upsert({
@@ -100,7 +90,7 @@ export async function main() {
     update: {
       title: 'The Matrix',
       description: 'A hacker discovers reality is a simulation and joins the resistance.',
-      price: new Prisma.Decimal(14.99),
+      price: 1499,
       releaseYear: 1999,
       imageUrl: 'https://picsum.photos/400/600?random=1',
       stock: true,
@@ -117,7 +107,7 @@ export async function main() {
       id: 'movie-the-matrix',
       title: 'The Matrix',
       description: 'A hacker discovers reality is a simulation and joins the resistance.',
-      price: new Prisma.Decimal(14.99),
+      price: 1499,
       releaseYear: 1999,
       imageUrl: 'https://picsum.photos/400/600?random=1',
       stock: true,
@@ -137,7 +127,7 @@ export async function main() {
     update: {
       title: 'Inception',
       description: 'A skilled thief enters dreams to steal secrets from targets.',
-      price: new Prisma.Decimal(16.99),
+      price: 1699,
       releaseYear: 2010,
       imageUrl: 'https://picsum.photos/400/600?random=2',
       stock: true,
@@ -154,7 +144,7 @@ export async function main() {
       id: 'movie-inception',
       title: 'Inception',
       description: 'A skilled thief enters dreams to steal secrets from targets.',
-      price: new Prisma.Decimal(16.99),
+      price: 1699,
       releaseYear: 2010,
       imageUrl: 'https://picsum.photos/400/600?random=2',
       stock: true,

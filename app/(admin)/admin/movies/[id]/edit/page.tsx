@@ -1,10 +1,9 @@
-import { notFound } from 'next/navigation'
-
 import prisma from '@/lib/prisma'
-
+import { notFound } from 'next/navigation'
 import { EditMovieForm } from './_components/movie-edit-form'
 
-export default async function EditMoviePage(props: PageProps<'/admin/movies/[id]/edit'>) {
+// changed page props from /admin/movies/[id]/edit
+export default async function EditMoviePage(props: PageProps<'/admin/movies/[id]'>) {
   const params = await props.params
 
   const movie = await prisma.movie.findUnique({
@@ -27,7 +26,6 @@ export default async function EditMoviePage(props: PageProps<'/admin/movies/[id]
       <EditMovieForm
         movie={{
           ...movie,
-          price: movie.price,
         }}
       />
     </div>
