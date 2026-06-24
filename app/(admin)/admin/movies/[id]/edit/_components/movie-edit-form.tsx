@@ -71,7 +71,7 @@ function EditMovieForm({ movie }: EditMovieProps) {
       formApi.reset({
         title: updatedMovie.title,
         description: movie.description,
-        price: movie.price,
+        price: Number(movie.price),
         releaseYear: movie.releaseYear,
         stock: movie.stock,
         runtime: movie.runtime,
