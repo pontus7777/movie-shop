@@ -15,23 +15,24 @@ import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 
 import { editMovie } from '../../../_actions/edit-movie-action'
+import { convertToSek } from '@/lib/priceUtils'
 
-const formSchema = z.object({
+const editFormSchema = z.object({
   title: z.string().min(1, 'Title is required').max(32, 'Title must be less than 32 characters'),
   description: z.string().min(1, 'Description is required').max(1000),
-  price: z.string().regex(/^\d+(\.\d{1,2})?$/),
+  price: z.number().min(1).max(1000000),
   releaseYear: z.number().min(0).max(9999),
   stock: z.boolean(),
   runtime: z.number().min(10),
   imageUrl: z.string(),
 })
 
-type Props = {
+type EditMovieProps = {
   movie: {
     id: string
     title: string
     description: string
-    price: string
+    price: number
     releaseYear: number
     stock: boolean
     runtime: number
@@ -39,23 +40,24 @@ type Props = {
   }
 }
 
-function EditMovieForm({ movie }: Props) {
+function EditMovieForm({ movie }: EditMovieProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  // use LOADING? Pontus
 
   const form = useForm({
     defaultValues: {
       title: movie.title,
       description: movie.description,
-      price: movie.price,
+      price: convertToSek(movie.price),
       releaseYear: movie.releaseYear,
       stock: movie.stock,
       runtime: movie.runtime,
       imageUrl: movie.imageUrl ?? '',
     },
     validators: {
-      onSubmit: formSchema,
-      onBlur: formSchema,
+      onSubmit: editFormSchema,
+      onBlur: editFormSchema,
     },
 
     onSubmit: async ({ value, formApi }) => {
@@ -145,10 +147,12 @@ function EditMovieForm({ movie }: Props) {
                 <Input
                   id={field.name}
                   name={field.name}
-                  type="text"
+                  type="number"
                   value={field.state.value}
+                  min={1}
+                  max={1000000}
                   onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
+                  onChange={(e) => field.handleChange(Number(e.target.value))}
                   aria-invalid={isInvalid}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}

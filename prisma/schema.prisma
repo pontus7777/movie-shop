@@ -87,21 +87,27 @@ model Verification {
 model Movie {
   id String @id @default(cuid())
 
-  title       String      @db.VarChar(100)
+  title       String @db.VarChar(100)
   description String
-  price       Decimal
-  releaseYear Int         @map("release_year")
+
+  // Price is in smallest possible unit
+  price       Int
+  releaseYear Int     @map("release_year")
   imageUrl    String?
   stock       Boolean
   runtime     Int
-  actors      Actor[]
-  directors   Director[]
-  genre       Genre?      @relation(fields: [genreId], references: [id])
-  genreId     Int?
-  orderItems  OrderItem[]
-  cartItems   CartItem[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime  @default(now()) @updatedAt
+
+  actors    Actor[]
+  directors Director[]
+
+  genre   Genre? @relation(fields: [genreId], references: [id])
+  genreId Int?
+
+  orderItems OrderItem[]
+  cartItems  CartItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@map("movies")
 }
