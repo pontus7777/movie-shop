@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
 import { DeleteMovieBtn } from './_components/delete-movie-btn'
+import { getMovieImageSrc } from "@/lib/image-utils";
 
 export default async function MovieDetailsPage(props: PageProps<'/admin/movies/[id]'>) {
   const params = await props.params
@@ -61,7 +62,7 @@ export default async function MovieDetailsPage(props: PageProps<'/admin/movies/[
 
       <div className="grid gap-6 md:grid-cols-[300px_1fr]">
         <Image
-          src={movie.imageUrl ?? '/placeholder-movie.jpg'}
+          src={getMovieImageSrc(movie.imageUrl)}
           alt={movie.title}
           width={300}
           height={450}
