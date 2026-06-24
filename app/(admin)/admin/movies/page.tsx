@@ -4,11 +4,12 @@ import Moviecard from '@/components/moviecard'
 import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
 import { convertToSek } from '@/lib/priceUtils'
+import { MovieTable } from '@/components/movie-table'
 
 export default async function Page() {
   const movies = await prisma.movie.findMany({
     include: {
-      genre: true,
+      genre:true,
       actors: true,
       directors: true,
     },
@@ -41,6 +42,15 @@ export default async function Page() {
           />
         ))}
       </div>
+
+
+
+    <MovieTable movies={movies}/>
+
+
+
+
+
     </div>
   )
 }
