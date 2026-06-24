@@ -39,6 +39,7 @@ type Props = {
 
 export default function MovieCard({ movie }: Props) {
   return (
+    <>
     <Card className="w-72 overflow-hidden">
       {/* Movie Poster */}
       <Image
@@ -68,5 +69,8 @@ export default function MovieCard({ movie }: Props) {
         <Button className="w-full">Add to Cart</Button>
       </CardContent>
     </Card>
+
+
+    </>
   )
 }
