@@ -65,4 +65,4 @@ generated/prisma/models/OrderItem.ts
 generated/prisma/models/Session.ts
 generated/prisma/models/User.ts
 generated/prisma/models/Verification.ts
-*.ts
+
