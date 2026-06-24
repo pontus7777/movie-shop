@@ -1,5 +1,4 @@
 import Link from 'next/link'
-
 import Moviecard from '@/components/moviecard'
 import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
@@ -20,7 +19,7 @@ export default async function Page() {
 
   return (
     <div className="bg-card rounded-xl border p-6 shadow-sm">
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex items-center justify-between md:hidden">
         <div>
           <h2 className="text-2xl font-bold">Movies</h2>
           <p className="text-muted-foreground">Movies cards</p>
@@ -31,7 +30,7 @@ export default async function Page() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:hidden">
         {movies.map((m) => (
           <Moviecard
             key={m.id}
@@ -42,15 +41,9 @@ export default async function Page() {
           />
         ))}
       </div>
-
-
-
-    <MovieTable movies={movies}/>
-
-
-
-
-
+        <div className="hidden md:block">
+          <MovieTable movies={movies}/>
+        </div>
     </div>
   )
 }
