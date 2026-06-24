@@ -1,14 +1,15 @@
-import { PrismaClient, Prisma } from "../generated/prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
-import "dotenv/config";
+import { PrismaPg } from '@prisma/adapter-pg'
+
+import { PrismaClient, Prisma } from '../generated/prisma/client'
+import 'dotenv/config'
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
-});
+})
 
 const prisma = new PrismaClient({
   adapter,
-});
+})
 
 export async function main() {
   const sciFi = await prisma.genre.upsert({
@@ -16,93 +17,92 @@ export async function main() {
     update: {},
     create: {
       id: 1,
-      name: "Science Fiction",
-      description: "Movies featuring futuristic technology and science.",
+      name: 'Science Fiction',
+      description: 'Movies featuring futuristic technology and science.',
     },
-  });
+  })
 
   const action = await prisma.genre.upsert({
     where: { id: 2 },
     update: {},
     create: {
       id: 2,
-      name: "Action",
-      description: "Fast-paced movies with thrilling sequences.",
+      name: 'Action',
+      description: 'Fast-paced movies with thrilling sequences.',
     },
-  });
+  })
 
   const keanu = await prisma.actor.upsert({
-    where: { id: "actor-keanu-reeves" },
+    where: { id: 'actor-keanu-reeves' },
     update: {},
     create: {
-      id: "actor-keanu-reeves",
-      name: "Keanu Reeves",
+      id: 'actor-keanu-reeves',
+      name: 'Keanu Reeves',
     },
-  });
+  })
 
   const carrie = await prisma.actor.upsert({
-    where: { id: "actor-carrie-anne-moss" },
+    where: { id: 'actor-carrie-anne-moss' },
     update: {},
     create: {
-      id: "actor-carrie-anne-moss",
-      name: "Carrie-Anne Moss",
+      id: 'actor-carrie-anne-moss',
+      name: 'Carrie-Anne Moss',
     },
-  });
+  })
 
   const leo = await prisma.actor.upsert({
-    where: { id: "actor-leonardo-dicaprio" },
+    where: { id: 'actor-leonardo-dicaprio' },
     update: {},
     create: {
-      id: "actor-leonardo-dicaprio",
-      name: "Leonardo DiCaprio",
+      id: 'actor-leonardo-dicaprio',
+      name: 'Leonardo DiCaprio',
     },
-  });
+  })
 
   const joseph = await prisma.actor.upsert({
-    where: { id: "actor-joseph-gordon-levitt" },
+    where: { id: 'actor-joseph-gordon-levitt' },
     update: {},
     create: {
-      id: "actor-joseph-gordon-levitt",
-      name: "Joseph Gordon-Levitt",
+      id: 'actor-joseph-gordon-levitt',
+      name: 'Joseph Gordon-Levitt',
     },
-  });
+  })
 
   const lana = await prisma.director.upsert({
-    where: { id: "director-lana-wachowski" },
+    where: { id: 'director-lana-wachowski' },
     update: {},
     create: {
-      id: "director-lana-wachowski",
-      name: "Lana Wachowski",
+      id: 'director-lana-wachowski',
+      name: 'Lana Wachowski',
     },
-  });
+  })
 
   const lilly = await prisma.director.upsert({
-    where: { id: "director-lilly-wachowski" },
+    where: { id: 'director-lilly-wachowski' },
     update: {},
     create: {
-      id: "director-lilly-wachowski",
-      name: "Lilly Wachowski",
+      id: 'director-lilly-wachowski',
+      name: 'Lilly Wachowski',
     },
-  });
+  })
 
   const nolan = await prisma.director.upsert({
-    where: { id: "director-christopher-nolan" },
+    where: { id: 'director-christopher-nolan' },
     update: {},
     create: {
-      id: "director-christopher-nolan",
-      name: "Christopher Nolan",
+      id: 'director-christopher-nolan',
+      name: 'Christopher Nolan',
     },
-  });
+  })
 
   await prisma.movie.upsert({
-    where: { id: "movie-the-matrix" },
+    where: { id: 'movie-the-matrix' },
     update: {
-      title: "The Matrix",
-      description:
-        "A hacker discovers reality is a simulation and joins the resistance.",
+      title: 'The Matrix',
+      description: 'A hacker discovers reality is a simulation and joins the resistance.',
       price: new Prisma.Decimal(14.99),
       releaseYear: 1999,
-      imageUrl: "https://picsum.photos/400/600?random=1",
+      imageUrl: 'https://picsum.photos/400/600?random=1',
       stock: true,
       runtime: 136,
       genreId: sciFi.id,
@@ -114,13 +114,12 @@ export async function main() {
       },
     },
     create: {
-      id: "movie-the-matrix",
-      title: "The Matrix",
-      description:
-        "A hacker discovers reality is a simulation and joins the resistance.",
+      id: 'movie-the-matrix',
+      title: 'The Matrix',
+      description: 'A hacker discovers reality is a simulation and joins the resistance.',
       price: new Prisma.Decimal(14.99),
       releaseYear: 1999,
-      imageUrl: "https://picsum.photos/400/600?random=1",
+      imageUrl: 'https://picsum.photos/400/600?random=1',
       stock: true,
       runtime: 136,
       genre: { connect: { id: sciFi.id } },
@@ -131,17 +130,16 @@ export async function main() {
         connect: [{ id: lana.id }, { id: lilly.id }],
       },
     },
-  });
+  })
 
   await prisma.movie.upsert({
-    where: { id: "movie-inception" },
+    where: { id: 'movie-inception' },
     update: {
-      title: "Inception",
-      description:
-        "A skilled thief enters dreams to steal secrets from targets.",
+      title: 'Inception',
+      description: 'A skilled thief enters dreams to steal secrets from targets.',
       price: new Prisma.Decimal(16.99),
       releaseYear: 2010,
-      imageUrl: "https://picsum.photos/400/600?random=2",
+      imageUrl: 'https://picsum.photos/400/600?random=2',
       stock: true,
       runtime: 148,
       genreId: sciFi.id,
@@ -153,13 +151,12 @@ export async function main() {
       },
     },
     create: {
-      id: "movie-inception",
-      title: "Inception",
-      description:
-        "A skilled thief enters dreams to steal secrets from targets.",
+      id: 'movie-inception',
+      title: 'Inception',
+      description: 'A skilled thief enters dreams to steal secrets from targets.',
       price: new Prisma.Decimal(16.99),
       releaseYear: 2010,
-      imageUrl: "https://picsum.photos/400/600?random=2",
+      imageUrl: 'https://picsum.photos/400/600?random=2',
       stock: true,
       runtime: 148,
       genre: { connect: { id: sciFi.id } },
@@ -170,16 +167,16 @@ export async function main() {
         connect: [{ id: nolan.id }],
       },
     },
-  });
+  })
 
-  console.log("Seed finished");
+  console.log('Seed finished')
 }
 
 main()
   .catch((e) => {
-    console.error(e);
-    process.exit(1);
+    console.error(e)
+    process.exit(1)
   })
   .finally(async () => {
-    await prisma.$disconnect();
-  });
+    await prisma.$disconnect()
+  })

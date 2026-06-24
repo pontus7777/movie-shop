@@ -1,15 +1,16 @@
-'use client';
+'use client'
 
-import MovieCard from '@/components/moviecard';
-import { useState } from 'react';
-import { MoviesPagination } from './_components/movies-pagination';
+import { useState } from 'react'
+
+import MovieCard from '@/components/moviecard'
+
+import { MoviesPagination } from './_components/movies-pagination'
 
 const movies = [
   {
     id: 1,
     title: 'Neon Horizon',
-    description:
-      'A cyberpunk detective uncovers a conspiracy that spans galaxies.',
+    description: 'A cyberpunk detective uncovers a conspiracy that spans galaxies.',
     genre: 'Sci-Fi',
     imageUrl: 'https://picsum.photos/200/300',
     price: 18,
@@ -25,8 +26,7 @@ const movies = [
   {
     id: 3,
     title: 'Crimson Vow',
-    description:
-      'A royal assassin questions her loyalty after discovering a hidden truth.',
+    description: 'A royal assassin questions her loyalty after discovering a hidden truth.',
     genre: 'Action',
     imageUrl: 'https://picsum.photos/200/300',
     price: 20,
@@ -58,8 +58,7 @@ const movies = [
   {
     id: 7,
     title: 'Moonfall Protocol',
-    description:
-      'Astronauts uncover a secret buried beneath the lunar surface.',
+    description: 'Astronauts uncover a secret buried beneath the lunar surface.',
     genre: 'Sci-Fi',
     imageUrl: 'https://picsum.photos/200/300',
     price: 21,
@@ -67,8 +66,7 @@ const movies = [
   {
     id: 8,
     title: 'Shattered Crown',
-    description:
-      'A kingdom descends into chaos after the king mysteriously disappears.',
+    description: 'A kingdom descends into chaos after the king mysteriously disappears.',
     genre: 'Drama',
     imageUrl: 'https://picsum.photos/200/300',
     price: 16,
@@ -108,8 +106,7 @@ const movies = [
   {
     id: 13,
     title: 'Frostbite',
-    description:
-      'A research team in Antarctica faces a deadly unknown organism.',
+    description: 'A research team in Antarctica faces a deadly unknown organism.',
     genre: 'Horror',
     imageUrl: 'https://picsum.photos/200/300',
     price: 20,
@@ -125,8 +122,7 @@ const movies = [
   {
     id: 15,
     title: 'Quantum Drift',
-    description:
-      'A physicist becomes unstuck in time after an experiment fails.',
+    description: 'A physicist becomes unstuck in time after an experiment fails.',
     genre: 'Sci-Fi',
     imageUrl: 'https://picsum.photos/200/300',
     price: 22,
@@ -158,8 +154,7 @@ const movies = [
   {
     id: 19,
     title: 'Broken Atlas',
-    description:
-      'A cartographer discovers a map that predicts future disasters.',
+    description: 'A cartographer discovers a map that predicts future disasters.',
     genre: 'Thriller',
     imageUrl: 'https://picsum.photos/200/300',
     price: 17,
@@ -183,8 +178,7 @@ const movies = [
   {
     id: 22,
     title: 'Thunderstrike',
-    description:
-      'A vigilante with electric powers fights a corrupt corporation.',
+    description: 'A vigilante with electric powers fights a corrupt corporation.',
     genre: 'Action',
     imageUrl: 'https://picsum.photos/200/300',
     price: 20,
@@ -192,8 +186,7 @@ const movies = [
   {
     id: 23,
     title: 'Emerald Tide',
-    description:
-      'A marine biologist uncovers a secret beneath the ocean floor.',
+    description: 'A marine biologist uncovers a secret beneath the ocean floor.',
     genre: 'Adventure',
     imageUrl: 'https://picsum.photos/200/300',
     price: 18,
@@ -254,25 +247,25 @@ const movies = [
     imageUrl: 'https://picsum.photos/200/300',
     price: 20,
   },
-];
+]
 
 // This is currently being a client side pagination, can change it to server component with data in the db (Pontus)
 
 export default function MoviesPage({}) {
-  const [page, setPage] = useState(1);
-  const pageSize = 12;
+  const [page, setPage] = useState(1)
+  const pageSize = 12
 
-  const totalPages = Math.ceil(movies.length / pageSize);
+  const totalPages = Math.ceil(movies.length / pageSize)
 
-  const paginatedMovies = movies.slice((page - 1) * pageSize, page * pageSize);
+  const paginatedMovies = movies.slice((page - 1) * pageSize, page * pageSize)
 
   return (
-    <div className="space-y-6 min-h-lvh p-6">
+    <div className="min-h-lvh space-y-6 p-6">
       <h1 className="text-3xl font-bold">Movies</h1>
 
       {/* Movie Grid */}
       <div className="flex justify-center">
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl w-full">
+        <div className="grid w-full max-w-5xl grid-cols-2 gap-4 md:grid-cols-3">
           {paginatedMovies.map((movie) => (
             <MovieCard key={movie.id} movie={movie} />
           ))}
@@ -281,5 +274,5 @@ export default function MoviesPage({}) {
 
       <MoviesPagination page={page} totalPages={totalPages} setPage={setPage} />
     </div>
-  );
+  )
 }

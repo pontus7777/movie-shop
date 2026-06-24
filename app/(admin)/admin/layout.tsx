@@ -1,12 +1,14 @@
-import { Toaster } from "sonner";
-import "@/app/globals.css";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AdminSidebar } from "./_components/admin-sidebar";
+import '@/app/globals.css'
+import { Toaster } from 'sonner'
+
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
+
+import { AdminSidebar } from './_components/admin-sidebar'
 
 export default function AdminLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <SidebarProvider>
@@ -21,5 +23,5 @@ export default function AdminLayout({
         </main>
       </div>
     </SidebarProvider>
-  );
+  )
 }

@@ -1,32 +1,29 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
-import { useForm } from "@tanstack/react-form";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import z from "zod";
+'use client'
+
+import { useForm } from '@tanstack/react-form'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
+import z from 'zod'
+
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
+import { authClient } from '@/lib/auth-client'
 
 const formSchema = z.object({
   email: z.email(),
   password: z.string().min(1),
   rememberMe: z.boolean(),
-});
+})
 
 function SignInForm() {
-  const router = useRouter();
+  const router = useRouter()
 
   const form = useForm({
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
       rememberMe: false,
     },
     validators: {
@@ -37,34 +34,33 @@ function SignInForm() {
         email: value.email,
         password: value.password,
         rememberMe: value.rememberMe,
-      });
+      })
 
       if (result.error) {
-        toast.error(result.error.message ?? "Faild to sign in!");
-        return;
+        toast.error(result.error.message ?? 'Faild to sign in!')
+        return
       }
 
-      toast.success("Sign in successeded ");
-      router.push("/");
-      router.refresh();
+      toast.success('Sign in successeded ')
+      router.push('/')
+      router.refresh()
     },
-  });
+  })
 
   return (
     <>
       <form
         method="POST"
         onSubmit={(e) => {
-          e.preventDefault();
-          form.handleSubmit();
+          e.preventDefault()
+          form.handleSubmit()
         }}
         className="space-y-4"
       >
         <FieldGroup>
           <form.Field name="email">
             {(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid;
+              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
 
               return (
                 <Field data-invalid={isInvalid}>
@@ -79,14 +75,13 @@ function SignInForm() {
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
-              );
+              )
             }}
           </form.Field>
 
           <form.Field name="password">
             {(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid;
+              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
 
               return (
                 <Field data-invalid={isInvalid}>
@@ -102,14 +97,13 @@ function SignInForm() {
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
-              );
+              )
             }}
           </form.Field>
 
           <form.Field name="rememberMe">
             {(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid;
+              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
 
               return (
                 <Field data-invalid={isInvalid} orientation="horizontal">
@@ -118,10 +112,10 @@ function SignInForm() {
                     name={field.name}
                     checked={field.state.value}
                     onCheckedChange={(checked) => {
-                      if (checked === "indeterminate") {
-                        return;
+                      if (checked === 'indeterminate') {
+                        return
                       }
-                      field.handleChange(checked);
+                      field.handleChange(checked)
                     }}
                     onBlur={field.handleBlur}
                     aria-invalid={isInvalid}
@@ -129,7 +123,7 @@ function SignInForm() {
 
                   <FieldLabel htmlFor={field.name}>Remember Me</FieldLabel>
                 </Field>
-              );
+              )
             }}
           </form.Field>
 
@@ -145,7 +139,7 @@ function SignInForm() {
         </FieldGroup>
       </form>
     </>
-  );
+  )
 }
 
-export { SignInForm };
+export { SignInForm }
