@@ -18,7 +18,7 @@ import { createMovie } from '../../_actions/create-movie-action'
 const formSchema = z.object({
   title: z.string().min(1, 'Title is required').max(32, 'Title must be less than 32 characters'),
   description: z.string().min(1, 'Description is required').max(1000),
-  price: z.string().regex(/^\d+(\.\d{1,2})?$/),
+  price: z.int().min(1),
   releaseYear: z.number().min(0).max(9999),
   stock: z.boolean(),
   runtime: z.number().min(10),
@@ -32,7 +32,7 @@ function CreateMovieForm() {
     defaultValues: {
       title: '',
       description: '',
-      price: '1',
+      price: 1,
       releaseYear: 1920,
       stock: false,
       runtime: 10,
@@ -126,7 +126,7 @@ function CreateMovieForm() {
                   type={'text'}
                   value={field.state.value}
                   onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
+                  onChange={(e) => field.handleChange(Number(e.target.value))}
                   aria-invalid={isInvalid}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}

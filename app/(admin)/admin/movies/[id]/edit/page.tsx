@@ -27,7 +27,7 @@ export default async function EditMoviePage(props: PageProps<'/admin/movies/[id]
       <EditMovieForm
         movie={{
           ...movie,
-          price: movie.price.toString(),
+          price: movie.price,
         }}
       />
     </div>

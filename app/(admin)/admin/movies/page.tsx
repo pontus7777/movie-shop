@@ -35,7 +35,7 @@ export default async function Page() {
             key={m.id}
             movie={{
               ...m,
-              price: Number(m.price),
+              price: m.price,
             }}
           />
         ))}

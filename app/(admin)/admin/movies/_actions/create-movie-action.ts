@@ -10,8 +10,7 @@ const createMovieSchema = z.object({
   title: z.string().min(1, 'Title is required').max(32, 'Title must be less than 32 characters'),
   description: z.string().min(1, 'Description is required').max(1000),
   price: z
-    .string()
-    .regex(/^\d+(\.\d{1,2})?$/)
+    .int()
     .min(1),
   releaseYear: z.number().min(0).max(9999),
   stock: z.boolean(),
@@ -26,7 +25,7 @@ export async function createMovie(values: z.infer<typeof createMovieSchema>) {
       data: {
         title: data.title,
         description: data.description,
-        price: new Decimal(data.price),
+        price:data.price,
         releaseYear: data.releaseYear,
         stock: data.stock,
         runtime: data.runtime,
