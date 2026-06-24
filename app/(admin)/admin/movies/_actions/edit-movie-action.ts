@@ -26,7 +26,7 @@ export async function editMovie(values: z.infer<typeof editMovieSchema>) {
   })
 
   if (!session) {
-    redirect('/login')
+    redirect('/sign-in')
   }
 
   const data = editMovieSchema.parse(values)
