@@ -43,3 +43,26 @@ next-env.d.ts
 
 # prisma
 ./generated/*
+
+generated/*
+generated/prisma/browser.ts
+generated/prisma/client.ts
+generated/prisma/commonInputTypes.ts
+generated/prisma/enums.ts
+generated/prisma/internal/class.ts
+generated/prisma/internal/prismaNamespace.ts
+generated/prisma/internal/prismaNamespaceBrowser.ts
+generated/prisma/models.ts
+generated/prisma/models/Account.ts
+generated/prisma/models/Actor.ts
+generated/prisma/models/Cart.ts
+generated/prisma/models/CartItem.ts
+generated/prisma/models/Director.ts
+generated/prisma/models/Genre.ts
+generated/prisma/models/Movie.ts
+generated/prisma/models/Order.ts
+generated/prisma/models/OrderItem.ts
+generated/prisma/models/Session.ts
+generated/prisma/models/User.ts
+generated/prisma/models/Verification.ts
+*.ts
