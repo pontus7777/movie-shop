@@ -2,25 +2,52 @@ import prisma from '@/lib/prisma'
 import 'dotenv/config'
 
 export async function main() {
-  const sciFi = await prisma.genre.upsert({
-    where: { id: 1 },
-    update: {},
-    create: {
-      id: 1,
-      name: 'Science Fiction',
-      description: 'Movies featuring futuristic technology and science.',
-    },
-  })
 
-  const action = await prisma.genre.upsert({
-    where: { id: 2 },
-    update: {},
-    create: {
-      id: 2,
-      name: 'Action',
-      description: 'Fast-paced movies with thrilling sequences.',
-    },
-  })
+  const scifi = await prisma.genre.upsert({
+  where: { name: 'Science Fiction' },
+  update: {},
+  create: {
+    name: 'Science Fiction',
+    description: 'Movies featuring futuristic technology and science.',
+  },
+})
+
+const action = await prisma.genre.upsert({
+  where: { name: 'Action' },
+  update: {},
+  create: {
+    name: 'Action',
+    description: 'Fast-paced movies with thrilling sequences.',
+  },
+})
+
+const horror = await prisma.genre.upsert({
+  where: { name: 'Horror' },
+  update: {},
+  create: {
+    name: 'Horror',
+    description: 'Scary movie!',
+  },
+})
+
+const romance = await prisma.genre.upsert({
+  where: { name: 'Romance' },
+  update: {},
+  create: {
+    name: 'Romance',
+    description: 'Love is life',
+  },
+})
+
+const thriller = await prisma.genre.upsert({
+  where: { name: 'Thriller' },
+  update: {},
+  create: {
+    name: 'Thriller',
+    description: 'The thrill',
+  },
+})
+
 
   const keanu = await prisma.actor.upsert({
     where: { id: 'actor-keanu-reeves' },
@@ -95,7 +122,7 @@ export async function main() {
       imageUrl: 'https://picsum.photos/400/600?random=1',
       stock: true,
       runtime: 136,
-      genreId: sciFi.id,
+      genreId: scifi.id,
       actors: {
         set: [{ id: keanu.id }, { id: carrie.id }],
       },
@@ -112,7 +139,7 @@ export async function main() {
       imageUrl: 'https://picsum.photos/400/600?random=1',
       stock: true,
       runtime: 136,
-      genre: { connect: { id: sciFi.id } },
+      genre: { connect: { id: scifi.id } },
       actors: {
         connect: [{ id: keanu.id }, { id: carrie.id }],
       },
@@ -132,7 +159,7 @@ export async function main() {
       imageUrl: 'https://picsum.photos/400/600?random=2',
       stock: true,
       runtime: 148,
-      genreId: sciFi.id,
+      genreId: scifi.id,
       actors: {
         set: [{ id: leo.id }, { id: joseph.id }],
       },
@@ -149,7 +176,7 @@ export async function main() {
       imageUrl: 'https://picsum.photos/400/600?random=2',
       stock: true,
       runtime: 148,
-      genre: { connect: { id: sciFi.id } },
+      genre: { connect: { id: scifi.id } },
       actors: {
         connect: [{ id: leo.id }, { id: joseph.id }],
       },

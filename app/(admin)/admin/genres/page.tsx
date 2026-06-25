@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma'
-import { GenresTable } from './_components/admin-genres-table'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
+import { GenresDataTable } from './_components/genres-data-table'
+import { columns } from './_components/columns'
+import AddGenreButton from './_components/add-genre-button'
 
 export default async function AdminGenresPage() {
   const genres = await prisma.genre.findMany()
@@ -14,11 +14,11 @@ export default async function AdminGenresPage() {
           <p className="text-muted-foreground">All Genres</p>
         </div>
 
-        <Button asChild>
-          <Link href="/admin/genres/create">Add Genre</Link>
-        </Button>
+       <AddGenreButton />
+  
       </div>
-      <GenresTable genres={genres} />
+      {/* <GenresTable genres={genres} /> */}
+    <GenresDataTable columns={columns} data={genres} />
     </div>
   )
 }
