@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 import placeHolder from '@/public/file.svg'
+import { getMovieImageSrc } from '@/lib/image-utils'
 
 export type Movie = {
   id: string
@@ -37,12 +38,17 @@ type Props = {
   movie: Movie
 }
 
+
+
 export default function MovieCard({ movie }: Props) {
+    const imageSrc = getMovieImageSrc(movie.imageUrl);
+
   return (
+    <>
     <Card className="w-72 overflow-hidden">
       {/* Movie Poster */}
       <Image
-        src={movie.imageUrl ?? placeHolder}
+        src={imageSrc}
         alt={movie.title}
         loading="eager" // something with LCP
         width={300}
@@ -68,5 +74,8 @@ export default function MovieCard({ movie }: Props) {
         <Button className="w-full">Add to Cart</Button>
       </CardContent>
     </Card>
+
+
+    </>
   )
 }
