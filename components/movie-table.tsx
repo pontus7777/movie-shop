@@ -27,7 +27,7 @@ type Props = {
 function MovieTable({movies}:Props){
 
       return (
-    <div className="rounded-xl border bg-card p-6 shadow-sm">
+    <div className="rounded-xl bg-card p-6 shadow-sm">
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Movie</h2>
