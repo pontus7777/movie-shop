@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import Moviecard from '@/components/moviecard'
+import ShopMoviecard from '@/components/shop-movie-card'
 import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
 import { convertToSek } from '@/lib/priceUtils'
@@ -32,7 +32,7 @@ export default async function Page() {
 
       <div className="grid grid-cols-1 gap-4 md:hidden">
         {movies.map((m) => (
-          <Moviecard
+          <ShopMoviecard
             key={m.id}
             movie={{
               ...m,
