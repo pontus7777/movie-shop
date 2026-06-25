@@ -1,0 +1,185 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  //admin plugin fields
+  role          String?   @default("user")
+  banned        Boolean?  @default(false)
+  banReason     String?
+  banExpires    DateTime?
+
+  sessions Session[]
+  accounts Account[]
+  orders   Order[]
+  // cartId        String
+  cart     Cart?
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model Movie {
+  id String @id @default(cuid())
+
+  title       String @db.VarChar(100)
+  description String
+
+  // Price is in smallest possible unit
+  price       Int
+  releaseYear Int     @map("release_year")
+  imageUrl    String?
+  stock       Boolean
+  runtime     Int
+
+  actors    Actor[]
+  directors Director[]
+
+  genre   Genre? @relation(fields: [genreId], references: [id])
+  genreId Int?
+
+  orderItems OrderItem[]
+  cartItems  CartItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("movies")
+}
+
+model Actor {
+  id     String  @id @default(cuid())
+  name   String
+  movies Movie[]
+
+  @@map("actors")
+}
+
+model Director {
+  id     String  @id @default(cuid())
+  name   String
+  movies Movie[]
+
+  @@map("directors")
+}
+
+model Genre {
+  id          Int     @id @default(autoincrement())
+  name        String  @db.VarChar(50)
+  description String
+  movies      Movie[]
+
+  @@map("genres")
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  userId    String
+  createdAt DateTime    @default(now())
+  total     Decimal
+  items     OrderItem[]
+  user      User        @relation(fields: [userId], references: [id])
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id       String  @id @default(cuid())
+  orderId  String // @unique
+  movieId  String // @unique
+  quantity Int
+  price    Decimal
+
+  order Order @relation(fields: [orderId], references: [id])
+  movie Movie @relation(fields: [movieId], references: [id])
+
+  @@unique([orderId, movieId])
+  @@map("order_items")
+}
+
+model Cart {
+  id     String     @id @default(cuid())
+  userId String     @unique
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items  CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id       String @id @default(cuid())
+  cartId   String // @unique
+  movieId  String // @unique
+  quantity Int    @default(1)
+
+  cart  Cart  @relation(fields: [cartId], references: [id])
+  movie Movie @relation(fields: [movieId], references: [id])
+
+  @@unique([cartId, movieId])
+  @@map("cart_items")
+}
