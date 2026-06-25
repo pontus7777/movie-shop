@@ -75,7 +75,7 @@ function MovieTable({movies}:Props){
               <TableCell>
                 <Avatar>
                   <AvatarImage
-                    src={movie.imageUrl  || placeHolder.src} 
+                    src={imageSrc  || placeHolder.src} 
                     alt={movie.title}
                     className="grayscale"
                   />
