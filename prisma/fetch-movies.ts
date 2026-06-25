@@ -92,7 +92,7 @@ async function main() {
       data: {
         title: details.title,
         description: details.overview || "No description available.",
-        price: (Math.random() * 15 + 4.99).toFixed(2),
+        price: 15 + 4.99,
         releaseYear: new Date(details.release_date).getFullYear(),
         imageUrl: `${IMAGE_BASE}${details.poster_path}`,
         stock: true,

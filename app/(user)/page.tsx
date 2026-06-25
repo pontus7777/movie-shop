@@ -17,7 +17,7 @@ export default async function Home() {
   // Convert Decimal -> plain number so it can be passed to a Client Component
   const cheapestMovies = cheapestMoviesRaw.map((movie) => ({
     ...movie,
-    price: movie.price.toNumber(),
+    price: movie.price,
   }));
 
   const recentMovies = await prisma.movie.findMany({
