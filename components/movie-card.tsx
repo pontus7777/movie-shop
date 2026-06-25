@@ -33,7 +33,7 @@ export default function MovieCard({
           alt={movie.title}
           width={300}
           height={400}
-          className="h-[340px] w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          className="h-85 w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
 
         <div className="p-2">

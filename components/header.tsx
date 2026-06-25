@@ -2,13 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ShoppingCart, Search, Film } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { ShoppingCart, Search, Film } from "lucide-react";
 import { ThemeModeToggle } from "./theme-mode-toggle";
 import { useState } from "react";
 

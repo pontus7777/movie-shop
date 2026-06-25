@@ -1,10 +1,11 @@
-import Link from "next/link";
-import { Film, Mail, Globe } from "lucide-react";
+import { Film, Mail, Globe } from 'lucide-react'
+import Link from 'next/link'
 
 export default function Footer() {
   return (
     <footer className="bg-background text-muted-foreground border-t">
       {/* ===== MAIN FOOTER CONTENT ===== */}
+
       <div className="max-w-7xl mx-auto  px-6 py-12">
         <div className="grid grid-cols-15 md:grid-cols-3 gap-50">
           {/* ===== BRAND SECTION ===== */}
@@ -14,7 +15,7 @@ export default function Footer() {
               href="/"
               className="flex items-center gap-2 text-xl font-extrabold tracking-tight"
             >
-              <div className="bg-purple-600 rounded-lg p-1.5">
+              <div className="rounded-lg bg-purple-600 p-1.5">
                 <Film className="h-5 w-5 text-white" />
               </div>
               <span>
@@ -23,16 +24,15 @@ export default function Footer() {
             </Link>
 
             <p className="text-sm leading-relaxed">
-              Discover and purchase your favorite movies. Your ultimate cinema
-              experience, online.
+              Discover and purchase your favorite movies. Your ultimate cinema experience, online.
             </p>
 
             {/* Social Icons */}
-            <div className="flex items-center gap-3 mt-2">
-              <a href="#" className="hover:text-purple-400 transition-colors">
+            <div className="mt-2 flex items-center gap-3">
+              <a href="#" className="transition-colors hover:text-purple-400">
                 <Globe className="h-5 w-5" />
               </a>
-              <a href="#" className="hover:text-purple-400 transition-colors">
+              <a href="#" className="transition-colors hover:text-purple-400">
                 <Mail className="h-5 w-5" />
               </a>
             </div>
@@ -40,13 +40,10 @@ export default function Footer() {
 
           {/* ===== ACCOUNT ===== */}
           <div className="flex flex-col gap-3">
-            <h3 className="text-foreground font-semibold text-sm uppercase tracking-wider mb-1">
+            <h3 className="text-foreground mb-1 text-sm font-semibold tracking-wider uppercase">
               Account
             </h3>
-            <Link
-              href="/sign-in"
-              className="text-sm hover:text-purple-400 transition-colors"
-            >
+            <Link href="/sign-in" className="text-sm transition-colors hover:text-purple-400">
               Sign In
             </Link>
             <Link
@@ -55,23 +52,17 @@ export default function Footer() {
             >
               Register
             </Link>
-            <Link
-              href="/orders"
-              className="text-sm hover:text-purple-400 transition-colors"
-            >
+            <Link href="/orders" className="text-sm transition-colors hover:text-purple-400">
               My Orders
             </Link>
-            <Link
-              href="/profile"
-              className="text-sm hover:text-purple-400 transition-colors"
-            >
+            <Link href="/profile" className="text-sm transition-colors hover:text-purple-400">
               My Profile
             </Link>
           </div>
 
           {/* ===== CONTACT ===== */}
           <div className="flex flex-col gap-3">
-            <h3 className="text-foreground font-semibold text-sm uppercase tracking-wider mb-1">
+            <h3 className="text-foreground mb-1 text-sm font-semibold tracking-wider uppercase">
               Contact
             </h3>
             <p className="text-sm">support@cinevault.com</p>
@@ -85,15 +76,15 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto  flex flex-col md:flex-row items-center justify-between gap-2 text-sm">
           <p>© 2026 CineVault. All rights reserved.</p>
           <div className="flex items-center gap-4">
-            <Link href="#" className="hover:text-purple-400 transition-colors">
+            <Link href="#" className="transition-colors hover:text-purple-400">
               Privacy Policy
             </Link>
-            <Link href="#" className="hover:text-purple-400 transition-colors">
+            <Link href="#" className="transition-colors hover:text-purple-400">
               Terms of Service
             </Link>
           </div>
         </div>
       </div>
     </footer>
-  );
+  )
 }

@@ -1,13 +1,17 @@
-'use client';
+'use client'
 
-import { ThemeModeToggle } from '@/components/theme-mode-toggle';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Plus } from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
+import { ThemeModeToggle } from '@/components/theme-mode-toggle'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu'
 import {
   Sidebar,
   SidebarContent,
@@ -19,13 +23,10 @@ import {
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar';
-import { Plus } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+} from '@/components/ui/sidebar'
 
 export function AdminSidebar() {
-  const pathname = usePathname();
+  const pathname = usePathname()
 
   return (
     <Sidebar>
@@ -42,9 +43,7 @@ export function AdminSidebar() {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                className={
-                  pathname === '/admin' ? 'border-b-2 border-b-blue-400' : ''
-                }
+                className={pathname === '/admin' ? 'border-b-2 border-b-blue-400' : ''}
                 // temporary minor style
                 isActive={pathname === '/admin'}
               >
@@ -52,26 +51,22 @@ export function AdminSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname === '/admin/movies'}
-              >
+              <SidebarMenuButton asChild isActive={pathname === '/admin/movies'}>
                 <Link href={'/admin/movies'}>Movies</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname === '/admin/orders'}
-              >
+              <SidebarMenuButton asChild isActive={pathname === '/admin/genres'}>
+                <Link href={'/admin/genres'}>Genres</Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={pathname === '/admin/orders'}>
                 <Link href={'/admin/orders'}>Orders</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname === '/admin/directors'}
-              >
+              <SidebarMenuButton asChild isActive={pathname === '/admin/directors'}>
                 <Link href={'/admin/directors'}>Directors</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -82,11 +77,8 @@ export function AdminSidebar() {
           <SidebarGroupLabel>Actions</SidebarGroupLabel>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname === '/admin/create'}
-              >
-                <Link href={'/admin/create'}>Add Movie</Link>
+              <SidebarMenuButton asChild isActive={pathname === '/admin/movies/create'}>
+                <Link href={'/admin/movies/create'}>Add Movie</Link>
               </SidebarMenuButton>
               <SidebarMenuBadge>
                 <Plus />
@@ -100,7 +92,7 @@ export function AdminSidebar() {
         <SidebarGroup>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex w-full items-center gap-3 rounded-md p-2 hover:bg-accent transition">
+              <button className="hover:bg-accent flex w-full items-center gap-3 rounded-md p-2 transition">
                 <Avatar className="h-9 w-9">
                   <AvatarImage src="https://github.com/shadcn.png" />
                   <AvatarFallback>CN</AvatarFallback>
@@ -108,9 +100,7 @@ export function AdminSidebar() {
 
                 <div className="flex flex-col text-left">
                   <span className="font-medium">John Admin</span>
-                  <span className="text-xs text-muted-foreground">
-                    Administrator
-                  </span>
+                  <span className="text-muted-foreground text-xs">Administrator</span>
                 </div>
               </button>
             </DropdownMenuTrigger>
@@ -124,5 +114,5 @@ export function AdminSidebar() {
         </SidebarGroup>
       </SidebarFooter>
     </Sidebar>
-  );
+  )
 }

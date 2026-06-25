@@ -39,7 +39,7 @@ export default function HotDealsCarousel({
             className="object-cover transition-opacity duration-500"
           />
 
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent" />
 
           <div className="absolute top-4 left-4 bg-red-600 text-white text-sm font-bold px-3 py-1 rounded-md">
             €{movie.price} ONLY
