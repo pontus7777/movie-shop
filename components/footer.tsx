@@ -5,10 +5,10 @@ export default function Footer() {
   return (
     <footer className="bg-background text-muted-foreground border-t">
       {/* ===== MAIN FOOTER CONTENT ===== */}
-      <div className="container mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+      <div className="max-w-7xl mx-auto  px-6 py-12">
+        <div className="grid grid-cols-15 md:grid-cols-3 gap-50">
           {/* ===== BRAND SECTION ===== */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
             {/* Logo */}
             <Link
               href="/"
@@ -38,43 +38,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* ===== QUICK LINKS ===== */}
-          <div className="flex flex-col gap-3">
-            <h3 className="text-foreground font-semibold text-sm uppercase tracking-wider mb-1">
-              Quick Links
-            </h3>
-            <Link
-              href="/"
-              className="text-sm hover:text-purple-400 transition-colors"
-            >
-              Home
-            </Link>
-            <Link
-              href="/trending"
-              className="text-sm hover:text-purple-400 transition-colors"
-            >
-              Trending
-            </Link>
-            <Link
-              href="/popular"
-              className="text-sm hover:text-purple-400 transition-colors"
-            >
-              Popular
-            </Link>
-            <Link
-              href="/top-rated"
-              className="text-sm hover:text-purple-400 transition-colors"
-            >
-              Top-rated
-            </Link>
-            <Link
-              href="/cart"
-              className="text-sm hover:text-purple-400 transition-colors"
-            >
-              Cart
-            </Link>
-          </div>
-
           {/* ===== ACCOUNT ===== */}
           <div className="flex flex-col gap-3">
             <h3 className="text-foreground font-semibold text-sm uppercase tracking-wider mb-1">
@@ -90,7 +53,7 @@ export default function Footer() {
               href="/sign-up"
               className="text-sm hover:text-purple-400 transition-colors"
             >
-              Sign Up
+              Register
             </Link>
             <Link
               href="/orders"
@@ -119,7 +82,7 @@ export default function Footer() {
 
       {/* ===== BOTTOM BAR ===== */}
       <div className="border-t py-4 px-6">
-        <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-2 text-sm">
+        <div className="max-w-7xl mx-auto  flex flex-col md:flex-row items-center justify-between gap-2 text-sm">
           <p>© 2026 CineVault. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <Link href="#" className="hover:text-purple-400 transition-colors">

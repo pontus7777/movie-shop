@@ -96,6 +96,7 @@ model Movie {
   imageUrl    String?
   stock       Boolean
   runtime     Int
+  rating      Float?
   actors      Actor[]
   directors   Director[]
   genre       Genre?      @relation(fields: [genreId], references: [id])
@@ -103,7 +104,7 @@ model Movie {
   orderItems  OrderItem[]
   cartItems   CartItem[]
 
-  @@map("movies")
+  @@map("movies") 
 }
 
 model Actor {

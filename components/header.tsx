@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ThemeModeToggle } from "../theme-mode-toggle";
+import { ThemeModeToggle } from "./theme-mode-toggle";
 import { useState } from "react";
 
 export default function Header() {
@@ -17,7 +17,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-background/80 backdrop-blur-md">
-      <div className="container mx-auto flex items-center justify-between px-6 py-3">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
         {/* ===== LOGO ===== */}
         <Link
           href="/"
@@ -30,42 +30,27 @@ export default function Header() {
             Cine<span className="text-purple-500">Vault</span>
           </span>
         </Link>
-
-        {/* ===== NAVIGATION ===== */}
-        <nav className="hidden md:flex items-center gap-1">
-          <Link href="/">
-            <Button variant="ghost" className="font-medium">
-              Home
-            </Button>
-          </Link>
-          <Link href="/trending">
-            <Button variant="ghost" className="font-medium">
-              Trending
-            </Button>
-          </Link>
-          <Link href="/popular">
-            <Button variant="ghost" className="font-medium">
-              Popular
-            </Button>
-          </Link>
-          <Link href="/top-rated">
-            <Button variant="ghost" className="font-medium">
-              Top-rated
-            </Button>
-          </Link>
-        </nav>
-
         {/* ===== RIGHT SIDE ACTIONS ===== */}
         <div className="flex items-center gap-2">
-          {/* Search Icon Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            onClick={() => setIsSearchOpen(!isSearchOpen)}
-          >
-            <Search className="h-5 w-5" />
-          </Button>
+          {/* Expandable Search */}
+          <div className="flex items-center">
+            <input
+              type="text"
+              placeholder="Search movies..."
+              className={`transition-all duration-300 ease-in-out bg-muted border border-border rounded-full text-sm px-3 py-1.5 outline-none focus:border-purple-500 ${
+                isSearchOpen ? "w-48 opacity-100 mr-2" : "w-0 opacity-0"
+              }`}
+            />
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+            >
+              <Search className="h-5 w-5" />
+            </Button>
+          </div>
 
           {/* Cart with badge */}
           <Link href="/cart">
@@ -91,12 +76,15 @@ export default function Header() {
           {/* Divider */}
           <div className="h-6 w-px bg-gray-300 dark:bg-gray-600 mx-1" />
 
-          {/* Sign in / Sign up buttons */}
-          <Button variant="ghost" className="font-medium">
-            Sign in
+          {/* Sign in / Register buttons */}
+          <Button variant="ghost" className="font-medium" asChild>
+            <Link href={"/sign-in"}>Sign in</Link>
           </Button>
-          <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-full font-medium">
-            Sign up
+          <Button
+            className="bg-purple-600 hover:bg-purple-700 text-white rounded-full font-medium"
+            asChild
+          >
+            <Link href={"/register"}>Register</Link>
           </Button>
         </div>
       </div>
