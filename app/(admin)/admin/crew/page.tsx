@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma'
 export default async function AdminCrewPage() {
   const actors = await prisma.actor.findMany({
     include: {
-      movies: true,
+      movies: true,  
     },
     orderBy: {
       name: 'asc',
