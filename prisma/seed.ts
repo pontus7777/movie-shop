@@ -49,66 +49,76 @@ const thriller = await prisma.genre.upsert({
 })
 
 
-  const keanu = await prisma.actor.upsert({
+  const keanu = await prisma.crew.upsert({
     where: { id: 'actor-keanu-reeves' },
     update: {},
     create: {
       id: 'actor-keanu-reeves',
       name: 'Keanu Reeves',
+      role:'ACTOR'
+
     },
   })
 
-  const carrie = await prisma.actor.upsert({
+  const carrie = await prisma.crew.upsert({
     where: { id: 'actor-carrie-anne-moss' },
     update: {},
     create: {
       id: 'actor-carrie-anne-moss',
       name: 'Carrie-Anne Moss',
+      role:'ACTOR'
+
     },
   })
 
-  const leo = await prisma.actor.upsert({
+  const leo = await prisma.crew.upsert({
     where: { id: 'actor-leonardo-dicaprio' },
     update: {},
     create: {
       id: 'actor-leonardo-dicaprio',
       name: 'Leonardo DiCaprio',
+      role:'ACTOR'
+
     },
   })
 
-  const joseph = await prisma.actor.upsert({
+  const joseph = await prisma.crew.upsert({
     where: { id: 'actor-joseph-gordon-levitt' },
     update: {},
     create: {
       id: 'actor-joseph-gordon-levitt',
       name: 'Joseph Gordon-Levitt',
+      role:'ACTOR'
     },
   })
 
-  const lana = await prisma.director.upsert({
+  const lana = await prisma.crew.upsert({
     where: { id: 'director-lana-wachowski' },
     update: {},
     create: {
       id: 'director-lana-wachowski',
       name: 'Lana Wachowski',
+      role: 'DIRECTOR'
     },
   })
 
-  const lilly = await prisma.director.upsert({
+  const lilly = await prisma.crew.upsert({
     where: { id: 'director-lilly-wachowski' },
     update: {},
     create: {
       id: 'director-lilly-wachowski',
       name: 'Lilly Wachowski',
+      role: 'DIRECTOR'
     },
   })
 
-  const nolan = await prisma.director.upsert({
+  const nolan = await prisma.crew.upsert({
     where: { id: 'director-christopher-nolan' },
     update: {},
     create: {
       id: 'director-christopher-nolan',
       name: 'Christopher Nolan',
+      role: 'DIRECTOR'
     },
   })
 
@@ -122,12 +132,8 @@ const thriller = await prisma.genre.upsert({
       imageUrl: 'https://picsum.photos/400/600?random=1',
       stock: true,
       runtime: 136,
-      genreId: scifi.id,
-      actors: {
-        set: [{ id: keanu.id }, { id: carrie.id }],
-      },
-      directors: {
-        set: [{ id: lana.id }, { id: lilly.id }],
+      crewMembers: {
+        set: [{ id: keanu.id }, { id: carrie.id }, { id: lana.id }, { id: lilly.id }],
       },
     },
     create: {
@@ -139,12 +145,9 @@ const thriller = await prisma.genre.upsert({
       imageUrl: 'https://picsum.photos/400/600?random=1',
       stock: true,
       runtime: 136,
-      genre: { connect: { id: scifi.id } },
-      actors: {
-        connect: [{ id: keanu.id }, { id: carrie.id }],
-      },
-      directors: {
-        connect: [{ id: lana.id }, { id: lilly.id }],
+     genres: { connect: { id: sciFi.id } },
+      crewMembers: {
+        connect: [{ id: keanu.id }, { id: carrie.id }, { id: lana.id }, { id: lilly.id }],
       },
     },
   })
@@ -159,12 +162,8 @@ const thriller = await prisma.genre.upsert({
       imageUrl: 'https://picsum.photos/400/600?random=2',
       stock: true,
       runtime: 148,
-      genreId: scifi.id,
-      actors: {
-        set: [{ id: leo.id }, { id: joseph.id }],
-      },
-      directors: {
-        set: [{ id: nolan.id }],
+     crewMembers: {
+        set: [{ id: keanu.id }, { id: carrie.id }, { id: lana.id }, { id: lilly.id }],
       },
     },
     create: {
@@ -176,12 +175,9 @@ const thriller = await prisma.genre.upsert({
       imageUrl: 'https://picsum.photos/400/600?random=2',
       stock: true,
       runtime: 148,
-      genre: { connect: { id: scifi.id } },
-      actors: {
-        connect: [{ id: leo.id }, { id: joseph.id }],
-      },
-      directors: {
-        connect: [{ id: nolan.id }],
+      genres: { connect: { id: sciFi.id } },
+     crewMembers: {
+        connect: [{ id: keanu.id }, { id: carrie.id }, { id: lana.id }, { id: lilly.id }],
       },
     },
   })

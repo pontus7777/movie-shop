@@ -4,12 +4,19 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'picsum.photos',
+        protocol: "https",
+        hostname: "picsum.photos",
+      },
+      {
+        protocol: "https",
+        hostname: "image.tmdb.org",
       },
     ],
   },
-  /* config options here */
+
+
 }
+
+
 
 export default nextConfig

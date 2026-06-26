@@ -87,21 +87,18 @@ model Verification {
 model Movie {
   id String @id @default(cuid())
 
-  title       String @db.VarChar(100)
+  title       String  @db.VarChar(100)
   description String
-
   // Price is in smallest possible unit
   price       Int
   releaseYear Int     @map("release_year")
   imageUrl    String?
   stock       Boolean
   runtime     Int
+  rating      Float?
 
-  actors    Actor[]
-  directors Director[]
-
-  genre   Genre? @relation(fields: [genreId], references: [id])
-  genreId Int?
+  crewMembers Crew[]
+  genres      Genre[]
 
   orderItems OrderItem[]
   cartItems  CartItem[]
@@ -112,20 +109,19 @@ model Movie {
   @@map("movies")
 }
 
-model Actor {
-  id     String  @id @default(cuid())
-  name   String
+model Crew {
+  id   String   @id @default(cuid())
+  name String
+  role CrewRole
+
   movies Movie[]
 
-  @@map("actors")
+  @@map("crew_members")
 }
 
-model Director {
-  id     String  @id @default(cuid())
-  name   String
-  movies Movie[]
-
-  @@map("directors")
+enum CrewRole {
+  ACTOR
+  DIRECTOR
 }
 
 model Genre {

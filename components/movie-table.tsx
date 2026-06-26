@@ -1,20 +1,18 @@
 "use client"
 
-import { Movie, Prisma } from "@/generated/prisma/client"
+import { Prisma } from "@/generated/prisma/client"
 import { Button } from "./ui/button"
 import Link from "next/link"
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "./ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
 import { Avatar, AvatarImage } from "./ui/avatar"
 import { MoveRight } from "lucide-react"
-import { Field, FieldLabel } from "./ui/field"
 import placeHolder from '@/public/file.svg'
 import { getMovieImageSrc } from "@/lib/image-utils";
 
 type MovieWithRelations = Prisma.MovieGetPayload<{
   include: {
-    genre: true;
-    actors: true;
-    directors: true;
+    genres: true,
+    crewMembers: true,
   };
 }>;
 
@@ -82,7 +80,10 @@ function MovieTable({movies}:Props){
                 </Avatar>
               </TableCell>
               <TableCell className="font-medium">{movie.title}</TableCell>
-              <TableCell>{movie.genre?.name ?? 'No genre'}</TableCell>
+              {movie.genres.map((genre) => (
+              <TableCell key={genre.id}>{genre.name ?? 'No genre'}</TableCell>
+
+              ))}
               <TableCell>{Number(movie.price)} kr</TableCell>
               <TableCell>{movie.releaseYear}</TableCell>
 
