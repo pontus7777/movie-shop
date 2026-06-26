@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 import placeHolder from '@/public/file.svg'
 import { getMovieImageSrc } from '@/lib/image-utils'
+import { Crew, Genre } from '@/generated/prisma/client'
 
 export type Movie = {
   id: string
@@ -16,23 +17,11 @@ export type Movie = {
   imageUrl: string | null
   stock: boolean
   runtime: number
-  genreId: number | null
+  genres: Genre[] | null
   createdAt: Date
   updatedAt: Date
   /*** All relations in */
-  genre: {
-    id: number
-    name: string
-    description: string
-  } | null
-  actors: {
-    id: string
-    name: string
-  }[]
-  directors: {
-    id: string
-    name: string
-  }[]
+  crewMembers: Crew[] | null
 }
 type Props = {
   movie: Movie
@@ -63,7 +52,10 @@ export default function ShopMovieCard({ movie }: Props) {
             {movie.title}
           </Link>
         </CardTitle>
-        <p className="text-muted-foreground text-sm">{movie.genre?.name ?? 'No genre'}</p>
+        {movie.genres?.map((genre) => (
+        <p key={genre.id} className="text-muted-foreground text-sm">{genre.name ?? 'No genre'}</p>
+
+        ))}
       </CardHeader>
 
       <CardContent>

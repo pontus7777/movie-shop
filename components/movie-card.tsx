@@ -1,22 +1,22 @@
-import Image from "next/image";
-import Link from "next/link";
-import type { Movie } from "@/generated/prisma/client";
+import Image from 'next/image'
+import Link from 'next/link'
+import { MovieWithGenres } from './movie-row'
 
-type MovieWithGenre = Movie & {
-  genre: {
-    name: string;
-  } | null;
-};
+// type MovieWithGenre = Movie & {
+//   genres: {
+//     name: string;
+//   } | null;
+// };
 
 export default function MovieCard({
   movie,
   showDealBadge = false,
 }: {
-  movie: MovieWithGenre;
-  showDealBadge?: boolean;
+  movie: MovieWithGenres
+  showDealBadge?: boolean
 }) {
   if (!movie.imageUrl) {
-    return null;
+    return null
   }
 
   return (
@@ -38,11 +38,13 @@ export default function MovieCard({
 
         <div className="p-2">
           <h3 className="text-sm font-semibold truncate">{movie.title}</h3>
-          <p className="text-xs text-muted-foreground">
-            ⭐ {movie.rating ? movie.rating.toFixed(1) : "Not rated"}
+          <p className="text-sm text-gray-300">
+            {(movie.genres.map((g) => g.name).join(' • ') || 'No genres') +
+              ' • ⭐ ' +
+              (movie.rating ? movie.rating.toFixed(1) : '—')}
           </p>
         </div>
       </div>
     </Link>
-  );
+  )
 }

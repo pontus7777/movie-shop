@@ -11,9 +11,8 @@ import { getMovieImageSrc } from "@/lib/image-utils";
 
 type MovieWithRelations = Prisma.MovieGetPayload<{
   include: {
-    genre: true;
-    actors: true;
-    directors: true;
+    genres: true,
+    crewMembers: true,
   };
 }>;
 
@@ -81,7 +80,10 @@ function MovieTable({movies}:Props){
                 </Avatar>
               </TableCell>
               <TableCell className="font-medium">{movie.title}</TableCell>
-              <TableCell>{movie.genre?.name ?? 'No genre'}</TableCell>
+              {movie.genres.map((genre) => (
+              <TableCell key={genre.id}>{genre.name ?? 'No genre'}</TableCell>
+
+              ))}
               <TableCell>{Number(movie.price)} kr</TableCell>
               <TableCell>{movie.releaseYear}</TableCell>
 
