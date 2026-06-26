@@ -5,10 +5,11 @@ export default function Footer() {
   return (
     <footer className="bg-background text-muted-foreground border-t">
       {/* ===== MAIN FOOTER CONTENT ===== */}
-      <div className="container mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
+
+      <div className="max-w-7xl mx-auto  px-6 py-12">
+        <div className="grid grid-cols-15 md:grid-cols-3 gap-50">
           {/* ===== BRAND SECTION ===== */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
             {/* Logo */}
             <Link
               href="/"
@@ -37,25 +38,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* ===== QUICK LINKS ===== */}
-          <div className="flex flex-col gap-3">
-            <h3 className="text-foreground mb-1 text-sm font-semibold tracking-wider uppercase">
-              Quick Links
-            </h3>
-            <Link href="/" className="text-sm transition-colors hover:text-purple-400">
-              Home
-            </Link>
-            <Link href="/movies" className="text-sm transition-colors hover:text-purple-400">
-              Movies
-            </Link>
-            <Link href="/genres" className="text-sm transition-colors hover:text-purple-400">
-              Genres
-            </Link>
-            <Link href="/cart" className="text-sm transition-colors hover:text-purple-400">
-              Cart
-            </Link>
-          </div>
-
           {/* ===== ACCOUNT ===== */}
           <div className="flex flex-col gap-3">
             <h3 className="text-foreground mb-1 text-sm font-semibold tracking-wider uppercase">
@@ -64,8 +46,11 @@ export default function Footer() {
             <Link href="/sign-in" className="text-sm transition-colors hover:text-purple-400">
               Sign In
             </Link>
-            <Link href="/sign-up" className="text-sm transition-colors hover:text-purple-400">
-              Sign Up
+            <Link
+              href="/sign-up"
+              className="text-sm hover:text-purple-400 transition-colors"
+            >
+              Register
             </Link>
             <Link href="/orders" className="text-sm transition-colors hover:text-purple-400">
               My Orders
@@ -87,8 +72,8 @@ export default function Footer() {
       </div>
 
       {/* ===== BOTTOM BAR ===== */}
-      <div className="border-t px-6 py-4">
-        <div className="container mx-auto flex flex-col items-center justify-between gap-2 text-sm md:flex-row">
+      <div className="border-t py-4 px-6">
+        <div className="max-w-7xl mx-auto  flex flex-col md:flex-row items-center justify-between gap-2 text-sm">
           <p>© 2026 CineVault. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <Link href="#" className="transition-colors hover:text-purple-400">

@@ -1,12 +1,11 @@
 "use client"
 
-import { Movie, Prisma } from "@/generated/prisma/client"
+import { Prisma } from "@/generated/prisma/client"
 import { Button } from "./ui/button"
 import Link from "next/link"
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "./ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
 import { Avatar, AvatarImage } from "./ui/avatar"
 import { MoveRight } from "lucide-react"
-import { Field, FieldLabel } from "./ui/field"
 import placeHolder from '@/public/file.svg'
 import { getMovieImageSrc } from "@/lib/image-utils";
 

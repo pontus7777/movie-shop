@@ -4,23 +4,19 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'picsum.photos',
+        protocol: "https",
+        hostname: "picsum.photos",
+      },
+      {
+        protocol: "https",
+        hostname: "image.tmdb.org",
       },
     ],
   },
-  /* config options here */
 
-  //   async redirects() {
-  //   return [
-  //     {
-  //       source: '/admin/crew/actors/create',
-  //       destination: '/admin/crew',
-  //       permanent: true, // or false
-  //     },
-  //   ];
-  // },
 
 }
+
+
 
 export default nextConfig
