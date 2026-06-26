@@ -11,7 +11,7 @@ export default async function AdminCrewPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Crew</h2>
-          <p className="text-muted-foreground">Manage crews and their movies</p>
+          <p className="text-muted-foreground">Manage actors and their movies</p>
         </div>
       </div>
       <CrewTable crewMembers={crew} />
