@@ -8,9 +8,8 @@ import { MovieTable } from '@/components/movie-table'
 export default async function Page() {
   const movies = await prisma.movie.findMany({
     include: {
-      genre:true,
-      actors: true,
-      directors: true,
+      genres:true,
+      crewMembers: true,
     },
     orderBy: {
       title: 'asc',

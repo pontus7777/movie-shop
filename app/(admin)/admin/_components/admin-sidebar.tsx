@@ -72,7 +72,7 @@ export function AdminSidebar() {
             </SidebarMenuItem>
              <SidebarMenuItem>
               <SidebarMenuButton asChild isActive={pathname === '/admin/crew'}>
-                <Link href={'/admin/crew'}>Actors</Link>
+                <Link href={'/admin/crew'}>Crew</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>

@@ -1,21 +1,10 @@
 import prisma from '@/lib/prisma'
-// import { CrewTable } from './_components/crew-table'
+import { CrewTable } from './_components/crew-table'
 
 export default async function AdminCrewPage() {
-  const actors = await prisma.actor.findMany({
-    include: {
-      movies: true,  
-    },
-    orderBy: {
-      name: 'asc',
-    },
-  })
 
-  const movies = await prisma.movie.findMany({
-    orderBy: {
-      title: 'asc',
-    },
-  })
+    const crew = await prisma.crew.findMany()
+
 
   return (
     <div className="bg-card rounded-xl border p-6 shadow-sm">
@@ -25,7 +14,7 @@ export default async function AdminCrewPage() {
           <p className="text-muted-foreground">Manage actors and their movies</p>
         </div>
       </div>
-      {/* <CrewTable actors={actors} movies={movies} /> */}
+      <CrewTable crewMembers={crew} />
     </div>
   )
 }
