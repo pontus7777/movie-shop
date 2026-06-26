@@ -20,14 +20,13 @@ import {
 import { Genre } from '@/generated/prisma/client'
 import { MoreHorizontalIcon } from 'lucide-react'
 import { deleteGenre } from '../_actions/delete-genre-action'
-import { useState } from 'react'
 
 type TableGenreProps = {
   genres: Genre[]
 }
 
 function GenresTable({ genres }: TableGenreProps) {
-  const [loading, setLoading] = useState(false)
+  // const [loading, setLoading] = useState(false)
   // Imeplement this somehow
 
   return (
