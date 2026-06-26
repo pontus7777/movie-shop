@@ -74,10 +74,6 @@ export function CrewTable({ crewMembers }: Props) {
 
                     <DropdownMenuSeparator />
 
-                    <DropdownMenuItem onClick={() => setCreateOpen(true)}>
-                      Create
-                    </DropdownMenuItem>
-
                     <DropdownMenuSeparator />
 
                     <DropdownMenuItem onClick={() => setDeleteId(cm.id)}>
@@ -128,12 +124,12 @@ export function CrewTable({ crewMembers }: Props) {
                 )}
 
                 {/* Create dialog */}
-                {createOpen && (
+                {/* {createOpen && (
                   <CreateCrewDialog
                     open
                     onOpenChange={() => setCreateOpen(false)}
                   />
-                )}
+                )} */}
               </TableCell>
             </TableRow>
           ))}
