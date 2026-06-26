@@ -5,17 +5,17 @@ import { revalidatePath } from 'next/cache'
 
 import prisma from '@/lib/prisma'
 
-const editActorSchema = z.object({
+const editCrewSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   role: z.string().min(1).max(50),
   movieIds: z.array(z.string()).optional(),
 })
 
-export async function editCrew(values: z.infer<typeof editActorSchema>) {
-  const data = editActorSchema.parse(values)
+export async function editCrew(values: z.infer<typeof editCrewSchema>) {
+  const data = editCrewSchema.parse(values)
 
-  const updatedActor = await prisma.crew.update({
+  const updatedCrew = await prisma.crew.update({
     where: {
       id: data.id,
       role: { equals: 'ACTOR' },
@@ -32,5 +32,5 @@ export async function editCrew(values: z.infer<typeof editActorSchema>) {
 
   revalidatePath('/admin/crew')
 
-  return updatedActor
+  return updatedCrew
 }
