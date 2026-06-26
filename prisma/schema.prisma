@@ -126,7 +126,7 @@ enum CrewRole {
 
 model Genre {
   id          Int     @id @default(autoincrement())
-  name        String  @db.VarChar(50)
+  name        String  @unique @db.VarChar(50)
   description String
   movies      Movie[]
 

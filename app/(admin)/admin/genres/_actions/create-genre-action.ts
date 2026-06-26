@@ -11,17 +11,18 @@ const createGenreSchema = z.object({
 
 export async function createGenre(values: z.infer<typeof createGenreSchema>) {
   const data = createGenreSchema.parse(values)
+
   try {
-    const newGenre = prisma.genre.create({
+    const newGenre = await prisma.genre.create({
       data: {
         name: data.name,
-        description: data.name,
+        description: data.description,
       },
     })
 
     revalidatePath(`/admin/genres`)
-
     return newGenre
+    
   } catch (error) {
     console.log('Error creating a genre', error)
     throw new Error('Faild to create a genre: ')

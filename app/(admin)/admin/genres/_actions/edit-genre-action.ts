@@ -1,0 +1,40 @@
+'use server'
+
+import prisma from '@/lib/prisma'
+import { revalidatePath } from 'next/cache'
+import { z } from 'zod'
+
+const editGenreSchema = z.object({
+  id: z.number().transform((val) => Number(val)),
+  name: z.string().min(1),
+  description: z.string().min(1),
+})
+
+export async function editGenre(values: z.infer<typeof editGenreSchema>) {
+  // Uncomment to enable auth
+  // const session = await auth.api.getSession({
+  //   headers: await headers(),
+  // })
+
+  // if (!session) {
+  //   redirect('/sign-in')
+  // }
+
+  const data = editGenreSchema.parse(values)
+
+  const updatedGenre = await prisma.genre.update({
+    where: {
+      id: data.id,
+    },
+    data: {
+      name: data.name,
+      description: data.description,
+    },
+  })
+
+  revalidatePath('/admin/genres')
+
+  return {
+    ...updatedGenre,
+  }
+}

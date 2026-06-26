@@ -21,13 +21,14 @@ const editMovieSchema = z.object({
 })
 
 export async function editMovie(values: z.infer<typeof editMovieSchema>) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
+  // Uncomment to enable auth
+  // const session = await auth.api.getSession({
+  //   headers: await headers(),
+  // })
 
-  if (!session) {
-    redirect('/sign-in')
-  }
+  // if (!session) {
+  //   redirect('/sign-in')
+  // }
 
   const data = editMovieSchema.parse(values)
 
