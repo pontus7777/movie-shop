@@ -19,29 +19,25 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Crew } from '@/generated/prisma/client'
 import { MoreHorizontalIcon } from 'lucide-react'
 import { deleteCrew } from '../_actions/delete-crew-action'
 import { toast } from 'sonner'
 import { Spinner } from '@/components/ui/spinner'
 import { EditCrewDialog } from './crew-edit'
+import { CreateCrewDialog } from './crew-create'
 
 type Props = {
   crewMembers: Crew[]
 }
 
 export function CrewTable({ crewMembers }: Props) {
-  const [openId, setOpenId] = useState<string | null>(null)
+  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [editId, setEditId] = useState<string | null>(null)
+  const [createOpen, setCreateOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+
 
   return (
     <>
@@ -72,19 +68,26 @@ export function CrewTable({ crewMembers }: Props) {
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem asChild>
-                      {/* ========== Edit Components living here ============ */}
-                      <EditCrewDialog crew={cm} />
+                    <DropdownMenuItem onClick={() => setEditId(cm.id)}>
+                      Edit
                     </DropdownMenuItem>
+
                     <DropdownMenuSeparator />
 
-                    {/* This only OPENS the dialog */}
-                    <DropdownMenuItem onClick={() => setOpenId(cm.id)}>Delete</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setCreateOpen(true)}>
+                      Create
+                    </DropdownMenuItem>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuItem onClick={() => setDeleteId(cm.id)}>
+                      Delete
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* The dialog lives OUTSIDE the menu */}
-                <AlertDialog open={openId === cm.id} onOpenChange={() => setOpenId(null)}>
+                {/* Delete dialog */}
+                <AlertDialog open={deleteId === cm.id} onOpenChange={() => setDeleteId(null)}>
                   <AlertDialogContent>
                     <AlertDialogHeader>
                       <AlertDialogTitle>Delete crew?</AlertDialogTitle>
@@ -102,10 +105,10 @@ export function CrewTable({ crewMembers }: Props) {
                             await deleteCrew(cm.id)
                             toast.success('Crew deleted')
                           } catch {
-                            toast.error('Failed to delete actor')
+                            toast.error('Failed to delete crew')
                           } finally {
                             setLoading(false)
-                            setOpenId(null)
+                            setDeleteId(null)
                           }
                         }}
                       >
@@ -114,6 +117,23 @@ export function CrewTable({ crewMembers }: Props) {
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
+
+                {/* Edit dialog */}
+                {editId === cm.id && (
+                  <EditCrewDialog
+                    crew={cm}
+                    open
+                    onOpenChange={() => setEditId(null)}
+                  />
+                )}
+
+                {/* Create dialog */}
+                {createOpen && (
+                  <CreateCrewDialog
+                    open
+                    onOpenChange={() => setCreateOpen(false)}
+                  />
+                )}
               </TableCell>
             </TableRow>
           ))}
