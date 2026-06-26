@@ -1,11 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { editCrew } from '../_actions/edit-crew-action'
 import { toast } from 'sonner'
 import {
   AlertDialog,
-  AlertDialogTrigger,
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -14,16 +12,18 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from '@/components/ui/alert-dialog'
-import { Button } from '@/components/ui/button'
 import { Crew } from '@/generated/prisma/client'
+import { editCrew } from '../_actions/edit-crew-action'
 
 type Props = {
   crew: Crew
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
-export function EditCrewDialog({ crew }: Props) {
-  const [open, setOpen] = useState(false)
+export function EditCrewDialog({ crew, open, onOpenChange }: Props) {
   const [name, setName] = useState(crew.name)
+  const [role, setRole] = useState<'ACTOR' | 'DIRECTOR'>(crew.role)
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit() {
@@ -33,11 +33,11 @@ export function EditCrewDialog({ crew }: Props) {
       await editCrew({
         id: crew.id,
         name,
-        role: crew.role,
+        role,
       })
 
       toast.success('Crew updated')
-      setOpen(false)
+      onOpenChange(false)
     } catch {
       toast.error('Failed to update crew')
     } finally {
@@ -46,37 +46,37 @@ export function EditCrewDialog({ crew }: Props) {
   }
 
   return (
-    <>
-      <AlertDialog open={open} onOpenChange={setOpen}>
-        <AlertDialogTrigger>Edit</AlertDialogTrigger>
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Edit Crew</AlertDialogTitle>
+          <AlertDialogDescription>Update the crew member details.</AlertDialogDescription>
+        </AlertDialogHeader>
 
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Edit Crew</AlertDialogTitle>
-            <AlertDialogDescription>Update the crew’s information.</AlertDialogDescription>
-          </AlertDialogHeader>
+        <div className="space-y-4 py-4">
+          <input
+            className="w-full border rounded p-2"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
 
-          <div className="space-y-4 py-4">
-            <input
-              className="w-full border rounded p-2"
-              value={name}
-              onChange={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                setName(e.target.value)
-              }}
-            />
-          </div>
+          <select
+            className="w-full border rounded p-2"
+            value={role}
+            onChange={(e) => setRole(e.target.value as 'ACTOR' | 'DIRECTOR')}
+          >
+            <option value="ACTOR">Actor</option>
+            <option value="DIRECTOR">Director</option>
+          </select>
+        </div>
 
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-
-            <AlertDialogAction onClick={handleSubmit} disabled={loading}>
-              {loading ? 'Saving...' : 'Save'}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={handleSubmit} disabled={loading}>
+            {loading ? 'Saving…' : 'Save'}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }
