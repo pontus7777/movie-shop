@@ -6,23 +6,23 @@ import { notFound } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
 import { DeleteMovieBtn } from './_components/delete-movie-btn'
-import { getMovieImageSrc } from "@/lib/image-utils";
+import { getMovieImageSrc } from '@/lib/image-utils'
 
-export default async function MovieDetailsPage(props: PageProps<'/admin/movies/[id]'>) {
-  const params = await props.params
+export default async function MovieDetailsPage({ params }: PageProps<'/admin/movies/[id]'>) {
+  // const params = await props.params
 
-  if (!params.id) {
+  if (!(await params).id) {
     notFound()
   }
 
   const movie = await prisma.movie.findUnique({
     where: {
-      id: params.id,
+      id: (await params).id,
     },
     include: {
-      genre: true,
-      actors: true,
-      directors: true,
+      genres: true,
+      crewMembers: true,
+      // directors: true,
     },
   })
 
@@ -35,7 +35,7 @@ export default async function MovieDetailsPage(props: PageProps<'/admin/movies/[
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-4xl font-bold">{movie.title}</h1>
-          <p className="text-muted-foreground">{movie.genre?.name ?? 'No genre'}</p>
+          <p className="text-muted-foreground">{movie.genres.map((g) => g.name) || 'No genre'}</p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -48,7 +48,7 @@ export default async function MovieDetailsPage(props: PageProps<'/admin/movies/[
 
           <DeleteMovieBtn
             action={async () => {
-              "use server"
+              'use server'
 
               await prisma.movie.delete({
                 where: {
@@ -78,12 +78,9 @@ export default async function MovieDetailsPage(props: PageProps<'/admin/movies/[
             <p>Release year: {movie.releaseYear}</p>
             <p>Runtime: {movie.runtime} minutes</p>
             <p>Stock: {movie.stock ? 'Available' : 'Out of stock'}</p>
-            <p>Genre: {movie.genre?.name ?? 'No genre'}</p>
-            <p>Actors: {movie.actors.map((actor) => actor.name).join(', ') || 'No actors'}</p>
-            <p>
-              Directors:{' '}
-              {movie.directors.map((director) => director.name).join(', ') || 'No directors'}
-            </p>
+            <p>Genre: {movie.genres.map((g) => g.name) || 'No genre'}</p>
+            <p>Actors: {movie.crewMembers.map((ca) => ca.name).join(', ') || 'No actors'}</p>
+            <p>Directors: {movie.crewMembers.map((cd) => cd.name).join(', ') || 'No directors'}</p>
           </div>
         </div>
       </div>
