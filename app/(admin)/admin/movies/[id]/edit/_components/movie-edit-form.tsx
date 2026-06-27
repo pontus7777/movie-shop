@@ -16,6 +16,9 @@ import { Textarea } from '@/components/ui/textarea'
 
 import { editMovie } from '../../../_actions/edit-movie-action'
 import { convertToSek } from '@/lib/priceUtils'
+import { Crew, Genre } from '@/generated/prisma/client'
+import { CrewSelector } from '@/components/movies/crew-selector'
+import { GenreSelector } from '@/components/movies/genre-selector'
 
 const editFormSchema = z.object({
   title: z.string().min(1, 'Title is required').max(32, 'Title must be less than 32 characters'),
@@ -25,6 +28,9 @@ const editFormSchema = z.object({
   stock: z.boolean(),
   runtime: z.number().min(10),
   imageUrl: z.string(),
+  crewMemberIds: z.array(z.string()),
+  genreIds: z.array(z.number()),
+
 })
 
 type EditMovieProps = {
@@ -37,14 +43,18 @@ type EditMovieProps = {
     stock: boolean
     runtime: number
     imageUrl: string | null
+
+    crewMembers: Crew[]
+    genres: Genre[]
   }
+
+  crewMembers: Crew[]
+  genres: Genre[]
 }
 
-function EditMovieForm({ movie }: EditMovieProps) {
+function EditMovieForm({ movie,crewMembers,genres}: EditMovieProps) {
   const router = useRouter()
-  const [loading, setLoading] = useState(false)
-  // use LOADING? Pontus
-
+  
   const form = useForm({
     defaultValues: {
       title: movie.title,
@@ -53,7 +63,10 @@ function EditMovieForm({ movie }: EditMovieProps) {
       releaseYear: movie.releaseYear,
       stock: movie.stock,
       runtime: movie.runtime,
-      imageUrl: movie.imageUrl ?? '',
+      imageUrl: movie.imageUrl ?? "",
+
+      crewMemberIds: movie.crewMembers.map((member) => member.id),
+      genreIds: movie.genres.map((genre) => genre.id),
     },
     validators: {
       onSubmit: editFormSchema,
@@ -61,8 +74,6 @@ function EditMovieForm({ movie }: EditMovieProps) {
     },
 
     onSubmit: async ({ value, formApi }) => {
-      setLoading(true)
-
       const updatedMovie = await editMovie({
         ...value,
         id: movie.id,
@@ -76,6 +87,12 @@ function EditMovieForm({ movie }: EditMovieProps) {
         stock: movie.stock,
         runtime: movie.runtime,
         imageUrl: updatedMovie.imageUrl ?? '',
+        crewMemberIds: updatedMovie.crewMembers.map(
+            (member) => member.id
+          ),
+        genreIds: updatedMovie.genres.map(
+            (genre) => genre.id
+          ),
       })
 
       toast.success('Form edited successfully', {})
@@ -83,7 +100,13 @@ function EditMovieForm({ movie }: EditMovieProps) {
       router.refresh()
     },
   })
+    const actors = crewMembers.filter(
+      (member) => member.role === "ACTOR"
+    );
 
+    const directors = crewMembers.filter(
+      (member) => member.role === "DIRECTOR"
+    );
   return (
     <form
       method="POST"
@@ -226,7 +249,51 @@ function EditMovieForm({ movie }: EditMovieProps) {
             )
           }}
         </form.Field>
+        {/* ====Crew: CheckBox Component actors, derictors ====== */}
+        <form.Field name="crewMemberIds">
+          {(field) => (
+            <div className="space-y-4">
+              <CrewSelector
+                title="Actors"
+                crew={actors}
+                value={field.state.value}
+                onChange={field.handleChange}
+              />
 
+              <CrewSelector
+                title="Directors"
+                crew={directors}
+                value={field.state.value}
+                onChange={field.handleChange}
+              />
+            </div>
+          )}
+        </form.Field>
+
+        <form.Field name="genreIds">
+          {(field) => {
+            const isInvalid =
+              field.state.meta.isTouched &&
+              !field.state.meta.isValid
+
+            return (
+              <Field data-invalid={isInvalid}>
+                <GenreSelector
+                  title="Genres"
+                  genres={genres}
+                  value={field.state.value}
+                  onChange={field.handleChange}
+                />
+
+                {isInvalid && (
+                  <FieldError errors={field.state.meta.errors} />
+                )}
+              </Field>
+            )
+          }}
+        </form.Field>
+
+  {/* ====Genre: CheckBox Component  ====== */}
         <form.Field name="stock">
           {(field) => (
             <Field orientation="horizontal">

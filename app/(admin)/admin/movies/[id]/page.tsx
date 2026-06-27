@@ -22,20 +22,29 @@ export default async function MovieDetailsPage({ params }: PageProps<'/admin/mov
     include: {
       genres: true,
       crewMembers: true,
-      // directors: true,
     },
   })
 
   if (!movie) {
     notFound()
   }
+  const actors = movie.crewMembers.filter(
+    (member) => member.role === "ACTOR"
+  )
+
+  const directors = movie.crewMembers.filter(
+    (member) => member.role === "DIRECTOR"
+  )
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 p-4">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-4xl font-bold">{movie.title}</h1>
-          <p className="text-muted-foreground">{movie.genres.map((g) => g.name) || 'No genre'}</p>
+          <p className="text-muted-foreground">  
+            {movie.genres.length
+              ? movie.genres.map((g) => g.name).join(', ')
+              : 'No genre'}</p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -78,9 +87,26 @@ export default async function MovieDetailsPage({ params }: PageProps<'/admin/mov
             <p>Release year: {movie.releaseYear}</p>
             <p>Runtime: {movie.runtime} minutes</p>
             <p>Stock: {movie.stock ? 'Available' : 'Out of stock'}</p>
-            <p>Genre: {movie.genres.map((g) => g.name) || 'No genre'}</p>
-            <p>Actors: {movie.crewMembers.map((ca) => ca.name).join(', ') || 'No actors'}</p>
-            <p>Directors: {movie.crewMembers.map((cd) => cd.name).join(', ') || 'No directors'}</p>
+            <p>Genre: 
+                {movie.genres.length
+                  ? movie.genres.map((g) => g.name).join(', ')
+                  : 'No genre'}
+            </p>
+            {/* <p>Actors: {movie.crewMembers.map((ca) => ca.name).join(', ') || 'No actors'}</p>
+            <p>Directors: {movie.crewMembers.map((cd) => cd.name).join(', ') || 'No directors'}</p> */}
+            <p>
+              Actors:
+              {actors.length
+                ? actors.map((actor) => actor.name).join(', ')
+                : 'No actors'}
+            </p>
+
+            <p>
+              Directors:
+              {directors.length
+                ? directors.map((director) => director.name).join(', ')
+                : 'No directors'}
+            </p>
           </div>
         </div>
       </div>
