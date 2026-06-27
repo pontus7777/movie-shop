@@ -6,11 +6,27 @@ import { EditMovieForm } from './_components/movie-edit-form'
 export default async function EditMoviePage(props: PageProps<'/admin/movies/[id]'>) {
   const params = await props.params
 
-  const movie = await prisma.movie.findUnique({
-    where: {
-      id: params.id,
-    },
-  })
+  const [movie, crewMembers] = await Promise.all([
+  prisma.movie.findUnique({
+      where: {
+        id: params.id,
+      },
+      include: {
+        crewMembers: true,
+      },
+    }),
+
+    prisma.crew.findMany({
+      orderBy: {
+        name: "asc",
+      },
+    }),
+  ])
+  // const movie = await prisma.movie.findUnique({
+  //   where: {
+  //     id: params.id,
+  //   },
+  // })
 
   if (!movie) {
     notFound()
@@ -24,9 +40,8 @@ export default async function EditMoviePage(props: PageProps<'/admin/movies/[id]
       </div>
 
       <EditMovieForm
-        movie={{
-          ...movie,
-        }}
+        movie={movie}
+        crewMembers={crewMembers}
       />
     </div>
   )
