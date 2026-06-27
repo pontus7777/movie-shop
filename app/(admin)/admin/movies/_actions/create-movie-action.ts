@@ -13,6 +13,11 @@ const createMovieSchema = z.object({
   releaseYear: z.number().min(0).max(9999),
   stock: z.boolean(),
   runtime: z.number().min(10),
+  imageUrl: z.union([
+    z.literal(""),
+    z.string().url("Invalid URL"),
+  ]),
+  crewMemberIds: z.array(z.string()),
 })
 
 export async function createMovie(values: z.infer<typeof createMovieSchema>) {
@@ -23,10 +28,14 @@ export async function createMovie(values: z.infer<typeof createMovieSchema>) {
       data: {
         title: data.title,
         description: data.description,
-        price: convertFromSek(data.price), // converts 149 sek to 1490 for example
+        price: convertFromSek(data.price), // converts 149 sek to 14900 for example
         releaseYear: data.releaseYear,
         stock: data.stock,
         runtime: data.runtime,
+        imageUrl: data.imageUrl.trim() === "" ? null : data.imageUrl,
+        crewMembers: {
+          connect: data.crewMemberIds.map((id) => ({ id })),
+        },
       },
     })
     revalidatePath(`/admin/movies`)
