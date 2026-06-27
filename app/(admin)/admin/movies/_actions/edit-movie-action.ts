@@ -22,6 +22,7 @@ const editMovieSchema = z.object({
       z.string().url("Invalid URL"),
 ]),
   crewMemberIds: z.array(z.string()),
+  genreIds: z.array(z.number()),
 })
 
 export async function editMovie(values: z.infer<typeof editMovieSchema>) {
@@ -51,9 +52,13 @@ export async function editMovie(values: z.infer<typeof editMovieSchema>) {
       crewMembers: {
           set: data.crewMemberIds.map((id) => ({ id })), //set replaces the existing list with the new selection
         },
+      genres: {
+        set: data.genreIds.map((id) => ({ id })),
+      },
     },
      include: {
           crewMembers: true,
+          genres: true,
         },
   })
   revalidatePath('/admin/movies')
