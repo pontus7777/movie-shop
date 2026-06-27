@@ -3,7 +3,7 @@ import ShopMoviecard from '@/components/shop-movie-card'
 import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
 import { convertToSek } from '@/lib/priceUtils'
-import { MovieTable } from '@/components/movie-table'
+import { MovieTable } from '@/components/movies/movie-table'
 
 export default async function Page() {
   const movies = await prisma.movie.findMany({
