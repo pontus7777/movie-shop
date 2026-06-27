@@ -3,7 +3,7 @@ import 'dotenv/config'
 
 export async function main() {
 
-  const scifi = await prisma.genre.upsert({
+  const sciFi = await prisma.genre.upsert({
   where: { name: 'Science Fiction' },
   update: {},
   create: {
