@@ -14,11 +14,15 @@ import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { createMovie } from '../../_actions/create-movie-action'
 import { Crew } from '@/generated/prisma/client'
-import { CrewSelector } from '@/components/crew-selector'
+import { CrewSelector } from '@/components/movies/crew-selector'
+import { GenreSelector } from '@/components/movies/genre-selector'
 
 type Props = {
   crewMembers: Crew[];
+  genres: { id: number; name: string }[]
 };
+
+
 
 const formSchema = z.object({
   title: z.string().min(1, 'Title is required').max(32, 'Title must be less than 32 characters'),
@@ -28,10 +32,11 @@ const formSchema = z.object({
   stock: z.boolean(),
   runtime: z.number().min(10),
   imageUrl: z.string(),
-  crewMemberIds: z.array(z.string()).min(1, "Select at least one crew member"),
+  crewMemberIds: z.array(z.string()).min(1),
+  genreIds: z.array(z.number()).min(1), 
 })
 
-function CreateMovieForm({ crewMembers }: Props) {
+function CreateMovieForm({ crewMembers, genres }: Props) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
@@ -44,7 +49,8 @@ function CreateMovieForm({ crewMembers }: Props) {
       stock: false,
       runtime: 10,
       imageUrl:"",
-      crewMemberIds:[] as string[]
+      crewMemberIds:[] as string[],
+      genreIds: [] as number[],
     },
     validators: {
       onSubmit: formSchema,
@@ -233,8 +239,8 @@ function CreateMovieForm({ crewMembers }: Props) {
             )
           }}
         </form.Field>
-         {/* ======= checkbox field ========= */}
-          <form.Field name="crewMemberIds">
+         {/* ======= Crew checkbox field ========= */}
+        <form.Field name="crewMemberIds">
             {(field) => {
               const isInvalid =
                 field.state.meta.isTouched &&
@@ -262,7 +268,56 @@ function CreateMovieForm({ crewMembers }: Props) {
                 </Field>
               );
             }}
-          </form.Field>
+        </form.Field>
+           {/* ======= Genre checkbox field ========= */}
+
+
+          <form.Field name="genreIds">
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched &&
+                !field.state.meta.isValid
+
+              return (
+                <Field data-invalid={isInvalid}>
+                  <GenreSelector
+                    title="Genres"
+                    genres={genres}
+                    value={field.state.value}
+                    onChange={field.handleChange}
+                  />
+
+                  {isInvalid && (
+                    <FieldError errors={field.state.meta.errors} />
+                  )}
+                </Field>
+              )
+            }}
+          </form.Field> 
+          
+        {/* <form.Field name="genreIds">
+            {(field) => {
+
+              const value = field.state.value as number[]
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid
+
+              return (
+                <Field data-invalid={isInvalid}>
+                    <GenreSelector
+                        title="Genres"
+                        genres={genres}
+                        value={field.state.value}
+                        onChange={field.handleChange}
+                      />
+
+                      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                    </Field>
+                  )
+                }}
+          </form.Field> */}
+
+
 
       </FieldGroup>
 
