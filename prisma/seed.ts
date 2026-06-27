@@ -185,6 +185,26 @@ const thriller = await prisma.genre.upsert({
   console.log('Seed finished')
 }
 
+// export async function main() {
+// const genres = [
+//   { name: "Action", description: "Fast-paced movies with intense sequences." },
+//   { name: "Comedy", description: "Movies designed to make you laugh." },
+//   { name: "Drama", description: "Emotionally driven storytelling." },
+//   { name: "Horror", description: "Scary and suspenseful films." },
+//   { name: "Sci-Fi", description: "Futuristic and science-based stories." },
+//   { name: "Romance", description: "Love and relationship stories." },
+//   { name: "Thriller", description: "Suspenseful and gripping narratives." },
+//   { name: "Fantasy", description: "Magical and imaginative worlds." },
+// ]
+
+//   await prisma.genre.createMany({
+//     data: genres,
+//     skipDuplicates: true,
+//   })
+
+//   console.log("Genres seeded successfully")
+// }
+
 main()
   .catch((e) => {
     console.error(e)
