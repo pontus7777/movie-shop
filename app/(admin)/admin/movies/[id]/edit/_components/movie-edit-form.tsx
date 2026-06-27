@@ -16,8 +16,9 @@ import { Textarea } from '@/components/ui/textarea'
 
 import { editMovie } from '../../../_actions/edit-movie-action'
 import { convertToSek } from '@/lib/priceUtils'
-import { Crew } from '@/generated/prisma/client'
+import { Crew, Genre } from '@/generated/prisma/client'
 import { CrewSelector } from '@/components/movies/crew-selector'
+import { GenreSelector } from '@/components/movies/genre-selector'
 
 const editFormSchema = z.object({
   title: z.string().min(1, 'Title is required').max(32, 'Title must be less than 32 characters'),
@@ -28,6 +29,7 @@ const editFormSchema = z.object({
   runtime: z.number().min(10),
   imageUrl: z.string(),
   crewMemberIds: z.array(z.string()),
+  genreIds: z.array(z.number()),
 
 })
 
@@ -43,12 +45,14 @@ type EditMovieProps = {
     imageUrl: string | null
 
     crewMembers: Crew[]
+    genres: Genre[]
   }
 
   crewMembers: Crew[]
+  genres: Genre[]
 }
 
-function EditMovieForm({ movie,crewMembers}: EditMovieProps) {
+function EditMovieForm({ movie,crewMembers,genres}: EditMovieProps) {
   const router = useRouter()
   
   const form = useForm({
@@ -62,6 +66,7 @@ function EditMovieForm({ movie,crewMembers}: EditMovieProps) {
       imageUrl: movie.imageUrl ?? "",
 
       crewMemberIds: movie.crewMembers.map((member) => member.id),
+      genreIds: movie.genres.map((genre) => genre.id),
     },
     validators: {
       onSubmit: editFormSchema,
@@ -84,6 +89,9 @@ function EditMovieForm({ movie,crewMembers}: EditMovieProps) {
         imageUrl: updatedMovie.imageUrl ?? '',
         crewMemberIds: updatedMovie.crewMembers.map(
             (member) => member.id
+          ),
+        genreIds: updatedMovie.genres.map(
+            (genre) => genre.id
           ),
       })
 
@@ -241,7 +249,7 @@ function EditMovieForm({ movie,crewMembers}: EditMovieProps) {
             )
           }}
         </form.Field>
-        {/* ==== CheckBox Component actors, derictors ====== */}
+        {/* ====Crew: CheckBox Component actors, derictors ====== */}
         <form.Field name="crewMemberIds">
           {(field) => (
             <div className="space-y-4">
@@ -262,9 +270,30 @@ function EditMovieForm({ movie,crewMembers}: EditMovieProps) {
           )}
         </form.Field>
 
+        <form.Field name="genreIds">
+          {(field) => {
+            const isInvalid =
+              field.state.meta.isTouched &&
+              !field.state.meta.isValid
 
+            return (
+              <Field data-invalid={isInvalid}>
+                <GenreSelector
+                  title="Genres"
+                  genres={genres}
+                  value={field.state.value}
+                  onChange={field.handleChange}
+                />
 
+                {isInvalid && (
+                  <FieldError errors={field.state.meta.errors} />
+                )}
+              </Field>
+            )
+          }}
+        </form.Field>
 
+  {/* ====Genre: CheckBox Component  ====== */}
         <form.Field name="stock">
           {(field) => (
             <Field orientation="horizontal">
