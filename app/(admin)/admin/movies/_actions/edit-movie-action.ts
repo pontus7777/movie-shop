@@ -17,7 +17,11 @@ const editMovieSchema = z.object({
   releaseYear: z.number().min(0).max(9999),
   stock: z.boolean(),
   runtime: z.number().min(10),
-  imageUrl: z.string(),
+  imageUrl: z.union([
+      z.literal(""),
+      z.string().url("Invalid URL"),
+]),
+  crewMemberIds: z.array(z.string()),
 })
 
 export async function editMovie(values: z.infer<typeof editMovieSchema>) {
@@ -44,7 +48,13 @@ export async function editMovie(values: z.infer<typeof editMovieSchema>) {
       stock: data.stock,
       runtime: data.runtime,
       imageUrl: data.imageUrl.trim() || null,
+      crewMembers: {
+          set: data.crewMemberIds.map((id) => ({ id })), //set replaces the existing list with the new selection
+        },
     },
+     include: {
+          crewMembers: true,
+        },
   })
   revalidatePath('/admin/movies')
 
