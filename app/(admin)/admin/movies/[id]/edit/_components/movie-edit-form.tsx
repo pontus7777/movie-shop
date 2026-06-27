@@ -17,7 +17,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { editMovie } from '../../../_actions/edit-movie-action'
 import { convertToSek } from '@/lib/priceUtils'
 import { Crew } from '@/generated/prisma/client'
-import { CrewSelector } from '@/components/crew-selector'
+import { CrewSelector } from '@/components/movies/crew-selector'
 
 const editFormSchema = z.object({
   title: z.string().min(1, 'Title is required').max(32, 'Title must be less than 32 characters'),
