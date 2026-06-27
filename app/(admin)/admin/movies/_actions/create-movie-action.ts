@@ -18,6 +18,7 @@ const createMovieSchema = z.object({
     z.string().url("Invalid URL"),
   ]),
   crewMemberIds: z.array(z.string()),
+  genreIds:z.array(z.number()),
 })
 
 export async function createMovie(values: z.infer<typeof createMovieSchema>) {
@@ -35,6 +36,9 @@ export async function createMovie(values: z.infer<typeof createMovieSchema>) {
         imageUrl: data.imageUrl.trim() === "" ? null : data.imageUrl,
         crewMembers: {
           connect: data.crewMemberIds.map((id) => ({ id })),
+        },
+        genres: {
+          connect: data.genreIds.map((id) => ({ id })),
         },
       },
     })
