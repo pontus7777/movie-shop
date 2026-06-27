@@ -16,6 +16,8 @@ import { Textarea } from '@/components/ui/textarea'
 
 import { editMovie } from '../../../_actions/edit-movie-action'
 import { convertToSek } from '@/lib/priceUtils'
+import { Crew } from '@/generated/prisma/client'
+import { CrewSelector } from '@/components/crew-selector'
 
 const editFormSchema = z.object({
   title: z.string().min(1, 'Title is required').max(32, 'Title must be less than 32 characters'),
@@ -25,6 +27,8 @@ const editFormSchema = z.object({
   stock: z.boolean(),
   runtime: z.number().min(10),
   imageUrl: z.string(),
+  crewMemberIds: z.array(z.string()),
+
 })
 
 type EditMovieProps = {
@@ -37,14 +41,16 @@ type EditMovieProps = {
     stock: boolean
     runtime: number
     imageUrl: string | null
+
+    crewMembers: Crew[]
   }
+
+  crewMembers: Crew[]
 }
 
-function EditMovieForm({ movie }: EditMovieProps) {
+function EditMovieForm({ movie,crewMembers}: EditMovieProps) {
   const router = useRouter()
-  const [loading, setLoading] = useState(false)
-  // use LOADING? Pontus
-
+  
   const form = useForm({
     defaultValues: {
       title: movie.title,
@@ -53,7 +59,9 @@ function EditMovieForm({ movie }: EditMovieProps) {
       releaseYear: movie.releaseYear,
       stock: movie.stock,
       runtime: movie.runtime,
-      imageUrl: movie.imageUrl ?? '',
+      imageUrl: movie.imageUrl ?? "",
+
+      crewMemberIds: movie.crewMembers.map((member) => member.id),
     },
     validators: {
       onSubmit: editFormSchema,
@@ -61,8 +69,6 @@ function EditMovieForm({ movie }: EditMovieProps) {
     },
 
     onSubmit: async ({ value, formApi }) => {
-      setLoading(true)
-
       const updatedMovie = await editMovie({
         ...value,
         id: movie.id,
@@ -76,6 +82,9 @@ function EditMovieForm({ movie }: EditMovieProps) {
         stock: movie.stock,
         runtime: movie.runtime,
         imageUrl: updatedMovie.imageUrl ?? '',
+        crewMemberIds: updatedMovie.crewMembers.map(
+            (member) => member.id
+          ),
       })
 
       toast.success('Form edited successfully', {})
@@ -83,7 +92,13 @@ function EditMovieForm({ movie }: EditMovieProps) {
       router.refresh()
     },
   })
+    const actors = crewMembers.filter(
+      (member) => member.role === "ACTOR"
+    );
 
+    const directors = crewMembers.filter(
+      (member) => member.role === "DIRECTOR"
+    );
   return (
     <form
       method="POST"
@@ -226,6 +241,29 @@ function EditMovieForm({ movie }: EditMovieProps) {
             )
           }}
         </form.Field>
+        {/* ==== CheckBox Component actors, derictors ====== */}
+        <form.Field name="crewMemberIds">
+          {(field) => (
+            <div className="space-y-4">
+              <CrewSelector
+                title="Actors"
+                crew={actors}
+                value={field.state.value}
+                onChange={field.handleChange}
+              />
+
+              <CrewSelector
+                title="Directors"
+                crew={directors}
+                value={field.state.value}
+                onChange={field.handleChange}
+              />
+            </div>
+          )}
+        </form.Field>
+
+
+
 
         <form.Field name="stock">
           {(field) => (
