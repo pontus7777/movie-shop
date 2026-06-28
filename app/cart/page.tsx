@@ -44,7 +44,10 @@ export default async function CartPage() {
               <CardHeader>
                 <CardTitle>{m.title}</CardTitle>
               </CardHeader>
-              <CardContent>{m.price} kr</CardContent>
+              <CardContent>
+                <img src={m.imageUrl ?? '/placeholder.jpg'} />
+                <p>{m.price} kr</p>
+              </CardContent>
               <CardFooter>
                 <CartActionButton
                   className="w-full"
