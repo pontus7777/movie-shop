@@ -1,31 +1,50 @@
-"use server"
+'use server'
 
-import * as cartUtils from "@/lib/cart"
+import { headers } from 'next/headers'
 
-// const cart = [
-//   {
-//     id: 1,
-//     quantity: 5,
-//   }
-// ]
+import { auth } from '@/lib/auth'
 
-// const cart2 = {
-//   "jlkajsdkla": 5,
-// }
+import {
+  addToCookieCart,
+  addToDatabaseCart,
+  removeFromCookieCart,
+  removeFromDatabaseCart,
+  clearCookieCart,
+  clearDatabaseCart,
+} from '@/lib/cart'
 
-export async function addToCart(id: string) {
-  // Check that the id exists in the DB
-  // const existingMovie = await prisma.movie.findUnique({
-  //  where: { id },
-  // })
+export async function addToCart(movieId: string) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
 
-  return await cartUtils.addToCart(id)
+  if (session) {
+    return addToDatabaseCart(session.user.id, movieId)
+  }
+
+  return addToCookieCart(movieId)
 }
 
-export async function removeFromCart(id: string, decrement = false) {
-  return await cartUtils.removeFromCart(id, decrement)
+export async function removeFromCart(movieId: string, decrement = false) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  if (session) {
+    return removeFromDatabaseCart(session.user.id, movieId, decrement)
+  }
+
+  return removeFromCookieCart(movieId, decrement)
 }
 
 export async function clearCart() {
-  await cartUtils.clearCart()
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  if (session) {
+    return clearDatabaseCart(session.user.id)
+  }
+
+  return clearCookieCart()
 }
