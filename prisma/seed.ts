@@ -2,52 +2,50 @@ import prisma from '@/lib/prisma'
 import 'dotenv/config'
 
 export async function main() {
-
   const sciFi = await prisma.genre.upsert({
-  where: { name: 'Science Fiction' },
-  update: {},
-  create: {
-    name: 'Science Fiction',
-    description: 'Movies featuring futuristic technology and science.',
-  },
-})
+    where: { name: 'Science Fiction' },
+    update: {},
+    create: {
+      name: 'Science Fiction',
+      description: 'Movies featuring futuristic technology and science.',
+    },
+  })
 
-const action = await prisma.genre.upsert({
-  where: { name: 'Action' },
-  update: {},
-  create: {
-    name: 'Action',
-    description: 'Fast-paced movies with thrilling sequences.',
-  },
-})
+  const action = await prisma.genre.upsert({
+    where: { name: 'Action' },
+    update: {},
+    create: {
+      name: 'Action',
+      description: 'Fast-paced movies with thrilling sequences.',
+    },
+  })
 
-const horror = await prisma.genre.upsert({
-  where: { name: 'Horror' },
-  update: {},
-  create: {
-    name: 'Horror',
-    description: 'Scary movie!',
-  },
-})
+  const horror = await prisma.genre.upsert({
+    where: { name: 'Horror' },
+    update: {},
+    create: {
+      name: 'Horror',
+      description: 'Scary movie!',
+    },
+  })
 
-const romance = await prisma.genre.upsert({
-  where: { name: 'Romance' },
-  update: {},
-  create: {
-    name: 'Romance',
-    description: 'Love is life',
-  },
-})
+  const romance = await prisma.genre.upsert({
+    where: { name: 'Romance' },
+    update: {},
+    create: {
+      name: 'Romance',
+      description: 'Love is life',
+    },
+  })
 
-const thriller = await prisma.genre.upsert({
-  where: { name: 'Thriller' },
-  update: {},
-  create: {
-    name: 'Thriller',
-    description: 'The thrill',
-  },
-})
-
+  const thriller = await prisma.genre.upsert({
+    where: { name: 'Thriller' },
+    update: {},
+    create: {
+      name: 'Thriller',
+      description: 'The thrill',
+    },
+  })
 
   const keanu = await prisma.crew.upsert({
     where: { id: 'actor-keanu-reeves' },
@@ -55,8 +53,7 @@ const thriller = await prisma.genre.upsert({
     create: {
       id: 'actor-keanu-reeves',
       name: 'Keanu Reeves',
-      role:'ACTOR'
-
+      role: 'ACTOR',
     },
   })
 
@@ -66,8 +63,7 @@ const thriller = await prisma.genre.upsert({
     create: {
       id: 'actor-carrie-anne-moss',
       name: 'Carrie-Anne Moss',
-      role:'ACTOR'
-
+      role: 'ACTOR',
     },
   })
 
@@ -77,8 +73,7 @@ const thriller = await prisma.genre.upsert({
     create: {
       id: 'actor-leonardo-dicaprio',
       name: 'Leonardo DiCaprio',
-      role:'ACTOR'
-
+      role: 'ACTOR',
     },
   })
 
@@ -88,7 +83,7 @@ const thriller = await prisma.genre.upsert({
     create: {
       id: 'actor-joseph-gordon-levitt',
       name: 'Joseph Gordon-Levitt',
-      role:'ACTOR'
+      role: 'ACTOR',
     },
   })
 
@@ -98,7 +93,7 @@ const thriller = await prisma.genre.upsert({
     create: {
       id: 'director-lana-wachowski',
       name: 'Lana Wachowski',
-      role: 'DIRECTOR'
+      role: 'DIRECTOR',
     },
   })
 
@@ -108,7 +103,7 @@ const thriller = await prisma.genre.upsert({
     create: {
       id: 'director-lilly-wachowski',
       name: 'Lilly Wachowski',
-      role: 'DIRECTOR'
+      role: 'DIRECTOR',
     },
   })
 
@@ -118,7 +113,7 @@ const thriller = await prisma.genre.upsert({
     create: {
       id: 'director-christopher-nolan',
       name: 'Christopher Nolan',
-      role: 'DIRECTOR'
+      role: 'DIRECTOR',
     },
   })
 
@@ -145,7 +140,7 @@ const thriller = await prisma.genre.upsert({
       imageUrl: 'https://picsum.photos/400/600?random=1',
       stock: true,
       runtime: 136,
-     genres: { connect: { id: sciFi.id } },
+      genres: { connect: { id: sciFi.id } },
       crewMembers: {
         connect: [{ id: keanu.id }, { id: carrie.id }, { id: lana.id }, { id: lilly.id }],
       },
@@ -162,7 +157,7 @@ const thriller = await prisma.genre.upsert({
       imageUrl: 'https://picsum.photos/400/600?random=2',
       stock: true,
       runtime: 148,
-     crewMembers: {
+      crewMembers: {
         set: [{ id: keanu.id }, { id: carrie.id }, { id: lana.id }, { id: lilly.id }],
       },
     },
@@ -176,7 +171,7 @@ const thriller = await prisma.genre.upsert({
       stock: true,
       runtime: 148,
       genres: { connect: { id: sciFi.id } },
-     crewMembers: {
+      crewMembers: {
         connect: [{ id: keanu.id }, { id: carrie.id }, { id: lana.id }, { id: lilly.id }],
       },
     },

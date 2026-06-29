@@ -137,13 +137,33 @@ model Order {
   id        String      @id @default(cuid())
   userId    String
   createdAt DateTime    @default(now())
-  total     Decimal
+  total     Int
   items     OrderItem[]
   user      User        @relation(fields: [userId], references: [id])
+
+  paymentMethod PaymentMethod
+
+  firstName String
+  lastName String
+  street     String
+  postalCode String
+  city       String
+  country    String
 
   @@map("orders")
 }
 
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CARD
+  PAYPAL
+  SWISH
+}
 model OrderItem {
   id       String  @id @default(cuid())
   orderId  String // @unique
