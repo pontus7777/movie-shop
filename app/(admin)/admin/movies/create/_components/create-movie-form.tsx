@@ -14,27 +14,46 @@ import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { createMovie } from '../../_actions/create-movie-action'
 import { Crew } from '@/generated/prisma/client'
-import { CrewSelector } from '@/components/movies/crew-selector'
 import { GenreSelector } from '@/components/movies/genre-selector'
+import { CrewEditor } from '@/components/movies/CrewEditor'
 
 type Props = {
-  crewMembers: Crew[]
+  crew: Crew[]
   genres: { id: number; name: string }[]
 }
 
 const formSchema = z.object({
   title: z.string().min(1, 'Title is required').max(32, 'Title must be less than 32 characters'),
   description: z.string().min(1, 'Description is required').max(1000),
-  price: z.number(),
-  releaseYear: z.number().min(0).max(9999),
+  price: z.number().positive('Price must be greater than 0'),
+  releaseYear: z
+    .number()
+    .int()
+    .min(1888)
+    .max(new Date().getFullYear() + 5),
   stock: z.boolean(),
-  runtime: z.number().min(10),
-  imageUrl: z.string(),
-  crewMemberIds: z.array(z.string()).min(1),
+  runtime: z.number().int().positive(),
+  imageUrl: z.string().url('Invalid image URL').or(z.literal('')),
+
+  //==== Crew members =====
+
+  crewMembers: z
+    .array(
+      z.object({
+        name: z.string().trim().min(1, 'Crew member name is required'),
+        actor: z.boolean(),
+        director: z.boolean(),
+      }),
+    )
+    .min(1, 'Add at least one crew member')
+    .refine((crew) => crew.every((member) => member.actor || member.director), {
+      //The .refine() call checks every crew member.
+      message: 'Each crew member must have at least one role.',
+    }),
   genreIds: z.array(z.number()).min(1),
 })
 
-function CreateMovieForm({ crewMembers, genres }: Props) {
+function CreateMovieForm({ genres }: Props) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
@@ -47,21 +66,28 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
       stock: false,
       runtime: 10,
       imageUrl: '',
-      crewMemberIds: [] as string[],
       genreIds: [] as number[],
+      crewMembers: [
+        {
+          name: '',
+          actor: false,
+          director: false,
+        },
+      ],
     },
     validators: {
       onSubmit: formSchema,
       onBlur: formSchema,
     },
     onSubmit: async ({ value }) => {
+      console.log('🔥 SUBMIT FIRED', value)
       setLoading(true)
       try {
         const newMovie = await createMovie(value)
 
         toast.success('Movie created successfully')
 
-        router.push(`/admin/movies/${newMovie.id}`) //need and issue to work on that!!!
+        router.push(`/admin/movies/${newMovie.id}`)
       } catch (err) {
         console.log(err)
         toast.error('Failed to submit form', {
@@ -71,11 +97,11 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
         setLoading(false)
       }
     },
+
+    onSubmitInvalid: ({ value }) => {
+      console.log('INVALID SUBMIT')
+    },
   })
-
-  // const actors = crewMembers.filter((member) => member.role === 'ACTOR')
-
-  // const directors = crewMembers.filter((member) => member.role === 'DIRECTOR')
 
   return (
     <form
@@ -233,33 +259,20 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
             )
           }}
         </form.Field>
-        {/* ======= Crew checkbox field ========= */}
-        {/* 
-        <form.Field name="crewMemberIds">
+        {/* ======= CrewMembers checkbox field ========= */}
+        <form.Field name="crewMembers">
           {(field) => {
             const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
 
             return (
               <Field data-invalid={isInvalid}>
-                <CrewSelector
-                  title="Actors"
-                  crew={actors}
-                  value={field.state.value}
-                  onChange={field.handleChange}
-                />
-
-                <CrewSelector
-                  title="Directors"
-                  crew={directors}
-                  value={field.state.value}
-                  onChange={field.handleChange}
-                />
+                <CrewEditor value={field.state.value} onChange={field.handleChange} />
 
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
             )
           }}
-        </form.Field> */}
+        </form.Field>
 
         {/* ======= Genre checkbox field ========= */}
 
@@ -281,28 +294,6 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
             )
           }}
         </form.Field>
-
-        {/* <form.Field name="genreIds">
-            {(field) => {
-
-              const value = field.state.value as number[]
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid
-
-              return (
-                <Field data-invalid={isInvalid}>
-                    <GenreSelector
-                        title="Genres"
-                        genres={genres}
-                        value={field.state.value}
-                        onChange={field.handleChange}
-                      />
-
-                      {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                    </Field>
-                  )
-                }}
-          </form.Field> */}
       </FieldGroup>
 
       <div className="flex justify-end gap-2">
