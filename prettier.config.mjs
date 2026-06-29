@@ -1,4 +1,4 @@
-import tailwind from 'prettier-plugin-tailwindcss'
+// import 'prettier-plugin-tailwindcss'
 
 /** @type {import("prettier").Config} */
 const config = {
@@ -9,7 +9,7 @@ const config = {
   printWidth: 100,
   bracketSpacing: true,
   arrowParens: 'always',
-  plugins: [tailwind],
+  // plugins: ['prettier-plugin-tailwindcss'],
 }
 
 export default config

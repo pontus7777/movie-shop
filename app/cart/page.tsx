@@ -1,5 +1,5 @@
 import { getCart } from "@/lib/cart"
-import { Movie, movies } from "@/lib/test-movie-data"
+import { CartTestMovie, movies } from "@/lib/test-movie-data"
 import {
   Card,
   CardHeader,
@@ -34,7 +34,7 @@ export default async function CartPage() {
   // }).filter(Boolean)
 
   let total = 0
-  const cartItems: { movie: Movie; quantity: number }[] = []
+  const cartItems: { movie: CartTestMovie; quantity: number }[] = []
   for (const id of ids) {
     const movie = movies.find((m) => m.id === id)
     if (!movie) continue
