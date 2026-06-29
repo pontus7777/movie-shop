@@ -66,11 +66,11 @@ export function AdminSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={pathname === '/admin/directors'}>
-                <Link href={'/admin/directors'}>Directors</Link>
+              <SidebarMenuButton asChild isActive={pathname === '/admin/users'}>
+                <Link href={'/admin/users'}>Users</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-             <SidebarMenuItem>
+            <SidebarMenuItem>
               <SidebarMenuButton asChild isActive={pathname === '/admin/crew'}>
                 <Link href={'/admin/crew'}>Crew</Link>
               </SidebarMenuButton>
