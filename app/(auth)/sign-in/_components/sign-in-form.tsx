@@ -10,6 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { authClient } from '@/lib/auth-client'
+import { mergeCurrentUserCart } from '../../_actions/merge-cart'
 
 const formSchema = z.object({
   email: z.email(),
@@ -41,7 +42,10 @@ function SignInForm() {
         return
       }
 
+      await mergeCurrentUserCart()
+
       toast.success('Sign in successeded ')
+
       router.push('/')
       router.refresh()
     },
