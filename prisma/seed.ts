@@ -1,143 +1,204 @@
 import prisma from '@/lib/prisma'
 import 'dotenv/config'
 
-async function main() {
-  console.log('Seeding database...')
-
-  // --- GENRES ---
-  const genres = await prisma.genre.createMany({
-    data: [
-      { name: 'Action', description: 'High energy and intense scenes' },
-      { name: 'Drama', description: 'Emotional and narrative-driven stories' },
-      { name: 'Comedy', description: 'Humorous and entertaining films' },
-      { name: 'Sci-Fi', description: 'Futuristic and science-based stories' },
-    ],
+export async function main() {
+  const sciFi = await prisma.genre.upsert({
+    where: { name: 'Science Fiction' },
+    update: {},
+    create: {
+      name: 'Science Fiction',
+      description: 'Movies featuring futuristic technology and science.',
+    },
   })
 
-  // --- MOVIES ---
-  const movie1 = await prisma.movie.create({
-    data: {
-      title: 'The Last Horizon',
-      description: 'A sci-fi adventure beyond the edge of the galaxy.',
-      price: 129,
-      releaseYear: 2024,
+  const action = await prisma.genre.upsert({
+    where: { name: 'Action' },
+    update: {},
+    create: {
+      name: 'Action',
+      description: 'Fast-paced movies with thrilling sequences.',
+    },
+  })
+
+  const horror = await prisma.genre.upsert({
+    where: { name: 'Horror' },
+    update: {},
+    create: {
+      name: 'Horror',
+      description: 'Scary movie!',
+    },
+  })
+
+  const romance = await prisma.genre.upsert({
+    where: { name: 'Romance' },
+    update: {},
+    create: {
+      name: 'Romance',
+      description: 'Love is life',
+    },
+  })
+
+  const thriller = await prisma.genre.upsert({
+    where: { name: 'Thriller' },
+    update: {},
+    create: {
+      name: 'Thriller',
+      description: 'The thrill',
+    },
+  })
+
+  const keanu = await prisma.crew.upsert({
+    where: { id: 'actor-keanu-reeves' },
+    update: {},
+    create: {
+      id: 'actor-keanu-reeves',
+      name: 'Keanu Reeves',
+      role: 'ACTOR',
+    },
+  })
+
+  const carrie = await prisma.crew.upsert({
+    where: { id: 'actor-carrie-anne-moss' },
+    update: {},
+    create: {
+      id: 'actor-carrie-anne-moss',
+      name: 'Carrie-Anne Moss',
+      role: 'ACTOR',
+    },
+  })
+
+  const leo = await prisma.crew.upsert({
+    where: { id: 'actor-leonardo-dicaprio' },
+    update: {},
+    create: {
+      id: 'actor-leonardo-dicaprio',
+      name: 'Leonardo DiCaprio',
+      role: 'ACTOR',
+    },
+  })
+
+  const joseph = await prisma.crew.upsert({
+    where: { id: 'actor-joseph-gordon-levitt' },
+    update: {},
+    create: {
+      id: 'actor-joseph-gordon-levitt',
+      name: 'Joseph Gordon-Levitt',
+      role: 'ACTOR',
+    },
+  })
+
+  const lana = await prisma.crew.upsert({
+    where: { id: 'director-lana-wachowski' },
+    update: {},
+    create: {
+      id: 'director-lana-wachowski',
+      name: 'Lana Wachowski',
+      role: 'DIRECTOR',
+    },
+  })
+
+  const lilly = await prisma.crew.upsert({
+    where: { id: 'director-lilly-wachowski' },
+    update: {},
+    create: {
+      id: 'director-lilly-wachowski',
+      name: 'Lilly Wachowski',
+      role: 'DIRECTOR',
+    },
+  })
+
+  const nolan = await prisma.crew.upsert({
+    where: { id: 'director-christopher-nolan' },
+    update: {},
+    create: {
+      id: 'director-christopher-nolan',
+      name: 'Christopher Nolan',
+      role: 'DIRECTOR',
+    },
+  })
+
+  await prisma.movie.upsert({
+    where: { id: 'movie-the-matrix' },
+    update: {
+      title: 'The Matrix',
+      description: 'A hacker discovers reality is a simulation and joins the resistance.',
+      price: 1499,
+      releaseYear: 1999,
       imageUrl: 'https://picsum.photos/400/600?random=1',
       stock: true,
-      runtime: 142,
-      rating: 8.5,
-      genres: { connect: [{ id: 1 }, { id: 4 }] },
+      runtime: 136,
+      crewMembers: {
+        set: [{ id: keanu.id }, { id: carrie.id }, { id: lana.id }, { id: lilly.id }],
+      },
+    },
+    create: {
+      id: 'movie-the-matrix',
+      title: 'The Matrix',
+      description: 'A hacker discovers reality is a simulation and joins the resistance.',
+      price: 1499,
+      releaseYear: 1999,
+      imageUrl: 'https://picsum.photos/400/600?random=1',
+      stock: true,
+      runtime: 136,
+      genres: { connect: { id: sciFi.id } },
+      crewMembers: {
+        connect: [{ id: keanu.id }, { id: carrie.id }, { id: lana.id }, { id: lilly.id }],
+      },
     },
   })
 
-  const movie2 = await prisma.movie.create({
-    data: {
-      title: 'Broken Silence',
-      description: 'A dramatic story of redemption and courage.',
-      price: 99,
-      releaseYear: 2023,
+  await prisma.movie.upsert({
+    where: { id: 'movie-inception' },
+    update: {
+      title: 'Inception',
+      description: 'A skilled thief enters dreams to steal secrets from targets.',
+      price: 1699,
+      releaseYear: 2010,
       imageUrl: 'https://picsum.photos/400/600?random=2',
       stock: true,
-      runtime: 118,
-      rating: 7.9,
-      genres: { connect: [{ id: 2 }] },
+      runtime: 148,
+      crewMembers: {
+        set: [{ id: keanu.id }, { id: carrie.id }, { id: lana.id }, { id: lilly.id }],
+      },
     },
-  })
-
-  const movie3 = await prisma.movie.create({
-    data: {
-      title: 'Laugh Out Loud',
-      description: 'A comedy that will leave you in tears.',
-      price: 79,
-      releaseYear: 2022,
-      imageUrl: 'https://picsum.photos/400/600?random=3',
+    create: {
+      id: 'movie-inception',
+      title: 'Inception',
+      description: 'A skilled thief enters dreams to steal secrets from targets.',
+      price: 1699,
+      releaseYear: 2010,
+      imageUrl: 'https://picsum.photos/400/600?random=2',
       stock: true,
-      runtime: 95,
-      rating: 7.2,
-      genres: { connect: [{ id: 3 }] },
-    },
-  })
-
-  // --- CREW ---
-  const crew1 = await prisma.crew.create({
-    data: { name: 'John Actor', movieId: movie1.id },
-  })
-
-  const crew2 = await prisma.crew.create({
-    data: { name: 'Sarah Director', movieId: movie1.id },
-  })
-
-  const crew3 = await prisma.crew.create({
-    data: { name: 'Mike Actor', movieId: movie2.id },
-  })
-
-  // --- CREW ON MOVIE ---
-  await prisma.crewOnMovie.createMany({
-    data: [
-      { crewId: crew1.id, movieId: movie1.id, role: 'ACTOR' },
-      { crewId: crew2.id, movieId: movie1.id, role: 'DIRECTOR' },
-      { crewId: crew3.id, movieId: movie2.id, role: 'ACTOR' },
-    ],
-  })
-
-  // --- USER ---
-  const user = await prisma.user.create({
-    data: {
-      id: 'user-1',
-      name: 'Demo User',
-      email: 'demo@example.com',
-      role: 'user',
-      banned: false,
-    },
-  })
-
-  // --- CART ---
-  const cart = await prisma.cart.create({
-    data: {
-      userId: user.id,
-    },
-  })
-
-  await prisma.cartItem.createMany({
-    data: [
-      { cartId: cart.id, movieId: movie1.id, quantity: 1 },
-      { cartId: cart.id, movieId: movie2.id, quantity: 2 },
-    ],
-  })
-
-  // --- ORDER ---
-  const order = await prisma.order.create({
-    data: {
-      userId: user.id,
-      total: 327,
-      paymentMethod: 'CARD',
-      firstName: 'Demo',
-      lastName: 'User',
-      street: 'Example Street 12',
-      postalCode: '12345',
-      city: 'Linköping',
-      country: 'Sweden',
-    },
-  })
-
-  await prisma.orderItem.createMany({
-    data: [
-      {
-        orderId: order.id,
-        movieId: movie1.id,
-        quantity: 1,
-        price: 129,
+      runtime: 148,
+      genres: { connect: { id: sciFi.id } },
+      crewMembers: {
+        connect: [{ id: keanu.id }, { id: carrie.id }, { id: lana.id }, { id: lilly.id }],
       },
-      {
-        orderId: order.id,
-        movieId: movie2.id,
-        quantity: 2,
-        price: 99,
-      },
-    ],
+    },
   })
 
-  console.log('🌱 Seeding complete!')
+  console.log('Seed finished')
 }
+
+// export async function main() {
+// const genres = [
+//   { name: "Action", description: "Fast-paced movies with intense sequences." },
+//   { name: "Comedy", description: "Movies designed to make you laugh." },
+//   { name: "Drama", description: "Emotionally driven storytelling." },
+//   { name: "Horror", description: "Scary and suspenseful films." },
+//   { name: "Sci-Fi", description: "Futuristic and science-based stories." },
+//   { name: "Romance", description: "Love and relationship stories." },
+//   { name: "Thriller", description: "Suspenseful and gripping narratives." },
+//   { name: "Fantasy", description: "Magical and imaginative worlds." },
+// ]
+
+//   await prisma.genre.createMany({
+//     data: genres,
+//     skipDuplicates: true,
+//   })
+
+//   console.log("Genres seeded successfully")
+// }
 
 main()
   .catch((e) => {

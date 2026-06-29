@@ -13,12 +13,14 @@ const createMovieSchema = z.object({
   releaseYear: z.number().min(0).max(9999),
   stock: z.boolean(),
   runtime: z.number().min(10),
-  imageUrl: z.union([
-    z.literal(""),
-    z.string().url("Invalid URL"),
-  ]),
-  crewMemberIds: z.array(z.string()),
-  genreIds:z.array(z.number()),
+  imageUrl: z.union([z.literal(''), z.string().url('Invalid URL')]),
+  crewMembers: z.array(
+    z.object({
+      name: z.string(),
+      role: z.enum(['ACTOR', 'DERICTOR']),
+    }),
+  ),
+  genreIds: z.array(z.number()),
 })
 
 export async function createMovie(values: z.infer<typeof createMovieSchema>) {
@@ -33,10 +35,10 @@ export async function createMovie(values: z.infer<typeof createMovieSchema>) {
         releaseYear: data.releaseYear,
         stock: data.stock,
         runtime: data.runtime,
-        imageUrl: data.imageUrl.trim() === "" ? null : data.imageUrl,
-        crewMembers: {
-          connect: data.crewMemberIds.map((id) => ({ id })),
-        },
+        imageUrl: data.imageUrl.trim() === '' ? null : data.imageUrl,
+        // crewMembers: {
+        //   connect: data.crewMemberIds.map((id) => ({ id })),
+        // },
         genres: {
           connect: data.genreIds.map((id) => ({ id })),
         },
