@@ -1,6 +1,4 @@
 import prisma from '@/lib/prisma'
-import MovieCard from '@/components/movie-card'
-import { Movie, Genre } from '@/generated/prisma/client'
 import HotDealsCarousel from '@/components/hot-deals-carousel'
 import { MovieRow } from '@/components/movie-row'
 
@@ -42,23 +40,23 @@ export default async function Home() {
   return (
     <main className="bg-background text-foreground">
       {/* ===== HERO ===== */}
-      <section className="border-b py-12 px-6 text-center">
-        <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
+      <section className="border-b px-6 py-12 text-center">
+        <h1 className="mb-2 text-3xl font-extrabold md:text-4xl">
           Find Your Next <span className="text-purple-500">Favorite Movie</span>
         </h1>
         <p className="text-muted-foreground">Stay updated with what everyone&apos;s watching</p>
       </section>
 
       {/* ===== HOT DEALS BANNER SECTION ===== */}
-      <section className="py-8 bg-purple-950/10 border-y border-purple-500/20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center gap-2 mb-1">
+      <section className="border-y border-purple-500/20 bg-purple-950/10 py-8">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mb-1 flex items-center gap-2">
             <h2 className="text-xl font-bold">🏷️ Hot Deals</h2>
-            <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded-full font-semibold">
+            <span className="rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold text-white">
               LIMITED TIME
             </span>
           </div>
-          <p className="text-sm text-muted-foreground mb-4">
+          <p className="text-muted-foreground mb-4 text-sm">
             Grab your favorite movies at the best prices
           </p>
 
@@ -68,8 +66,8 @@ export default async function Home() {
 
       {/* Most Purchased - placeholder until checkout/orders exist */}
       <section className="py-8">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-xl font-bold mb-2">🔥 Most Purchased Movies</h2>
+        <div className="mx-auto max-w-7xl px-6">
+          <h2 className="mb-2 text-xl font-bold">🔥 Most Purchased Movies</h2>
           <p className="text-muted-foreground text-sm">
             Coming soon — this section will show real data once checkout and orders are implemented.
           </p>

@@ -4,12 +4,14 @@ import { Toaster } from 'sonner'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 
 import { AdminSidebar } from './_components/admin-sidebar'
+import { requireAdmin } from '@/lib/require-admin'
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  await requireAdmin()
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
