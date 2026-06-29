@@ -21,53 +21,55 @@ export type Movie = {
   createdAt: Date
   updatedAt: Date
   /*** All relations in */
-  crewMembers: Crew[] | null
+  credits:
+    | {
+        crew: Crew
+        role: string
+      }[]
+    | null
 }
 type Props = {
   movie: Movie
 }
 
-
-
 export default function ShopMovieCard({ movie }: Props) {
-    const imageSrc = getMovieImageSrc(movie.imageUrl);
+  const imageSrc = getMovieImageSrc(movie.imageUrl)
 
   return (
     <>
-    <Card className="w-72 overflow-hidden">
-      {/* Movie Poster */}
-      <Image
-        src={imageSrc}
-        alt={movie.title}
-        loading="eager" // something with LCP
-        width={300}
-        height={200}
-        className="h-48 w-full object-cover"
-      />
+      <Card className="w-72 overflow-hidden">
+        {/* Movie Poster */}
+        <Image
+          src={imageSrc}
+          alt={movie.title}
+          loading="eager" // something with LCP
+          width={300}
+          height={200}
+          className="h-48 w-full object-cover"
+        />
 
-      {/* Info Section */}
-      <CardHeader>
-        <CardTitle>
-          <Link href={`/admin/movies/${movie.id}`} className="font-semibold hover:underline">
-            {movie.title}
-          </Link>
-        </CardTitle>
-        {movie.genres?.map((genre) => (
-        <p key={genre.id} className="text-muted-foreground text-sm">{genre.name ?? 'No genre'}</p>
+        {/* Info Section */}
+        <CardHeader>
+          <CardTitle>
+            <Link href={`/admin/movies/${movie.id}`} className="font-semibold hover:underline">
+              {movie.title}
+            </Link>
+          </CardTitle>
+          {movie.genres?.map((genre) => (
+            <p key={genre.id} className="text-muted-foreground text-sm">
+              {genre.name ?? 'No genre'}
+            </p>
+          ))}
+        </CardHeader>
 
-        ))}
-      </CardHeader>
+        <CardContent>
+          <p className="mb-3 text-sm">{movie.description}</p>
 
-      <CardContent>
-        <p className="mb-3 text-sm">{movie.description}</p>
+          <p className="mb-3 text-lg font-bold">${movie.price.toString()}</p>
 
-        <p className="mb-3 text-lg font-bold">${movie.price.toString()}</p>
-
-        <Button className="w-full">Add to Cart</Button>
-      </CardContent>
-    </Card>
-
-
+          <Button className="w-full">Add to Cart</Button>
+        </CardContent>
+      </Card>
     </>
   )
 }
