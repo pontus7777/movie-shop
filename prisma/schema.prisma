@@ -103,20 +103,36 @@ model Movie {
   orderItems OrderItem[]
   cartItems  CartItem[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
+  crewOnMovies CrewOnMovie[]
 
   @@map("movies")
 }
 
 model Crew {
-  id   String   @id @default(cuid())
-  name String
-  role CrewRole
+  id      String        @id @default(cuid())
+  name    String
+  credits CrewOnMovie[]
 
-  movies Movie[]
+  // role CrewRole
+  // movies Movie[]
+  movie   Movie?  @relation(fields: [movieId], references: [id])
+  movieId String?
 
   @@map("crew_members")
+}
+
+model CrewOnMovie {
+  id      String   @id @default(cuid())
+  crewId  String
+  movieId String
+  role    CrewRole
+
+  crew  Crew  @relation(fields: [crewId], references: [id])
+  movie Movie @relation(fields: [movieId], references: [id])
+
+  @@unique([crewId, movieId, role])
 }
 
 enum CrewRole {
@@ -143,8 +159,8 @@ model Order {
 
   paymentMethod PaymentMethod
 
-  firstName String
-  lastName String
+  firstName  String
+  lastName   String
   street     String
   postalCode String
   city       String
@@ -164,6 +180,7 @@ enum PaymentMethod {
   PAYPAL
   SWISH
 }
+
 model OrderItem {
   id       String  @id @default(cuid())
   orderId  String // @unique
