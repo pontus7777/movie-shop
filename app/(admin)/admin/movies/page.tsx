@@ -8,8 +8,12 @@ import { MovieTable } from '@/components/movies/movie-table'
 export default async function Page() {
   const movies = await prisma.movie.findMany({
     include: {
-      genres:true,
-      crewMembers: true,
+      genres: true,
+      credits: {
+        include: {
+          crew: true,
+        },
+      },
     },
     orderBy: {
       title: 'asc',
@@ -40,9 +44,9 @@ export default async function Page() {
           />
         ))}
       </div>
-        <div className="hidden md:block">
-          <MovieTable movies={movies}/>
-        </div>
+      <div className="hidden md:block">
+        <MovieTable movies={movies} />
+      </div>
     </div>
   )
 }
