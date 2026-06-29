@@ -13,6 +13,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { getMovieImageSrc } from '@/lib/image-utils'
+import Image from 'next/image'
+import { Button } from '@/components/ui/button'
 
 export default async function CartPage() {
   const cart = await getCart()
@@ -21,18 +24,19 @@ export default async function CartPage() {
 
   const movies = await getMovies()
   const cartMovies = await getMoviesByIds(ids)
-  let total = 0
+  // let total = 0
 
   const cartItems = cartMovies.map((movie) => {
     const quantity = cart[movie.id]
 
-    total += movie.price * quantity
+    // total += movie.price * quantity
 
     return {
       movie,
       quantity,
     }
   })
+  const total = cartItems.reduce((sum, item) => sum + item.movie.price * item.quantity, 0)
 
   return (
     <div className="mx-auto max-w-4xl space-y-6 p-4">
@@ -45,7 +49,14 @@ export default async function CartPage() {
                 <CardTitle>{m.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <img src={m.imageUrl ?? '/placeholder.jpg'} />
+                <Image
+                  alt="{m.title}"
+                  src={getMovieImageSrc(m.imageUrl)}
+                  width={300}
+                  height={400}
+                  loading="eager"
+                  priority
+                />
                 <p>{m.price} kr</p>
               </CardContent>
               <CardFooter>
@@ -151,6 +162,11 @@ export default async function CartPage() {
                 >
                   Clear Cart
                 </CartActionButton>
+              </TableCell>
+              <TableCell>
+                <Button asChild variant="default">
+                  <a href="/checkout">Checkout</a>
+                </Button>
               </TableCell>
             </TableRow>
           </TableFooter>
