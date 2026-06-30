@@ -31,13 +31,6 @@ type Props = {
 
 export function MovieCrewEditor({ value, onChange, crew }: Props) {
   // =========================
-  // Remove row
-  // =========================
-  function removeCrewMember(index: number) {
-    onChange(value.filter((_, i) => i !== index))
-  }
-
-  // =========================
   // Update one row
   // =========================
   function updateCrewMember(index: number, changes: Partial<CrewMemberForm>) {
@@ -139,15 +132,6 @@ export function MovieCrewEditor({ value, onChange, crew }: Props) {
             />
             <Label>Director</Label>
           </div>
-
-          <Button
-            type="button"
-            variant="destructive"
-            size="icon"
-            onClick={() => removeCrewMember(index)}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
         </div>
       ))}
     </div>
