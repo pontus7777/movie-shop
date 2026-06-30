@@ -15,7 +15,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { createMovie } from '../../_actions/create-movie-action'
 import { Crew } from '@/generated/prisma/client'
 import { GenreSelector } from '@/components/movies/genre-selector'
-import { CrewEditor } from '@/components/movies/CrewEditor'
+import { MovieCrewEditor } from '@/components/movies/movie-crew-editor'
 
 type Props = {
   crew: Crew[]
@@ -34,12 +34,12 @@ const formSchema = z.object({
   stock: z.boolean(),
   runtime: z.number().int().positive(),
   imageUrl: z.string().url('Invalid image URL').or(z.literal('')),
-
   //==== Crew members =====
-
   crewMembers: z
     .array(
       z.object({
+        isNew: z.boolean(),
+        crewId: z.string(),
         name: z.string().trim().min(1, 'Crew member name is required'),
         actor: z.boolean(),
         director: z.boolean(),
@@ -50,10 +50,10 @@ const formSchema = z.object({
       //The .refine() call checks every crew member.
       message: 'Each crew member must have at least one role.',
     }),
-  genreIds: z.array(z.number()).min(1),
+  genreIds: z.array(z.number()).min(1, 'Select at least one genre'),
 })
 
-function CreateMovieForm({ genres }: Props) {
+function CreateMovieForm({ genres, crew }: Props) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
@@ -62,13 +62,15 @@ function CreateMovieForm({ genres }: Props) {
       title: '',
       description: '',
       price: 1,
-      releaseYear: 1920,
+      releaseYear: new Date().getFullYear(),
       stock: false,
       runtime: 10,
       imageUrl: '',
       genreIds: [] as number[],
       crewMembers: [
         {
+          isNew: false,
+          crewId: '',
           name: '',
           actor: false,
           director: false,
@@ -80,7 +82,7 @@ function CreateMovieForm({ genres }: Props) {
       onBlur: formSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log('🔥 SUBMIT FIRED', value)
+      console.log('SUBMIT FIRED', value)
       setLoading(true)
       try {
         const newMovie = await createMovie(value)
@@ -99,7 +101,7 @@ function CreateMovieForm({ genres }: Props) {
     },
 
     onSubmitInvalid: ({ value }) => {
-      console.log('INVALID SUBMIT')
+      console.log('INVALID SUBMIT ', value)
     },
   })
 
@@ -266,7 +268,11 @@ function CreateMovieForm({ genres }: Props) {
 
             return (
               <Field data-invalid={isInvalid}>
-                <CrewEditor value={field.state.value} onChange={field.handleChange} />
+                <MovieCrewEditor
+                  crew={crew}
+                  value={field.state.value}
+                  onChange={field.handleChange}
+                />
 
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
