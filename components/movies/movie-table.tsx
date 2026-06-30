@@ -8,11 +8,14 @@ import { Avatar, AvatarImage } from '../ui/avatar'
 import { MoveRight } from 'lucide-react'
 import placeHolder from '@/public/file.svg'
 import { getMovieImageSrc } from '@/lib/image-utils'
+import { convertToEuro } from '@/lib/priceUtils'
 
 type MovieWithRelations = Prisma.MovieGetPayload<{
   include: {
     genres: true
-    crewMembers: true
+    credits: {
+      include: { crew: true }
+    }
   }
 }>
 
@@ -24,7 +27,7 @@ type Props = {
 }
 function MovieTable({ movies }: Props) {
   return (
-    <div className="rounded-xl bg-card p-6 shadow-sm">
+    <div className="bg-card rounded-xl p-6 shadow-sm">
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Movie</h2>
@@ -77,7 +80,7 @@ function MovieTable({ movies }: Props) {
                     : 'No genre'}
                 </TableCell>
 
-                <TableCell>{Number(movie.price)} kr</TableCell>
+                <TableCell>€{convertToEuro(movie.priceInCents)}</TableCell>
                 <TableCell>{movie.releaseYear}</TableCell>
 
                 <TableCell className="text-right">
