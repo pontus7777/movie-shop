@@ -4,7 +4,6 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { MovieWithGenres } from './movie-row'
 import { convertToEuro } from '@/lib/priceUtils'
 import { MovieWithRelations } from './shop-movie-card'
 
@@ -27,7 +26,7 @@ export default function HotDealsCarousel({ movies }: Props) {
       <Link href={`/movies/${movie.id}`}>
         <div className="relative h-55 w-full md:h-70">
           <Image
-            src={movie.imageUrl ?? '/placeholder.jpg'}
+            src={movie.backdropUrl ?? '/placeholder.jpg'}
             alt={movie.title}
             fill
             sizes="(max-width: 768px) 100vw, 1280px"

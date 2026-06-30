@@ -6,7 +6,7 @@ export default async function Home() {
   const cheapestMoviesRaw = await prisma.movie.findMany({
     include: { genres: true },
     orderBy: { priceInCents: 'asc' },
-    take: 5,
+    take: 10,
   })
 
   // Convert Decimal -> plain number so it can be passed to a Client Component
