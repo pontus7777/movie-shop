@@ -19,7 +19,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { Crew } from '@/generated/prisma/client'
 import { MoreHorizontalIcon } from 'lucide-react'
 import { deleteCrew } from '../_actions/delete-crew-action'
@@ -38,7 +46,6 @@ export function CrewTable({ crewMembers }: Props) {
   const [createOpen, setCreateOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
-
   return (
     <>
       <Table>
@@ -47,7 +54,7 @@ export function CrewTable({ crewMembers }: Props) {
           <TableRow>
             <TableHead className="w-25"></TableHead>
             <TableHead>Name</TableHead>
-            <TableHead>Role</TableHead>
+            {/* <TableHead>Role</TableHead> */}
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -57,7 +64,7 @@ export function CrewTable({ crewMembers }: Props) {
             <TableRow key={cm.id}>
               <TableCell className="font-medium">{index + 1}</TableCell>
               <TableCell>{cm.name}</TableCell>
-              <TableCell>{cm.role}</TableCell>
+              {/* <TableCell>{cm.role}</TableCell> */}
 
               <TableCell className="text-right">
                 <DropdownMenu>
@@ -68,17 +75,13 @@ export function CrewTable({ crewMembers }: Props) {
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setEditId(cm.id)}>
-                      Edit
-                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setEditId(cm.id)}>Edit</DropdownMenuItem>
 
                     <DropdownMenuSeparator />
 
                     <DropdownMenuSeparator />
 
-                    <DropdownMenuItem onClick={() => setDeleteId(cm.id)}>
-                      Delete
-                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setDeleteId(cm.id)}>Delete</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
 
@@ -116,11 +119,7 @@ export function CrewTable({ crewMembers }: Props) {
 
                 {/* Edit dialog */}
                 {editId === cm.id && (
-                  <EditCrewDialog
-                    crew={cm}
-                    open
-                    onOpenChange={() => setEditId(null)}
-                  />
+                  <EditCrewDialog crew={cm} open onOpenChange={() => setEditId(null)} />
                 )}
 
                 {/* Create dialog */}

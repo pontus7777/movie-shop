@@ -8,7 +8,7 @@ import prisma from '@/lib/prisma'
 const editCrewSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
-  role: z.enum(['ACTOR', 'DIRECTOR']),
+  // role: z.enum(['ACTOR', 'DIRECTOR']),
   movieIds: z.array(z.string()).optional(),
 })
 
@@ -21,7 +21,7 @@ export async function editCrew(values: z.infer<typeof editCrewSchema>) {
     },
     data: {
       name: data.name,
-      role: data.role,
+      // role: data.role,
       /**
        *  movies: data.movieIds
         ? {
@@ -31,7 +31,6 @@ export async function editCrew(values: z.infer<typeof editCrewSchema>) {
         : undefined,
        */
     },
-    
   })
 
   revalidatePath('/admin/crew')
