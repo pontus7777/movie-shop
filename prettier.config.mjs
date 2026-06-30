@@ -1,5 +1,3 @@
-// import 'prettier-plugin-tailwindcss'
-
 /** @type {import("prettier").Config} */
 const config = {
   semi: false,

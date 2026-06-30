@@ -1,12 +1,12 @@
 'use server'
 
-import { Genre } from '@/generated/prisma/client'
 import prisma from '@/lib/prisma'
+import { revalidatePath } from 'next/cache'
 
-export async function deleteGenre(genreId: Genre['id']): Promise<void> {
-  prisma.genre.delete({
-    where: {
-      id: genreId,
-    },
+export async function deleteGenre(id: number){
+  await prisma.genre.delete({
+    where: { id },
   })
+
+  revalidatePath('/admin/genres')
 }

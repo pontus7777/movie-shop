@@ -1,8 +1,17 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 import { CreateMovieForm } from './_components/create-movie-form'
+import prisma from '@/lib/prisma';
 
-export default function CreateMoviePage() {
+export default async function CreateMoviePage() {
+  const [crewMembers, genres] = await Promise.all([
+    prisma.crew.findMany({
+      orderBy: [{ role: "asc" }, { name: "asc" }],
+    }),
+    prisma.genre.findMany({
+      orderBy: { name: "asc" },
+    }),
+])
   return (
     <div className="mx-auto mt-10 flex w-full justify-center px-4">
       <Card className="w-full max-w-2xl">
@@ -12,7 +21,7 @@ export default function CreateMoviePage() {
         </CardHeader>
 
         <CardContent>
-          <CreateMovieForm />
+          <CreateMovieForm  crewMembers={crewMembers} genres={genres}/>
         </CardContent>
       </Card>
     </div>

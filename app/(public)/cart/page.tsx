@@ -1,14 +1,7 @@
-import { getCart } from "@/lib/cart"
-import { CartTestMovie, movies } from "@/lib/test-movie-data"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card"
-import { CartActionButton } from "@/components/cart-action-button"
-import { addToCart, clearCart, removeFromCart } from "./_actions/cart-actions"
+
+import { CartActionButton } from '@/components/cart-action-button'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Table,
   TableBody,
@@ -17,26 +10,26 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from '@/components/ui/table'
+import { getCart } from '@/lib/cart'
+import { getMovieImageSrc } from '@/lib/image-utils'
+import { getMovies, getMoviesByIds } from '@/lib/services/movie'
+import Image from 'next/image'
+import { addToCart, clearCart, removeFromCart } from './_actions/cart-actions'
 
 export default async function CartPage() {
-  const cart = await getCart()
 
+ const cart = await getCart()
   const ids = Object.keys(cart)
-  // const cartItems = ids.map((id) => {
-  //   const product = products.find((prod) => prod.id === id);
-  //   if (!product) return null;
 
-  //   return {
-  //     product,
-  //     quantity: cart[id]
-  //   }
-  // }).filter(Boolean)
+  const movies = await getMovies()
+  const cartMovies = await getMoviesByIds(ids)
 
   let total = 0
-  const cartItems: { movie: CartTestMovie; quantity: number }[] = []
+  const cartItems: { movie: (typeof cartMovies)[number]; quantity: number }[] = []
+
   for (const id of ids) {
-    const movie = movies.find((m) => m.id === id)
+    const movie = cartMovies.find((m) => m.id === id)
     if (!movie) continue
 
     total += movie.price * cart[id]
@@ -45,11 +38,7 @@ export default async function CartPage() {
       quantity: cart[id],
     })
   }
-
-  // const movies = await prisma.movie.findMany({
-  //    where: { id: { in: ids }, deletedAt: null }
-  // });
-
+  
   return (
     <div className="mx-auto max-w-4xl space-y-6 p-4">
       <div>
@@ -58,9 +47,19 @@ export default async function CartPage() {
           {movies.map((m) => (
             <Card key={m.id}>
               <CardHeader>
-                <CardTitle>{m.name}</CardTitle>
+                <CardTitle>{m.title}</CardTitle>
               </CardHeader>
-              <CardContent>{m.price} kr</CardContent>
+              <CardContent>
+                <Image
+                  alt="{m.title}"
+                  src={getMovieImageSrc(m.imageUrl)}
+                  width={300}
+                  height={400}
+                  loading="eager"
+                  priority
+                />
+                <p>{m.price} kr</p>
+              </CardContent>
               <CardFooter>
                 <CartActionButton
                   className="w-full"
@@ -78,9 +77,6 @@ export default async function CartPage() {
 
       <div>
         <h1 className="mb-2 text-2xl font-bold">Cart</h1>
-        {/* {movies.map((movie) => (
-        <CartItem movie={movie} quantity={cart[movie.id]} />
-        ))} */}
 
         <Table>
           <TableHeader>
@@ -92,16 +88,10 @@ export default async function CartPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {/* <TableRow>
-              <TableCell>Product 1</TableCell>
-              <TableCell>1</TableCell>
-              <TableCell>100 kr</TableCell>
-              <TableCell></TableCell>
-            </TableRow> */}
 
             {cartItems.map((item) => (
               <TableRow key={`cart-item-${item.movie.id}`}>
-                <TableCell>{item.movie.name}</TableCell>
+                <TableCell>{item.movie.title}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <CartActionButton
@@ -109,7 +99,7 @@ export default async function CartPage() {
                       variant="outline"
                       movieId={item.movie.id}
                       action={async (movieId) => {
-                        "use server"
+                        'use server'
                         await removeFromCart(movieId, true)
                       }}
                       toastMessage="Successfully decremented cart item!"
@@ -156,7 +146,7 @@ export default async function CartPage() {
                   size="sm"
                   variant="destructive"
                   action={async () => {
-                    "use server"
+                    'use server'
                     await clearCart()
                   }}
                   movieId=""
@@ -164,6 +154,11 @@ export default async function CartPage() {
                 >
                   Clear Cart
                 </CartActionButton>
+              </TableCell>
+              <TableCell>
+                <Button asChild variant="default">
+                  <a href="/checkout">Checkout</a>
+                </Button>
               </TableCell>
             </TableRow>
           </TableFooter>
