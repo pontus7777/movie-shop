@@ -21,15 +21,17 @@ async function generate() {
   const genreResponse = await fetchGenres()
   const genres = genreResponse.genres
 
-  console.log('Fetching movies (3 pages = ~60 movies)...')
+  console.log('Fetching movies (5 pages = ~100 movies)...')
   const pages = await Promise.all([
     fetchPopularMovies(1),
     fetchPopularMovies(2),
     fetchPopularMovies(3),
+    fetchPopularMovies(4),
+    fetchPopularMovies(5),
   ])
 
   const movies: TMDBMovie[] = pages.flatMap((p) => p.results)
-  const selectedMovies = movies.slice(0, 50)
+  const selectedMovies = movies.slice(0, 100)
 
   const fullMovies = []
 

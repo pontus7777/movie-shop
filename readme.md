@@ -37,7 +37,7 @@ Seed commands:
 npm run generate:tmdb
 ```
 
-drag the tmdb-data.json into prisma/scripts
+drag the tmdb-data.json into prisma/
 
 ```bash
 npm run seed
