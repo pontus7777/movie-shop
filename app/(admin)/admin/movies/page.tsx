@@ -2,13 +2,13 @@ import Link from 'next/link'
 import ShopMoviecard from '@/app/(public)/_components/shop-movie-card'
 import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
-import { convertToSek } from '@/lib/priceUtils'
+import { convertToEuro } from '@/lib/priceUtils'
 import { MovieTable } from '@/components/movies/movie-table'
 
 export default async function Page() {
   const movies = await prisma.movie.findMany({
     include: {
-      genres:true,
+      genres: true,
       crewMembers: true,
     },
     orderBy: {
@@ -35,14 +35,14 @@ export default async function Page() {
             key={m.id}
             movie={{
               ...m,
-              price: convertToSek(m.price),
+              price: convertToEuro(m.price),
             }}
           />
         ))}
       </div>
-        <div className="hidden md:block">
-          <MovieTable movies={movies}/>
-        </div>
+      <div className="hidden md:block">
+        <MovieTable movies={movies} />
+      </div>
     </div>
   )
 }

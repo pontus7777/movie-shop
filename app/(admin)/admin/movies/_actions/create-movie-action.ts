@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 import prisma from '@/lib/prisma'
-import { convertFromSek } from '@/lib/priceUtils'
+import { convertFromEuro } from '@/lib/priceUtils'
 
 const createMovieSchema = z.object({
   title: z.string().min(1, 'Title is required').max(32, 'Title must be less than 32 characters'),
@@ -13,12 +13,9 @@ const createMovieSchema = z.object({
   releaseYear: z.number().min(0).max(9999),
   stock: z.boolean(),
   runtime: z.number().min(10),
-  imageUrl: z.union([
-    z.literal(""),
-    z.string().url("Invalid URL"),
-  ]),
+  imageUrl: z.union([z.literal(''), z.string().url('Invalid URL')]),
   crewMemberIds: z.array(z.string()),
-  genreIds:z.array(z.number()),
+  genreIds: z.array(z.number()),
 })
 
 export async function createMovie(values: z.infer<typeof createMovieSchema>) {
@@ -29,11 +26,11 @@ export async function createMovie(values: z.infer<typeof createMovieSchema>) {
       data: {
         title: data.title,
         description: data.description,
-        price: convertFromSek(data.price), // converts 149 sek to 14900 for example
+        price: convertFromEuro(data.price), // converts 149 sek to 14900 for example
         releaseYear: data.releaseYear,
         stock: data.stock,
         runtime: data.runtime,
-        imageUrl: data.imageUrl.trim() === "" ? null : data.imageUrl,
+        imageUrl: data.imageUrl.trim() === '' ? null : data.imageUrl,
         crewMembers: {
           connect: data.crewMemberIds.map((id) => ({ id })),
         },

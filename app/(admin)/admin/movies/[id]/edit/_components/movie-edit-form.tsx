@@ -14,7 +14,7 @@ import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 
 import { editMovie } from '../../../_actions/edit-movie-action'
-import { convertToSek } from '@/lib/priceUtils'
+import { convertToEuro } from '@/lib/priceUtils'
 import { Crew, Genre } from '@/generated/prisma/client'
 import { CrewSelector } from '@/components/movies/crew-selector'
 import { GenreSelector } from '@/components/movies/genre-selector'
@@ -29,7 +29,6 @@ const editFormSchema = z.object({
   imageUrl: z.string(),
   crewMemberIds: z.array(z.string()),
   genreIds: z.array(z.number()),
-
 })
 
 type EditMovieProps = {
@@ -51,18 +50,18 @@ type EditMovieProps = {
   genres: Genre[]
 }
 
-function EditMovieForm({ movie,crewMembers,genres}: EditMovieProps) {
+function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
   const router = useRouter()
-  
+
   const form = useForm({
     defaultValues: {
       title: movie.title,
       description: movie.description,
-      price: convertToSek(movie.price),
+      price: convertToEuro(movie.price),
       releaseYear: movie.releaseYear,
       stock: movie.stock,
       runtime: movie.runtime,
-      imageUrl: movie.imageUrl ?? "",
+      imageUrl: movie.imageUrl ?? '',
 
       crewMemberIds: movie.crewMembers.map((member) => member.id),
       genreIds: movie.genres.map((genre) => genre.id),
@@ -86,12 +85,8 @@ function EditMovieForm({ movie,crewMembers,genres}: EditMovieProps) {
         stock: movie.stock,
         runtime: movie.runtime,
         imageUrl: updatedMovie.imageUrl ?? '',
-        crewMemberIds: updatedMovie.crewMembers.map(
-            (member) => member.id
-          ),
-        genreIds: updatedMovie.genres.map(
-            (genre) => genre.id
-          ),
+        crewMemberIds: updatedMovie.crewMembers.map((member) => member.id),
+        genreIds: updatedMovie.genres.map((genre) => genre.id),
       })
 
       toast.success('Form edited successfully', {})
@@ -99,13 +94,9 @@ function EditMovieForm({ movie,crewMembers,genres}: EditMovieProps) {
       router.refresh()
     },
   })
-    const actors = crewMembers.filter(
-      (member) => member.role === "ACTOR"
-    );
+  const actors = crewMembers.filter((member) => member.role === 'ACTOR')
 
-    const directors = crewMembers.filter(
-      (member) => member.role === "DIRECTOR"
-    );
+  const directors = crewMembers.filter((member) => member.role === 'DIRECTOR')
   return (
     <form
       method="POST"
@@ -271,9 +262,7 @@ function EditMovieForm({ movie,crewMembers,genres}: EditMovieProps) {
 
         <form.Field name="genreIds">
           {(field) => {
-            const isInvalid =
-              field.state.meta.isTouched &&
-              !field.state.meta.isValid
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
 
             return (
               <Field data-invalid={isInvalid}>
@@ -284,15 +273,13 @@ function EditMovieForm({ movie,crewMembers,genres}: EditMovieProps) {
                   onChange={field.handleChange}
                 />
 
-                {isInvalid && (
-                  <FieldError errors={field.state.meta.errors} />
-                )}
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
             )
           }}
         </form.Field>
 
-  {/* ====Genre: CheckBox Component  ====== */}
+        {/* ====Genre: CheckBox Component  ====== */}
         <form.Field name="stock">
           {(field) => (
             <Field orientation="horizontal">

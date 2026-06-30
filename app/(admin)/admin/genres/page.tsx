@@ -14,11 +14,10 @@ export default async function AdminGenresPage() {
           <p className="text-muted-foreground">All Genres</p>
         </div>
 
-       <AddGenreButton />
-  
+        <AddGenreButton />
       </div>
       {/* <GenresTable genres={genres} /> */}
-    <GenresDataTable columns={columns} data={genres} />
+      <GenresDataTable columns={columns} data={genres} />
     </div>
   )
 }

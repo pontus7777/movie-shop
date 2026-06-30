@@ -1,7 +1,7 @@
-export function convertToSek(priceInOre: number) {
-  return priceInOre / 100
+export function convertToEuro(priceInCents: number) {
+  return priceInCents / 100
 }
 
-export function convertFromSek(priceInSek: number) {
-  return priceInSek * 100
+export function convertFromEuro(priceInEuro: number) {
+  return Math.round(priceInEuro * 100)
 }

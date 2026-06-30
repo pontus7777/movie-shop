@@ -2,21 +2,17 @@ import prisma from '@/lib/prisma'
 import HotDealsCarousel from '@/app/(public)/_components/hot-deals-carousel'
 import { MovieRow } from '@/app/(public)/_components/movie-row'
 
-// type MovieWithGenre = Movie & {
-//   genres: Genre[] | null;
-// };
-
 export default async function Home() {
   const cheapestMoviesRaw = await prisma.movie.findMany({
     include: { genres: true },
-    orderBy: { price: 'asc' },
+    orderBy: { priceInCents: 'asc' },
     take: 5,
   })
 
   // Convert Decimal -> plain number so it can be passed to a Client Component
   const cheapestMovies = cheapestMoviesRaw.map((movie) => ({
     ...movie,
-    price: movie.price,
+    price: movie.priceInCents,
   }))
 
   const recentMovies = await prisma.movie.findMany({
