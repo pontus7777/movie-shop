@@ -93,6 +93,7 @@ model Movie {
   price       Int
   releaseYear Int     @map("release_year")
   imageUrl    String?
+  trailerUrl  String? @map("trailer_url")   // ← new line
   stock       Boolean
   runtime     Int
   rating      Float?
