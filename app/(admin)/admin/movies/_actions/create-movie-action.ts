@@ -18,6 +18,7 @@ const createMovieSchema = z.object({
   crewMembers: z
     .array(
       z.object({
+        crewId: z.string(),
         name: z.string().trim().min(1, 'Crew member name is required'),
         actor: z.boolean(),
         director: z.boolean(),
@@ -48,69 +49,43 @@ export async function createMovie(values: z.infer<typeof createMovieSchema>) {
           runtime: data.runtime,
           imageUrl: data.imageUrl.trim() === '' ? null : data.imageUrl,
 
-          // Connect selected genres while creating the movie
           genres: {
             connect: data.genreIds.map((id) => ({ id })),
           },
+
+          credits: {
+            create: data.crewMembers.flatMap((member) => {
+              const credits = []
+
+              if (member.actor) {
+                credits.push({
+                  role: CrewRole.ACTOR,
+                  crew: {
+                    connectOrCreate: {
+                      where: { name: member.name },
+                      create: { name: member.name },
+                    },
+                  },
+                })
+              }
+
+              if (member.director) {
+                credits.push({
+                  role: CrewRole.DIRECTOR,
+                  crew: {
+                    connectOrCreate: {
+                      where: { name: member.name },
+                      create: { name: member.name },
+                    },
+                  },
+                })
+              }
+
+              return credits
+            }),
+          },
         },
       })
-
-      // =========================
-      // Process Crew Members
-      // =========================
-
-      for (const member of data.crewMembers) {
-        // ===============================================
-        // Find crew member by name
-        // ===============================================
-
-        let crew = await tx.crew.findUnique({
-          where: {
-            name: member.name,
-          },
-        })
-
-        // ===============================================
-        // Create crew member if it doesn't exist
-        // ===============================================
-
-        if (!crew) {
-          crew = await tx.crew.create({
-            data: {
-              name: member.name,
-            },
-          })
-        }
-
-        // ===============================================
-        // Create ACTOR relation
-        // ===============================================
-
-        if (member.actor) {
-          await tx.crewOnMovie.create({
-            data: {
-              movieId: movie.id,
-              crewId: crew.id,
-              role: CrewRole.ACTOR,
-            },
-          })
-        }
-
-        // ===============================================
-        // Create DIRECTOR relation
-        // ===============================================
-
-        if (member.director) {
-          await tx.crewOnMovie.create({
-            data: {
-              movieId: movie.id,
-              crewId: crew.id,
-              role: CrewRole.DIRECTOR,
-            },
-          })
-        }
-      }
-
       return movie
     })
 
