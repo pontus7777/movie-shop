@@ -22,14 +22,6 @@ export async function editCrew(values: z.infer<typeof editCrewSchema>) {
     data: {
       name: data.name,
       role: data.role,
-      /**
-       *  movies: data.movieIds
-        ? {
-            set: [], // clear existing
-            connect: data.movieIds.map((id) => ({ id })),
-          }
-        : undefined,
-       */
     },
     
   })

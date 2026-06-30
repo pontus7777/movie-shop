@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import ShopMoviecard from '@/components/shop-movie-card'
+import ShopMoviecard from '@/app/(public)/_components/shop-movie-card'
 import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
 import { convertToSek } from '@/lib/priceUtils'

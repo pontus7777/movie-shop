@@ -92,8 +92,6 @@ export default async function MovieDetailsPage({ params }: PageProps<'/admin/mov
                   ? movie.genres.map((g) => g.name).join(', ')
                   : 'No genre'}
             </p>
-            {/* <p>Actors: {movie.crewMembers.map((ca) => ca.name).join(', ') || 'No actors'}</p>
-            <p>Directors: {movie.crewMembers.map((cd) => cd.name).join(', ') || 'No directors'}</p> */}
             <p>
               Actors:
               {actors.length

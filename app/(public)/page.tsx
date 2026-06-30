@@ -1,6 +1,6 @@
 import prisma from '@/lib/prisma'
-import HotDealsCarousel from '@/components/hot-deals-carousel'
-import { MovieRow } from '@/components/movie-row'
+import HotDealsCarousel from '@/app/(public)/_components/hot-deals-carousel'
+import { MovieRow } from '@/app/(public)/_components/movie-row'
 
 // type MovieWithGenre = Movie & {
 //   genres: Genre[] | null;

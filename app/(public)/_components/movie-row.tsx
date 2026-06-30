@@ -19,7 +19,7 @@ export function MovieRow({ rowTitle, movies }: Props) {
         <h2 className="text-xl font-bold mb-4">{rowTitle}</h2>
         <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
           {movies.map((movie) => (
-            <div key={movie.id} className="flex-shrink-0 w-[230px]">
+            <div key={movie.id} className="shrink-0 w-57.5">
               <MovieCard movie={movie} />
             </div>
           ))}

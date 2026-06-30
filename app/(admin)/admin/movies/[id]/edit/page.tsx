@@ -29,11 +29,6 @@ export default async function EditMoviePage(props: PageProps<'/admin/movies/[id]
     }),
 
   ])
-  // const movie = await prisma.movie.findUnique({
-  //   where: {
-  //     id: params.id,
-  //   },
-  // })
 
   if (!movie) {
     notFound()

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { ShoppingCart, Search, Film } from 'lucide-react'
-import { ThemeModeToggle } from './theme-mode-toggle'
+import { ThemeModeToggle } from '../../../components/theme-mode-toggle'
 import { useState } from 'react'
 
 export default function Header({ cartCount = 0 }: { cartCount?: number }) {

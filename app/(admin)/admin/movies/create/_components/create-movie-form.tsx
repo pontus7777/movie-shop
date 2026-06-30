@@ -294,31 +294,6 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
               )
             }}
           </form.Field> 
-          
-        {/* <form.Field name="genreIds">
-            {(field) => {
-
-              const value = field.state.value as number[]
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid
-
-              return (
-                <Field data-invalid={isInvalid}>
-                    <GenreSelector
-                        title="Genres"
-                        genres={genres}
-                        value={field.state.value}
-                        onChange={field.handleChange}
-                      />
-
-                      {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                    </Field>
-                  )
-                }}
-          </form.Field> */}
-
-
-
       </FieldGroup>
 
       <div className="flex justify-end gap-2">

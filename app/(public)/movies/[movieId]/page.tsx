@@ -5,8 +5,8 @@ import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { CartActionButton } from '@/components/cart-action-button'
-import { addToCart } from '@/app/cart/_actions/cart-actions'
 import { getYoutubeEmbedUrl } from '@/lib/youtube-utils'
+import { addToCart } from '../../cart/_actions/cart-actions'
 
 export default async function MovieDetailsPage(props: PageProps<'/movies/[movieId]'>) {
   const params = await props.params
@@ -49,7 +49,7 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
             />
           </div>
         ) : (
-          <div className="relative h-[360px] w-full overflow-hidden">
+          <div className="relative h-90 w-full overflow-hidden">
             <Image
               src={posterSrc}
               alt=""
@@ -59,13 +59,13 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
             />
           </div>
         )}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-background" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-b from-transparent to-background" />
       </div>
 
       {/* ===== FLOATING INFO CARD ===== */}
       <div className="relative mx-auto max-w-5xl px-6">
         <div className="-mt-16 flex flex-col gap-6 sm:flex-row sm:items-end">
-          <div className="mx-auto w-[140px] shrink-0 overflow-hidden rounded-xl shadow-2xl shadow-black/50 ring-1 ring-white/10 sm:mx-0 sm:w-[190px]">
+          <div className="mx-auto w-35 shrink-0 overflow-hidden rounded-xl shadow-2xl shadow-black/50 ring-1 ring-white/10 sm:mx-0 sm:w-47.5">
             <Image
               src={posterSrc}
               alt={movie.title}
@@ -130,7 +130,7 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
 
           <Separator className="my-2" />
 
-          <div className="mx-auto flex w-fit items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:mx-0">
+          <div className="mx-auto flex w-fit items-center gap-3 rounded-xl border border-white/10 bg-white/3 p-3 sm:mx-0">
             <span className="text-1.5xl font-bold text-purple-400">€{displayPrice}</span>
             <CartActionButton
               movieId={movie.id}

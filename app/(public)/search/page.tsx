@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma'
-import MovieCard from '@/components/movie-card'
+import MovieCard from '@/app/(public)/_components/movie-card'
 
 export default async function SearchPage(props: PageProps<'/search'>) {
   const searchParams = await props.searchParams

@@ -1,6 +1,6 @@
 import '@/app/globals.css'
-import Footer from '@/components/footer'
-import Header from '@/components/header'
+import Footer from '@/app/(public)/_components/footer'
+import Header from '@/app/(public)/_components/header'
 import { getCart } from '@/lib/cart' // added new line
 
 export default async function UserLayout({
@@ -13,7 +13,7 @@ export default async function UserLayout({
 
   return (
     <div className="flex min-h-screen w-full flex-col">
-      <Header cartCount={cartCount} /> // update line
+      <Header cartCount={cartCount} />
       <main className="flex-1">{children}</main>
       <Footer />
     </div>

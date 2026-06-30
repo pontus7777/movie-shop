@@ -1,11 +1,8 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { headers } from 'next/headers'
-import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
-import { auth } from '@/lib/auth'
 import prisma from '@/lib/prisma'
 import { convertFromSek } from '@/lib/priceUtils'
 
@@ -26,15 +23,6 @@ const editMovieSchema = z.object({
 })
 
 export async function editMovie(values: z.infer<typeof editMovieSchema>) {
-  // Uncomment to enable auth
-  // const session = await auth.api.getSession({
-  //   headers: await headers(),
-  // })
-
-  // if (!session) {
-  //   redirect('/sign-in')
-  // }
-
   const data = editMovieSchema.parse(values)
 
   const updatedMovie = await prisma.movie.update({
