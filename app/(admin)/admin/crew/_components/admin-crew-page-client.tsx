@@ -17,9 +17,7 @@ export function AdminCrewPageClient({ crew }: { crew: Crew[] }) {
           <p className="text-muted-foreground">Manage crews and their movies</p>
         </div>
 
-        <Button onClick={() => setCreateOpen(true)}>
-          Add Crew
-        </Button>
+        <Button onClick={() => setCreateOpen(true)}>Add Crew</Button>
       </div>
 
       <CrewTable crewMembers={crew} />

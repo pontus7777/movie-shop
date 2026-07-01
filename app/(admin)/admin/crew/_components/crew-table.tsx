@@ -34,7 +34,6 @@ import { deleteCrew } from '../_actions/delete-crew-action'
 import { toast } from 'sonner'
 import { Spinner } from '@/components/ui/spinner'
 import { EditCrewDialog } from './crew-edit'
-import { CreateCrewDialog } from './crew-create'
 
 type Props = {
   crewMembers: Crew[]
@@ -43,7 +42,6 @@ type Props = {
 export function CrewTable({ crewMembers }: Props) {
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [editId, setEditId] = useState<string | null>(null)
-  const [createOpen, setCreateOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
   return (

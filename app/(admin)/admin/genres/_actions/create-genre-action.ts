@@ -22,7 +22,6 @@ export async function createGenre(values: z.infer<typeof createGenreSchema>) {
 
     revalidatePath(`/admin/genres`)
     return newGenre
-    
   } catch (error) {
     console.log('Error creating a genre', error)
     throw new Error('Faild to create a genre: ')

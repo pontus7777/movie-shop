@@ -1,9 +1,6 @@
-import { getCart } from '@/lib/cart'
-import { getMovies, getMoviesByIds } from '@/lib/services/movie'
-
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import { CartActionButton } from '@/components/cart-action-button'
-import { addToCart, clearCart, removeFromCart } from './_actions/cart-actions'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Table,
   TableBody,
@@ -13,30 +10,33 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { getCart } from '@/lib/cart'
 import { getMovieImageSrc } from '@/lib/image-utils'
+import { getMovies, getMoviesByIds } from '@/lib/services/movie'
 import Image from 'next/image'
-import { Button } from '@/components/ui/button'
+import { addToCart, clearCart, removeFromCart } from './_actions/cart-actions'
+import { convertToEuro } from '@/lib/priceUtils'
 
 export default async function CartPage() {
   const cart = await getCart()
-
   const ids = Object.keys(cart)
 
   const movies = await getMovies()
   const cartMovies = await getMoviesByIds(ids)
-  // let total = 0
 
-  const cartItems = cartMovies.map((movie) => {
-    const quantity = cart[movie.id]
+  let total = 0
+  const cartItems: { movie: (typeof cartMovies)[number]; quantity: number }[] = []
 
-    // total += movie.price * quantity
+  for (const id of ids) {
+    const movie = cartMovies.find((m) => m.id === id)
+    if (!movie) continue
 
-    return {
+    total += convertToEuro(movie.priceInCents) * cart[id]
+    cartItems.push({
       movie,
-      quantity,
-    }
-  })
-  const total = cartItems.reduce((sum, item) => sum + item.movie.price * item.quantity, 0)
+      quantity: cart[id],
+    })
+  }
 
   return (
     <div className="mx-auto max-w-4xl space-y-6 p-4">
@@ -57,7 +57,7 @@ export default async function CartPage() {
                   loading="eager"
                   priority
                 />
-                <p>{m.price} kr</p>
+                <p>€{convertToEuro(m.priceInCents)}</p>
               </CardContent>
               <CardFooter>
                 <CartActionButton
@@ -76,9 +76,6 @@ export default async function CartPage() {
 
       <div>
         <h1 className="mb-2 text-2xl font-bold">Cart</h1>
-        {/* {movies.map((movie) => (
-        <CartItem movie={movie} quantity={cart[movie.id]} />
-        ))} */}
 
         <Table>
           <TableHeader>
@@ -90,13 +87,6 @@ export default async function CartPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {/* <TableRow>
-              <TableCell>Product 1</TableCell>
-              <TableCell>1</TableCell>
-              <TableCell>100 kr</TableCell>
-              <TableCell></TableCell>
-            </TableRow> */}
-
             {cartItems.map((item) => (
               <TableRow key={`cart-item-${item.movie.id}`}>
                 <TableCell>{item.movie.title}</TableCell>
@@ -130,7 +120,7 @@ export default async function CartPage() {
                     </CartActionButton>
                   </div>
                 </TableCell>
-                <TableCell>{item.movie.price * item.quantity} kr</TableCell>
+                <TableCell>€{convertToEuro(item.movie.priceInCents) * item.quantity}</TableCell>
                 <TableCell>
                   <CartActionButton
                     size="sm"
@@ -148,7 +138,7 @@ export default async function CartPage() {
           <TableFooter>
             <TableRow>
               <TableCell colSpan={2}>Total</TableCell>
-              <TableCell>{total} kr</TableCell>
+              <TableCell>€{total.toFixed(2)}</TableCell>
               <TableCell>
                 <CartActionButton
                   size="sm"

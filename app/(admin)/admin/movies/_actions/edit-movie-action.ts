@@ -1,14 +1,10 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { headers } from 'next/headers'
-import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
-import { auth } from '@/lib/auth'
 import prisma from '@/lib/prisma'
 import { convertFromSek } from '@/lib/priceUtils'
-import { CrewRole } from '@/generated/prisma/client'
 
 const editMovieSchema = z.object({
   id: z.string().min(1),
@@ -50,15 +46,6 @@ const editMovieSchema = z.object({
 })
 
 export async function editMovie(values: z.infer<typeof editMovieSchema>) {
-  // Uncomment to enable auth
-  // const session = await auth.api.getSession({
-  //   headers: await headers(),
-  // })
-
-  // if (!session) {
-  //   redirect('/sign-in')
-  // }
-
   const data = editMovieSchema.parse(values)
 
   const updatedMovie = await prisma.movie.update({
@@ -68,12 +55,14 @@ export async function editMovie(values: z.infer<typeof editMovieSchema>) {
     data: {
       title: data.title,
       description: data.description,
-      price: convertFromSek(data.price),
+      price: convertFromEuro(data.price),
       releaseYear: data.releaseYear,
       stock: data.stock,
       runtime: data.runtime,
       imageUrl: data.imageUrl.trim() || null,
-
+      crewMembers: {
+        set: data.crewMemberIds.map((id) => ({ id })), //set replaces the existing list with the new selection
+      },
       genres: {
         set: data.genreIds.map((id) => ({ id })),
       },

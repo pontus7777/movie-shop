@@ -11,15 +11,6 @@ const editGenreSchema = z.object({
 })
 
 export async function editGenre(values: z.infer<typeof editGenreSchema>) {
-  // Uncomment to enable auth
-  // const session = await auth.api.getSession({
-  //   headers: await headers(),
-  // })
-
-  // if (!session) {
-  //   redirect('/sign-in')
-  // }
-
   const data = editGenreSchema.parse(values)
 
   const updatedGenre = await prisma.genre.update({

@@ -2,6 +2,7 @@
 
 import { Genre } from '@/generated/prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -13,8 +14,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { MoreHorizontal } from 'lucide-react'
-import { deleteGenre } from '../_actions/delete-genre-action'
 import { EditGenreMenuItem } from './edit-genre-menuitem'
+import { DeleteGenreDialog } from './delete-genre-dialog' // ★ NEW
 
 export const columns: ColumnDef<Genre>[] = [
   {
@@ -42,23 +43,24 @@ export const columns: ColumnDef<Genre>[] = [
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
+
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
             <DropdownMenuItem onClick={() => navigator.clipboard.writeText(genre.id.toString())}>
               Genre ID
             </DropdownMenuItem>
+
             <DropdownMenuSeparator />
 
-            <EditGenreMenuItem id={genre.id} description={genre.description} name={genre.name} />
+            <EditGenreMenuItem
+              id={genre.id}
+              description={genre.description}
+              name={genre.name}
+            />
 
-            <DropdownMenuItem
-              variant="destructive"
-              onClick={async () => {
-                await deleteGenre(genre.id)
-              }}
-            >
-              Delete Genre
-            </DropdownMenuItem>
+            {/* ★ NEW — delete dialog menu item */}
+            <DeleteGenreDialog id={genre.id} name={genre.name} />
           </DropdownMenuContent>
         </DropdownMenu>
       )

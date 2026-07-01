@@ -32,6 +32,13 @@ export default async function MovieDetailsPage({ params }: PageProps<'/admin/mov
   if (!movie) {
     notFound()
   }
+  // const actors = movie.crewMembers.filter(
+  //   (member) => member.role === "ACTOR"
+  // )
+
+  // const directors = movie.crewMembers.filter(
+  //   (member) => member.role === "DIRECTOR"
+  // )
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 p-4">
@@ -87,13 +94,9 @@ export default async function MovieDetailsPage({ params }: PageProps<'/admin/mov
               Genre:
               {movie.genres.length ? movie.genres.map((g) => g.name).join(', ') : 'No genre'}
             </p>
-            {/* <p>Actors: {movie.crewMembers.map((ca) => ca.name).join(', ') || 'No actors'}</p>
-            <p>Directors: {movie.crewMembers.map((cd) => cd.name).join(', ') || 'No directors'}</p> */}
             <p>
-              Crew:
-              {movie?.credits?.length
-                ? movie.credits.map((c) => `${c.crew.name} (${c.role})`).join(', ')
-                : 'No crew'}
+              Actors:
+              {actors.length ? actors.map((actor) => actor.name).join(', ') : 'No actors'}
             </p>
 
             {/* <p>

@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { Button } from "./ui/button"
-import { toast } from "sonner"
-import { useRouter } from "next/navigation"
+import { useState } from 'react'
+import { Button } from './ui/button'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 type Props = React.ComponentProps<typeof Button> & {
   movieId: string
@@ -11,12 +11,7 @@ type Props = React.ComponentProps<typeof Button> & {
   action: (movieId: string) => Promise<unknown>
 }
 
-function CartActionButton({
-  movieId,
-  toastMessage,
-  action,
-  ...props
-}: Props) {
+function CartActionButton({ movieId, toastMessage, action, ...props }: Props) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 

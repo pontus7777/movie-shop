@@ -87,17 +87,29 @@ model Verification {
 model Movie {
   id String @id @default(cuid())
 
-  title       String  @db.VarChar(100)
-  description String
-  // Price is in smallest possible unit
-  price       Int
-  releaseYear Int     @map("release_year")
-  imageUrl    String?
-  stock       Boolean
-  runtime     Int
-  rating      Float?
+  title         String    @db.VarChar(100)
+  originalTitle String? // OPTIONAL
+  description   String
+  tagline       String?
+  priceInCents  Int
+  releaseYear   Int       @map("release_year")
+  releaseDate   DateTime? // OPTIONAL
+  imageUrl      String?
+  backdropUrl   String?
+  trailerUrl    String?
+  imdbId        String? // OPTIONAL can link to imdb link
+  adult         Boolean?  @default(false) // OPTIONAL
 
-  genres Genre[]
+  stock      Boolean
+  runtime    Int
+  rating     Float?
+  popularity Float?
+  budget     Int?
+  revenue    Int?
+
+  genres   Genre[]
+  keywords MovieKeyword[] @relation("MovieKeywords")
+  credits  CrewOnMovie[]
 
   orderItems OrderItem[]
   cartItems  CartItem[]
@@ -110,10 +122,20 @@ model Movie {
   @@map("movies")
 }
 
+model MovieKeyword {
+  id     Int     @id
+  name   String
+  movies Movie[] @relation("MovieKeywords")
+
+  @@map("movie_keywords")
+}
+
 model Crew {
-  id      String        @id @default(cuid())
-  name    String        @unique
-  credits CrewOnMovie[]
+  id   String   @id @default(cuid())
+  name String
+  role CrewRole
+
+  movies Movie[]
 
   @@map("crew_members")
 }

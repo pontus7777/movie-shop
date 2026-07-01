@@ -1,0 +1,27 @@
+import '@/app/globals.css'
+import Footer from '@/app/(public)/_components/footer'
+import Header from '@/app/(public)/_components/header'
+import { getCart } from '@/lib/cart'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+
+export default async function UserLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  const cart = await getCart()
+  const cartCount = Object.values(cart).reduce((sum, quantity) => sum + quantity, 0)
+
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  return (
+    <div className="flex min-h-screen w-full flex-col">
+      <Header cartCount={cartCount} userName={session?.user.name ?? null} />
+      <main className="flex-1">{children}</main>
+      <Footer />
+    </div>
+  )
+}

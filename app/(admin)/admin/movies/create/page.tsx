@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 
 import { CreateMovieForm } from './_components/create-movie-form'
 import prisma from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 
 export default async function CreateMoviePage() {
   const [crew, genres] = await Promise.all([
@@ -19,6 +20,7 @@ export default async function CreateMoviePage() {
       },
       orderBy: { name: 'asc' },
     }),
+  ])
   ])
   return (
     <div className="mx-auto mt-10 flex w-full justify-center px-4">

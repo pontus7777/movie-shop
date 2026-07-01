@@ -18,7 +18,7 @@ import { GenreSelector } from '@/components/movies/genre-selector'
 import { MovieCrewEditor } from '@/components/movies/movie-crew-editor'
 
 type Props = {
-  crew: Crew[]
+  crewMembers: Crew[]
   genres: { id: number; name: string }[]
 }
 
@@ -32,25 +32,10 @@ const formSchema = z.object({
     .min(1888)
     .max(new Date().getFullYear() + 5),
   stock: z.boolean(),
-  runtime: z.number().int().positive(),
-  imageUrl: z.string().url('Invalid image URL').or(z.literal('')),
-  //==== Crew members =====
-  crewMembers: z
-    .array(
-      z.object({
-        isNew: z.boolean(),
-        crewId: z.string(),
-        name: z.string().trim().min(1, 'Crew member name is required'),
-        actor: z.boolean(),
-        director: z.boolean(),
-      }),
-    )
-    .min(1, 'Add at least one crew member')
-    .refine((crew) => crew.every((member) => member.actor || member.director), {
-      //The .refine() call checks every crew member.
-      message: 'Each crew member must have at least one role.',
-    }),
-  genreIds: z.array(z.number()).min(1, 'Select at least one genre'),
+  runtime: z.number().min(10),
+  imageUrl: z.string(),
+  crewMemberIds: z.array(z.string()).min(1),
+  genreIds: z.array(z.number()).min(1),
 })
 
 function CreateMovieForm({ genres, crew }: Props) {
@@ -66,6 +51,7 @@ function CreateMovieForm({ genres, crew }: Props) {
       stock: false,
       runtime: 10,
       imageUrl: '',
+      crewMemberIds: [] as string[],
       genreIds: [] as number[],
       crewMembers: [
         {
@@ -99,11 +85,11 @@ function CreateMovieForm({ genres, crew }: Props) {
         setLoading(false)
       }
     },
-
-    onSubmitInvalid: ({ value }) => {
-      console.log('INVALID SUBMIT ', value)
-    },
   })
+
+  const actors = crewMembers.filter((member) => member.role === 'ACTOR')
+
+  const directors = crewMembers.filter((member) => member.role === 'DIRECTOR')
 
   return (
     <form
@@ -261,15 +247,23 @@ function CreateMovieForm({ genres, crew }: Props) {
             )
           }}
         </form.Field>
-        {/* ======= CrewMembers checkbox field ========= */}
-        <form.Field name="crewMembers">
+        {/* ======= Crew checkbox field ========= */}
+        <form.Field name="crewMemberIds">
           {(field) => {
             const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
 
             return (
               <Field data-invalid={isInvalid}>
-                <MovieCrewEditor
-                  crew={crew}
+                <CrewSelector
+                  title="Actors"
+                  crew={actors}
+                  value={field.state.value}
+                  onChange={field.handleChange}
+                />
+
+                <CrewSelector
+                  title="Directors"
+                  crew={directors}
                   value={field.state.value}
                   onChange={field.handleChange}
                 />
@@ -279,7 +273,6 @@ function CreateMovieForm({ genres, crew }: Props) {
             )
           }}
         </form.Field>
-
         {/* ======= Genre checkbox field ========= */}
 
         <form.Field name="genreIds">
@@ -300,6 +293,28 @@ function CreateMovieForm({ genres, crew }: Props) {
             )
           }}
         </form.Field>
+
+        {/* <form.Field name="genreIds">
+            {(field) => {
+
+              const value = field.state.value as number[]
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid
+
+              return (
+                <Field data-invalid={isInvalid}>
+                    <GenreSelector
+                        title="Genres"
+                        genres={genres}
+                        value={field.state.value}
+                        onChange={field.handleChange}
+                      />
+
+                      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                    </Field>
+                  )
+                }}
+          </form.Field> */}
       </FieldGroup>
 
       <div className="flex justify-end gap-2">

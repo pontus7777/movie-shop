@@ -7,7 +7,7 @@ const config = {
   printWidth: 100,
   bracketSpacing: true,
   arrowParens: 'always',
-  plugins: ['prettier-plugin-tailwindcss'],
+  // plugins: ['prettier-plugin-tailwindcss'],
 }
 
 export default config

@@ -3,7 +3,6 @@
 import { useForm } from '@tanstack/react-form'
 import { Save } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -15,7 +14,7 @@ import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 
 import { editMovie } from '../../../_actions/edit-movie-action'
-import { convertToSek } from '@/lib/priceUtils'
+import { convertToEuro } from '@/lib/priceUtils'
 import { Crew, Genre } from '@/generated/prisma/client'
 import { CrewSelector } from '@/components/movies/crew-selector'
 import { GenreSelector } from '@/components/movies/genre-selector'
@@ -58,7 +57,7 @@ function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
     defaultValues: {
       title: movie.title,
       description: movie.description,
-      price: convertToSek(movie.price),
+      price: convertToEuro(movie.price),
       releaseYear: movie.releaseYear,
       stock: movie.stock,
       runtime: movie.runtime,
