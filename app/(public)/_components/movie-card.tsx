@@ -21,10 +21,10 @@ export default function MovieCard({
 
   return (
     <Link href={`/movies/${movie.id}`}>
-      <div className="group relative rounded-xl overflow-hidden cursor-pointer bg-muted">
+      <div className="group bg-muted relative cursor-pointer overflow-hidden rounded-xl">
         {showDealBadge && (
-          <div className="absolute top-4 left-4 bg-red-600 text-white text-sm font-bold px-3 py-1 rounded-md">
-            €{movie.price.toString()} ONLY
+          <div className="absolute top-4 left-4 rounded-md bg-red-600 px-3 py-1 text-sm font-bold text-white">
+            €{movie.priceInCents.toString()} ONLY
           </div>
         )}
 
@@ -37,7 +37,7 @@ export default function MovieCard({
         />
 
         <div className="p-2">
-          <h3 className="text-sm font-semibold truncate">{movie.title}</h3>
+          <h3 className="truncate text-sm font-semibold">{movie.title}</h3>
           <p className="text-sm text-gray-300">
             {(movie.genres.map((g) => g.name).join(' • ') || 'No genres') +
               ' • ⭐ ' +
