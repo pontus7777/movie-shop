@@ -11,36 +11,65 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { getCart } from '@/lib/cart'
-import { getMovieImageSrc } from '@/lib/image-utils'
-import { getMovies, getMoviesByIds } from '@/lib/services/movie'
-import Image from 'next/image'
 import { addToCart, clearCart, removeFromCart } from './_actions/cart-actions'
 import { convertToEuro } from '@/lib/priceUtils'
+import { getMovieImageSrc } from '@/lib/image-utils'
+import Image from 'next/image'
 
 export default async function CartPage() {
   const cart = await getCart()
-  const ids = Object.keys(cart)
+  // const ids = Object.keys(cart)
 
-  const movies = await getMovies()
-  const cartMovies = await getMoviesByIds(ids)
+  // const movies = await getMovies()
+  // const cartMovies = await getMoviesByIds(ids)
 
-  let total = 0
-  const cartItems: { movie: (typeof cartMovies)[number]; quantity: number }[] = []
-
-  for (const id of ids) {
-    const movie = cartMovies.find((m) => m.id === id)
-    if (!movie) continue
-
-    total += convertToEuro(movie.priceInCents) * cart[id]
-    cartItems.push({
-      movie,
-      quantity: cart[id],
-    })
-  }
+  const total = cart.items.reduce(
+    (sum, item) => sum + convertToEuro(item.movie.priceInCents) * item.quantity,
+    0,
+  )
 
   return (
     <div className="mx-auto max-w-4xl space-y-6 p-4">
       <div>
+        <h1 className="mb-2 text-2xl font-bold">My Cart</h1>
+
+        <div className="grid grid-cols-3 gap-4">
+          {cart.items.map((item) => (
+            <Card key={item.movie.id}>
+              <CardHeader>
+                <CardTitle>{item.movie.title}</CardTitle>
+              </CardHeader>
+
+              <CardContent>
+                <Image
+                  alt={item.movie.title}
+                  src={getMovieImageSrc(item.movie.imageUrl)}
+                  width={300}
+                  height={400}
+                  loading="eager"
+                  priority
+                />
+
+                <p>€{convertToEuro(item.movie.priceInCents)}</p>
+
+                <p>Quantity: {item.quantity}</p>
+              </CardContent>
+
+              <CardFooter>
+                <CartActionButton
+                  className="w-full"
+                  movieId={item.movie.id}
+                  toastMessage="Successfully added to cart!"
+                  action={addToCart}
+                >
+                  Add one more
+                </CartActionButton>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </div>
+      {/* <div>
         <h1 className="mb-2 text-2xl font-bold">Movies</h1>
         <div className="grid grid-cols-3 gap-4">
           {movies.map((m) => (
@@ -72,7 +101,7 @@ export default async function CartPage() {
             </Card>
           ))}
         </div>
-      </div>
+      </div> */}
 
       <div>
         <h1 className="mb-2 text-2xl font-bold">Cart</h1>
@@ -87,8 +116,8 @@ export default async function CartPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {cartItems.map((item) => (
-              <TableRow key={`cart-item-${item.movie.id}`}>
+            {cart.items.map((item) => (
+              <TableRow key={item.movie.id}>
                 <TableCell>{item.movie.title}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
@@ -120,7 +149,10 @@ export default async function CartPage() {
                     </CartActionButton>
                   </div>
                 </TableCell>
-                <TableCell>€{convertToEuro(item.movie.priceInCents) * item.quantity}</TableCell>
+                <TableCell>
+                  €{(convertToEuro(item.movie.priceInCents) * item.quantity).toFixed(2)}
+                </TableCell>
+
                 <TableCell>
                   <CartActionButton
                     size="sm"
@@ -135,11 +167,12 @@ export default async function CartPage() {
               </TableRow>
             ))}
           </TableBody>
+
           <TableFooter>
             <TableRow>
               <TableCell colSpan={2}>Total</TableCell>
               <TableCell>€{total.toFixed(2)}</TableCell>
-              <TableCell>
+              <TableCell className="flex gap-2">
                 <CartActionButton
                   size="sm"
                   variant="destructive"
@@ -152,9 +185,8 @@ export default async function CartPage() {
                 >
                   Clear Cart
                 </CartActionButton>
-              </TableCell>
-              <TableCell>
-                <Button asChild variant="default">
+
+                <Button asChild>
                   <a href="/checkout">Checkout</a>
                 </Button>
               </TableCell>
