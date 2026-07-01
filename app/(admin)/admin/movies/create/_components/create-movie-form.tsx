@@ -1,37 +1,47 @@
 'use client'
 
+import { GenreSelector } from '@/app/(admin)/admin/movies/_components/genre-selector'
+import { Button } from '@/components/ui/button'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
+import { Switch } from '@/components/ui/switch'
+import { Textarea } from '@/components/ui/textarea'
+import { Crew, Genre } from '@/generated/prisma/client'
 import { useForm } from '@tanstack/react-form'
 import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { z } from 'zod'
-
-import { Button } from '@/components/ui/button'
-import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
-import { Switch } from '@/components/ui/switch'
-import { Textarea } from '@/components/ui/textarea'
+import { CrewCommandSelector } from '../../_components/crew-command-selector'
 import { createMovie } from '../../_actions/create-movie-action'
-import { Crew } from '@/generated/prisma/client'
-import { CrewSelector } from '@/components/movies/crew-selector'
-import { GenreSelector } from '@/components/movies/genre-selector'
 
 type Props = {
   crewMembers: Crew[]
-  genres: { id: number; name: string }[]
+  genres: Omit<Genre, 'description'>[]
 }
 
 const formSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(32, 'Title must be less than 32 characters'),
-  description: z.string().min(1, 'Description is required').max(1000),
-  price: z.number(),
+  title: z.string().min(1).max(32),
+  description: z.string().min(1).max(1000),
+  price: z
+    .string()
+    .refine((val) => /^\d+(\.\d{1,2})?$/.test(val), 'Price must be a valid number like 21.29'),
   releaseYear: z.number().min(0).max(9999),
   stock: z.boolean(),
   runtime: z.number().min(10),
   imageUrl: z.string(),
-  crewMemberIds: z.array(z.string()).min(1),
-  genreIds: z.array(z.number()).min(1),
+
+  crew: z
+    .array(
+      z.object({
+        id: z.string(),
+        role: z.enum(['ACTOR', 'DIRECTOR']),
+      }),
+    )
+    .min(1, 'Select at least one crew member'),
+
+  genreIds: z.array(z.number()).min(1, 'Select at least one genre'),
 })
 
 function CreateMovieForm({ crewMembers, genres }: Props) {
@@ -42,12 +52,12 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
     defaultValues: {
       title: '',
       description: '',
-      price: 1,
+      price: '10',
       releaseYear: 1920,
       stock: false,
-      runtime: 10,
+      runtime: 90,
       imageUrl: '',
-      crewMemberIds: [] as string[],
+      crew: [] as { id: string; role: 'ACTOR' | 'DIRECTOR' }[],
       genreIds: [] as number[],
     },
     validators: {
@@ -60,8 +70,7 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
         const newMovie = await createMovie(value)
 
         toast.success('Movie created successfully')
-
-        router.push(`/admin/movies/${newMovie.id}`) //need and issue to work on that!!!
+        router.push(`/admin/movies/${newMovie.id}`)
       } catch (err) {
         console.log(err)
         toast.error('Failed to submit form', {
@@ -72,10 +81,6 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
       }
     },
   })
-
-  const actors = crewMembers.filter((member) => member.role === 'ACTOR')
-
-  const directors = crewMembers.filter((member) => member.role === 'DIRECTOR')
 
   return (
     <form
@@ -90,17 +95,14 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
         <form.Field name="title">
           {(field) => {
             const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Title</FieldLabel>
                 <Input
                   id={field.name}
-                  name={field.name}
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  aria-invalid={isInvalid}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -111,17 +113,14 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
         <form.Field name="description">
           {(field) => {
             const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Description</FieldLabel>
                 <Textarea
                   id={field.name}
-                  name={field.name}
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  aria-invalid={isInvalid}
                   className="h-35"
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -131,37 +130,32 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
         </form.Field>
 
         <form.Field name="imageUrl">
-          {(field) => {
-            return (
-              <Field>
-                <FieldLabel htmlFor={field.name}>Image URL</FieldLabel>
-                <Input
-                  id={field.name}
-                  placeholder="https://picsum.photos/300/450"
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              </Field>
-            )
-          }}
+          {(field) => (
+            <Field>
+              <FieldLabel htmlFor={field.name}>Image URL</FieldLabel>
+              <Input
+                id={field.name}
+                placeholder="https://picsum.photos/300/450"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
+            </Field>
+          )}
         </form.Field>
 
         <form.Field name="price">
           {(field) => {
             const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Price</FieldLabel>
                 <Input
                   id={field.name}
-                  name={field.name}
-                  type={'number'}
+                  type="text"
                   value={field.state.value}
                   onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(Number(e.target.value))}
-                  aria-invalid={isInvalid}
+                  onChange={(e) => field.handleChange(e.target.value)}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -172,17 +166,14 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
         <form.Field name="releaseYear">
           {(field) => {
             const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Release year</FieldLabel>
                 <Input
                   id={field.name}
-                  name={field.name}
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(Number(e.target.value))}
-                  aria-invalid={isInvalid}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -191,80 +182,56 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
         </form.Field>
 
         <form.Field name="stock">
-          {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-
-            return (
-              <Field data-invalid={isInvalid} orientation="horizontal">
-                <Switch
-                  id={field.name}
-                  name={field.name}
-                  checked={field.state.value}
-                  onCheckedChange={(checked) => {
-                    field.handleChange(checked)
-                  }}
-                  onBlur={field.handleBlur}
-                  aria-invalid={isInvalid}
-                />
-
-                <FieldLabel htmlFor={field.name}>In stock</FieldLabel>
-              </Field>
-            )
-          }}
+          {(field) => (
+            <Field orientation="horizontal">
+              <Switch
+                id={field.name}
+                checked={field.state.value}
+                onCheckedChange={(checked) => field.handleChange(checked)}
+                onBlur={field.handleBlur}
+              />
+              <FieldLabel htmlFor={field.name}>In stock</FieldLabel>
+            </Field>
+          )}
         </form.Field>
 
         <form.Field name="runtime">
           {(field) => {
             const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Runtime</FieldLabel>
                 <Input
                   id={field.name}
-                  name={field.name}
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(Number(e.target.value))}
-                  aria-invalid={isInvalid}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
             )
           }}
         </form.Field>
-        {/* ======= Crew checkbox field ========= */}
-        <form.Field name="crewMemberIds">
+
+        <form.Field name="crew">
           {(field) => {
             const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-
             return (
               <Field data-invalid={isInvalid}>
-                <CrewSelector
-                  title="Actors"
-                  crew={actors}
+                <CrewCommandSelector
+                  crew={crewMembers}
                   value={field.state.value}
                   onChange={field.handleChange}
                 />
-
-                <CrewSelector
-                  title="Directors"
-                  crew={directors}
-                  value={field.state.value}
-                  onChange={field.handleChange}
-                />
-
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
             )
           }}
         </form.Field>
-        {/* ======= Genre checkbox field ========= */}
 
         <form.Field name="genreIds">
           {(field) => {
             const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-
             return (
               <Field data-invalid={isInvalid}>
                 <GenreSelector
@@ -273,7 +240,6 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
                   value={field.state.value}
                   onChange={field.handleChange}
                 />
-
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
             )

@@ -90,9 +90,7 @@ export default function Header({
 
           {userName ? (
             <>
-              <span className="text-sm text-muted-foreground hidden sm:inline">
-                Hi, {userName}
-              </span>
+              <span className="text-sm text-muted-foreground hidden sm:inline">Hi, {userName}</span>
               <Button
                 variant="ghost"
                 className="font-medium"

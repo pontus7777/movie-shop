@@ -1,14 +1,22 @@
 'use client'
 
 import { Prisma } from '@/generated/prisma/client'
-import { Button } from '../ui/button'
+import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
-import { Avatar, AvatarImage } from '../ui/avatar'
+
+import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { MoveRight } from 'lucide-react'
 import placeHolder from '@/public/file.svg'
 import { getMovieImageSrc } from '@/lib/image-utils'
 import { convertToEuro } from '@/lib/priceUtils'
+import {
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  Table,
+} from '@/components/ui/table'
 
 type MovieWithRelations = Prisma.MovieGetPayload<{
   include: {
@@ -21,9 +29,6 @@ type MovieWithRelations = Prisma.MovieGetPayload<{
 
 type Props = {
   movies: MovieWithRelations[]
-  //   page: number
-  //   pageSize: number
-  //   totalPages: number
 }
 function MovieTable({ movies }: Props) {
   return (
@@ -45,18 +50,11 @@ function MovieTable({ movies }: Props) {
         <TableHeader>
           <TableRow>
             <TableHead></TableHead>
-            <TableHead>
-              <Button variant="ghost">Title</Button>
-            </TableHead>
-            <TableHead>
-              <Button variant="ghost">Genre</Button>
-            </TableHead>
-            <TableHead>
-              <Button variant="ghost">Pice</Button>
-            </TableHead>
+            <TableHead>Title</TableHead>
+            <TableHead>Genre</TableHead>
+            <TableHead>Price</TableHead>
             <TableHead>Release Year</TableHead>
-
-            <TableHead className="text-right">...</TableHead>
+            <TableHead className="text-right">Details</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -86,8 +84,8 @@ function MovieTable({ movies }: Props) {
                 <TableCell className="text-right">
                   <Button asChild variant="secondary">
                     <Link href={`/admin/movies/${movie.id}`}>
-                      view
-                      <MoveRight className="ml-2" />
+                      View
+                      <MoveRight />
                     </Link>
                   </Button>
                 </TableCell>

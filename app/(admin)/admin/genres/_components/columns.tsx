@@ -2,7 +2,6 @@
 
 import { Genre } from '@/generated/prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
-import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -53,11 +52,7 @@ export const columns: ColumnDef<Genre>[] = [
 
             <DropdownMenuSeparator />
 
-            <EditGenreMenuItem
-              id={genre.id}
-              description={genre.description}
-              name={genre.name}
-            />
+            <EditGenreMenuItem id={genre.id} description={genre.description} name={genre.name} />
 
             {/* ★ NEW — delete dialog menu item */}
             <DeleteGenreDialog id={genre.id} name={genre.name} />

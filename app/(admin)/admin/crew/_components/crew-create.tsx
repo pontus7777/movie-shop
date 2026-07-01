@@ -21,19 +21,17 @@ type Props = {
 
 export function CreateCrewDialog({ open, onOpenChange }: Props) {
   const [name, setName] = useState('')
-  const [role, setRole] = useState<'ACTOR' | 'DIRECTOR'>('ACTOR')
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit() {
     try {
       setLoading(true)
 
-      await createCrew({ name, role })
+      await createCrew({ name })
 
       toast.success('Crew created')
       onOpenChange(false)
       setName('')
-      setRole('ACTOR')
     } catch {
       toast.error('Failed to create crew')
     } finally {
@@ -56,15 +54,6 @@ export function CreateCrewDialog({ open, onOpenChange }: Props) {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-
-          <select
-            className="w-full border rounded p-2"
-            value={role}
-            onChange={(e) => setRole(e.target.value as 'ACTOR' | 'DIRECTOR')}
-          >
-            <option value="ACTOR">Actor</option>
-            <option value="DIRECTOR">Director</option>
-          </select>
         </div>
 
         <AlertDialogFooter>
