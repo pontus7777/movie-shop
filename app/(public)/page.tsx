@@ -37,6 +37,8 @@ export default async function Home() {
     take: 5,
   })
 
+
+  
   return (
     <main className="bg-background text-foreground">
       {/* ===== HERO ===== */}
