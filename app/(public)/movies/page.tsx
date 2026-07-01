@@ -41,7 +41,11 @@ export default async function MoviesPage(props: PageProps<'/movies'>) {
       <div className="flex justify-center">
         <div className="grid w-full max-w-5xl grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
           {movies.map((movie) => {
-            const quantity = cart[movie.id] ?? 0
+            //const quantity = cart[movie.id] ?? 0
+
+            const cartItem = cart.items.find((item) => item.movie.id === movie.id)
+
+            const quantity = cartItem?.quantity ?? 0
 
             return <ShopMovieCard key={movie.id} movie={movie} quantity={quantity} />
           })}
