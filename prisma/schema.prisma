@@ -131,13 +131,26 @@ model MovieKeyword {
 }
 
 model Crew {
-  id   String   @id @default(cuid())
-  name String
-  role CrewRole
-
-  movies Movie[]
+  id      String        @id @default(cuid())
+  name    String
+  credits CrewOnMovie[]
 
   @@map("crew_members")
+}
+
+model CrewOnMovie {
+  id String @id @default(cuid())
+
+  crewId String
+  crew   Crew   @relation(fields: [crewId], references: [id])
+
+  movieId String
+  movie   Movie  @relation(fields: [movieId], references: [id])
+
+  role CrewRole
+
+  @@unique([crewId, movieId, role])
+  @@map("crew_on_movie")
 }
 
 model CrewOnMovie {
@@ -179,6 +192,8 @@ model Order {
 
   paymentMethod PaymentMethod
 
+  firstName  String
+  lastName   String
   firstName  String
   lastName   String
   street     String
