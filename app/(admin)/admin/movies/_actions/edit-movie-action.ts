@@ -5,6 +5,8 @@ import { z } from 'zod'
 
 import prisma from '@/lib/prisma'
 import { convertFromSek } from '@/lib/priceUtils'
+import { CrewRole } from '@/generated/prisma/client'
+import { convertFromEuro } from '@/lib/priceUtils'
 
 const editMovieSchema = z.object({
   id: z.string().min(1),
@@ -60,9 +62,7 @@ export async function editMovie(values: z.infer<typeof editMovieSchema>) {
       stock: data.stock,
       runtime: data.runtime,
       imageUrl: data.imageUrl.trim() || null,
-      crewMembers: {
-        set: data.crewMemberIds.map((id) => ({ id })), //set replaces the existing list with the new selection
-      },
+
       genres: {
         set: data.genreIds.map((id) => ({ id })),
       },
