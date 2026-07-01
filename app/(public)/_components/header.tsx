@@ -6,16 +6,32 @@ import { Button } from '@/components/ui/button'
 import { ShoppingCart, Search, Film } from 'lucide-react'
 import { ThemeModeToggle } from '../../../components/theme-mode-toggle'
 import { useState } from 'react'
+import { authClient } from '@/lib/auth-client'
 
-export default function Header({ cartCount = 0 }: { cartCount?: number }) {
+export default function Header({
+  userName,
+  cartCount = 0,
+}: {
+  userName?: string | null
+  cartCount?: number
+}) {
   const router = useRouter()
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [signingOut, setSigningOut] = useState(false)
 
   function handleSearchSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!searchQuery.trim()) return
     router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
+  }
+
+  async function handleSignOut() {
+    setSigningOut(true)
+    await authClient.signOut()
+    setSigningOut(false)
+    router.push('/')
+    router.refresh()
   }
 
   return (
@@ -72,15 +88,33 @@ export default function Header({ cartCount = 0 }: { cartCount?: number }) {
           <ThemeModeToggle />
           <div className="h-6 w-px bg-gray-300 dark:bg-gray-600 mx-1" />
 
-          <Button variant="ghost" className="font-medium" asChild>
-            <Link href={'/sign-in'}>Sign in</Link>
-          </Button>
-          <Button
-            className="bg-purple-600 hover:bg-purple-700 text-white rounded-full font-medium"
-            asChild
-          >
-            <Link href={'/register'}>Register</Link>
-          </Button>
+          {userName ? (
+            <>
+              <span className="text-sm text-muted-foreground hidden sm:inline">
+                Hi, {userName}
+              </span>
+              <Button
+                variant="ghost"
+                className="font-medium"
+                onClick={handleSignOut}
+                disabled={signingOut}
+              >
+                {signingOut ? 'Signing out...' : 'Sign out'}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="ghost" className="font-medium" asChild>
+                <Link href={'/sign-in'}>Sign in</Link>
+              </Button>
+              <Button
+                className="bg-purple-600 hover:bg-purple-700 text-white rounded-full font-medium"
+                asChild
+              >
+                <Link href={'/register'}>Register</Link>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>
