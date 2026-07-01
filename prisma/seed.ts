@@ -1,226 +1,170 @@
+import { PrismaClient } from '@/generated/prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg'
+import { CrewRole } from '@/generated/prisma/enums'
+import { readFileSync } from 'fs'
+import path from 'path'
+import dotenv from 'dotenv'
 import { auth } from '@/lib/auth'
-import prisma from '@/lib/prisma'
-import 'dotenv/config'
 
-export async function main() {
+dotenv.config()
 
-  const sciFi = await prisma.genre.upsert({
-  where: { name: 'Science Fiction' },
-  update: {},
-  create: {
-    name: 'Science Fiction',
-    description: 'Movies featuring futuristic technology and science.',
-  },
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({
+    connectionString: process.env.DATABASE_URL,
+  }),
 })
 
-const action = await prisma.genre.upsert({
-  where: { name: 'Action' },
-  update: {},
-  create: {
-    name: 'Action',
-    description: 'Fast-paced movies with thrilling sequences.',
-  },
-})
-
-const horror = await prisma.genre.upsert({
-  where: { name: 'Horror' },
-  update: {},
-  create: {
-    name: 'Horror',
-    description: 'Scary movie!',
-  },
-})
-
-const romance = await prisma.genre.upsert({
-  where: { name: 'Romance' },
-  update: {},
-  create: {
-    name: 'Romance',
-    description: 'Love is life',
-  },
-})
-
-const thriller = await prisma.genre.upsert({
-  where: { name: 'Thriller' },
-  update: {},
-  create: {
-    name: 'Thriller',
-    description: 'The thrill',
-  },
-})
-
-  const keanu = await prisma.crew.upsert({
-    where: { id: 'actor-keanu-reeves' },
-    update: {},
-    create: {
-      id: 'actor-keanu-reeves',
-      name: 'Keanu Reeves',
-      role:'ACTOR'
-
-    },
-  })
-
-  const carrie = await prisma.crew.upsert({
-    where: { id: 'actor-carrie-anne-moss' },
-    update: {},
-    create: {
-      id: 'actor-carrie-anne-moss',
-      name: 'Carrie-Anne Moss',
-      role:'ACTOR'
-
-    },
-  })
-
-  const leo = await prisma.crew.upsert({
-    where: { id: 'actor-leonardo-dicaprio' },
-    update: {},
-    create: {
-      id: 'actor-leonardo-dicaprio',
-      name: 'Leonardo DiCaprio',
-      role:'ACTOR'
-
-    },
-  })
-
-  const joseph = await prisma.crew.upsert({
-    where: { id: 'actor-joseph-gordon-levitt' },
-    update: {},
-    create: {
-      id: 'actor-joseph-gordon-levitt',
-      name: 'Joseph Gordon-Levitt',
-      role:'ACTOR'
-    },
-  })
-
-  const lana = await prisma.crew.upsert({
-    where: { id: 'director-lana-wachowski' },
-    update: {},
-    create: {
-      id: 'director-lana-wachowski',
-      name: 'Lana Wachowski',
-      role: 'DIRECTOR'
-    },
-  })
-
-  const lilly = await prisma.crew.upsert({
-    where: { id: 'director-lilly-wachowski' },
-    update: {},
-    create: {
-      id: 'director-lilly-wachowski',
-      name: 'Lilly Wachowski',
-      role: 'DIRECTOR'
-    },
-  })
-
-  const nolan = await prisma.crew.upsert({
-    where: { id: 'director-christopher-nolan' },
-    update: {},
-    create: {
-      id: 'director-christopher-nolan',
-      name: 'Christopher Nolan',
-      role: 'DIRECTOR'
-    },
-  })
-
-  await prisma.movie.upsert({
-    where: { id: 'movie-the-matrix' },
-    update: {
-      title: 'The Matrix',
-      description: 'A hacker discovers reality is a simulation and joins the resistance.',
-      price: 1499,
-      releaseYear: 1999,
-      imageUrl: 'https://picsum.photos/400/600?random=1',
-      stock: true,
-      runtime: 136,
-      crewMembers: {
-        set: [{ id: keanu.id }, { id: carrie.id }, { id: lana.id }, { id: lilly.id }],
-      },
-    },
-    create: {
-      id: 'movie-the-matrix',
-      title: 'The Matrix',
-      description: 'A hacker discovers reality is a simulation and joins the resistance.',
-      price: 1499,
-      releaseYear: 1999,
-      imageUrl: 'https://picsum.photos/400/600?random=1',
-      stock: true,
-      runtime: 136,
-     genres: { connect: { id: sciFi.id } },
-      crewMembers: {
-        connect: [{ id: keanu.id }, { id: carrie.id }, { id: lana.id }, { id: lilly.id }],
-      },
-    },
-  })
-
-  await prisma.movie.upsert({
-    where: { id: 'movie-inception' },
-    update: {
-      title: 'Inception',
-      description: 'A skilled thief enters dreams to steal secrets from targets.',
-      price: 1699,
-      releaseYear: 2010,
-      imageUrl: 'https://picsum.photos/400/600?random=2',
-      stock: true,
-      runtime: 148,
-     crewMembers: {
-        set: [{ id: keanu.id }, { id: carrie.id }, { id: lana.id }, { id: lilly.id }],
-      },
-    },
-    create: {
-      id: 'movie-inception',
-      title: 'Inception',
-      description: 'A skilled thief enters dreams to steal secrets from targets.',
-      price: 1699,
-      releaseYear: 2010,
-      imageUrl: 'https://picsum.photos/400/600?random=2',
-      stock: true,
-      runtime: 148,
-      genres: { connect: { id: sciFi.id } },
-     crewMembers: {
-        connect: [{ id: keanu.id }, { id: carrie.id }, { id: lana.id }, { id: lilly.id }],
-      },
-    },
-  })
-
-  console.log('Seed finished')
+interface SeedMovie {
+  id: string
+  title: string
+  originalTitle: string | null
+  description: string
+  tagline: string | null
+  priceInCents: number
+  releaseYear: number
+  releaseDate: string | null
+  imageUrl: string | null
+  backdropUrl: string | null
+  trailerUrl: string | null
+  imdbId: string | null
+  stock: boolean
+  runtime: number
+  rating: number | null
+  popularity: number | null
+  budget: number | null
+  revenue: number | null
+  genres: number[]
+  keywords: { id: number; name: string }[]
+  credits: {
+    id: string
+    name: string
+    role: 'ACTOR' | 'DIRECTOR'
+  }[]
 }
 
-// export async function main() {
-// const genres = [
-//   { name: "Action", description: "Fast-paced movies with intense sequences." },
-//   { name: "Comedy", description: "Movies designed to make you laugh." },
-//   { name: "Drama", description: "Emotionally driven storytelling." },
-//   { name: "Horror", description: "Scary and suspenseful films." },
-//   { name: "Sci-Fi", description: "Futuristic and science-based stories." },
-//   { name: "Romance", description: "Love and relationship stories." },
-//   { name: "Thriller", description: "Suspenseful and gripping narratives." },
-//   { name: "Fantasy", description: "Magical and imaginative worlds." },
-// ]
+async function seed() {
+  const filePath = path.join(__dirname, 'tmdb-data.json')
+  const data = JSON.parse(readFileSync(filePath, 'utf8')) as {
+    genres: { id: number; name: string }[]
+    movies: SeedMovie[]
+  }
 
-//   await prisma.genre.createMany({
-//     data: genres,
-//     skipDuplicates: true,
-//   })
+  console.log('Resetting database')
+  await prisma.movie.deleteMany()
+  await prisma.crew.deleteMany()
+  await prisma.genre.deleteMany()
+  await prisma.movieKeyword.deleteMany()
 
-//   console.log("Genres seeded successfully")
-// }
+  console.log('Creating admin user...')
+  try {
+    await auth.api.createUser({
+      body: {
+        email: 'admin@admin.com',
+        password: 'password',
+        name: 'admin',
+        role: 'admin',
+      },
+    })
+  } catch {
+    console.log('Admin user already exists, skipping.')
+  }
 
-// export async function main() {
-//   await auth.api.createUser({
-//     body: {
-//       email: 'admin@admin.com', // required
-//       password: 'password', // required
-//       name: 'admin', // required
-//       role: 'admin',
-//     },
-//   })
-// }
+  console.log('Seeding genres...')
+  for (const g of data.genres) {
+    await prisma.genre.upsert({
+      where: { id: g.id },
+      update: {},
+      create: {
+        id: g.id,
+        name: g.name,
+        description: `${g.name} movies`,
+      },
+    })
+  }
 
-main()
-  .catch((e) => {
-    console.error(e)
-    process.exit(1)
-  })
-  .finally(async () => {
-    await prisma.$disconnect()
-  })
+  console.log('Seeding keywords...')
+  const keywordMap = new Map<number, string>()
+  for (const movie of data.movies) {
+    for (const k of movie.keywords) {
+      if (!keywordMap.has(k.id)) {
+        keywordMap.set(k.id, k.name)
+        await prisma.movieKeyword.upsert({
+          where: { id: k.id },
+          update: {},
+          create: {
+            id: k.id,
+            name: k.name,
+          },
+        })
+      }
+    }
+  }
+
+  console.log('Seeding crew...')
+  const crewMap = new Map<string, { id: string; name: string }>()
+
+  for (const movie of data.movies) {
+    for (const c of movie.credits) {
+      if (!crewMap.has(c.id)) {
+        crewMap.set(c.id, c)
+        await prisma.crew.upsert({
+          where: { id: c.id },
+          update: {},
+          create: {
+            id: c.id,
+            name: c.name,
+          },
+        })
+      }
+    }
+  }
+
+  console.log('Seeding movies...')
+  for (const m of data.movies) {
+    await prisma.movie.upsert({
+      where: { id: m.id },
+      update: {},
+      create: {
+        id: m.id,
+        title: m.title,
+        originalTitle: m.originalTitle,
+        description: m.description,
+        tagline: m.tagline,
+        priceInCents: m.priceInCents,
+        releaseYear: m.releaseYear,
+        releaseDate: m.releaseDate ? new Date(m.releaseDate) : null,
+        imageUrl: m.imageUrl,
+        backdropUrl: m.backdropUrl,
+        trailerUrl: m.trailerUrl,
+        imdbId: m.imdbId,
+        stock: m.stock,
+        runtime: m.runtime,
+        rating: m.rating,
+        popularity: m.popularity,
+        budget: m.budget,
+        revenue: m.revenue,
+
+        genres: {
+          connect: m.genres.map((id) => ({ id })),
+        },
+
+        keywords: {
+          connect: m.keywords.map((k) => ({ id: k.id })),
+        },
+
+        credits: {
+          create: m.credits.map((c) => ({
+            crewId: c.id,
+            role: c.role as CrewRole,
+          })),
+        },
+      },
+    })
+  }
+
+  console.log('Seed complete!')
+}
+
+seed()
+  .catch((e) => console.error(e))
+  .finally(() => prisma.$disconnect())

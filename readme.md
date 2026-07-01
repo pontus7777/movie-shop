@@ -31,6 +31,18 @@ Run the development server:
 npm run dev
 ```
 
+Seed commands:
+
+```bash
+npm run generate:tmdb
+```
+
+drag the tmdb-data.json into prisma/
+
+```bash
+npm run seed
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Deploy on Vercel

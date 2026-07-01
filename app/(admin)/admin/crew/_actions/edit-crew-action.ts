@@ -23,7 +23,6 @@ export async function editCrew(values: z.infer<typeof editCrewSchema>) {
       name: data.name,
       role: data.role,
     },
-    
   })
 
   revalidatePath('/admin/crew')

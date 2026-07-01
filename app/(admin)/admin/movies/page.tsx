@@ -1,20 +1,24 @@
 import Link from 'next/link'
-import ShopMoviecard from '@/app/(public)/_components/shop-movie-card'
+import ShopMoviecard, { MovieWithRelations } from '@/app/(public)/_components/shop-movie-card'
 import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
-import { convertToSek } from '@/lib/priceUtils'
+import { convertToEuro } from '@/lib/priceUtils'
 import { MovieTable } from '@/components/movies/movie-table'
+import MovieCard from '@/app/(public)/_components/movie-card'
 
 export default async function Page() {
-  const movies = await prisma.movie.findMany({
+  const movies = (await prisma.movie.findMany({
     include: {
-      genres:true,
-      crewMembers: true,
+      genres: true,
+      keywords: true,
+      credits: {
+        include: { crew: true },
+      },
     },
     orderBy: {
       title: 'asc',
     },
-  })
+  })) as MovieWithRelations[]
 
   return (
     <div className="bg-card rounded-xl border p-6 shadow-sm">
@@ -31,18 +35,12 @@ export default async function Page() {
 
       <div className="grid grid-cols-1 gap-4 md:hidden">
         {movies.map((m) => (
-          <ShopMoviecard
-            key={m.id}
-            movie={{
-              ...m,
-              price: convertToSek(m.price),
-            }}
-          />
+          <MovieCard key={m.id} movie={m} />
         ))}
       </div>
-        <div className="hidden md:block">
-          <MovieTable movies={movies}/>
-        </div>
+      <div className="hidden md:block">
+        <MovieTable movies={movies} />
+      </div>
     </div>
   )
 }

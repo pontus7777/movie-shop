@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import {
   Pagination,
   PaginationContent,
@@ -12,27 +13,38 @@ import {
 type MoviesPaginationProps = {
   page: number
   totalPages: number
-  setPage: (page: number) => void
 }
 
-export function MoviesPagination({ page, totalPages, setPage }: MoviesPaginationProps) {
+export function MoviesPagination({ page, totalPages }: MoviesPaginationProps) {
+  const router = useRouter()
+
+  const goToPage = (p: number) => {
+    router.push(`/movies?page=${p}`)
+  }
+
   return (
     <Pagination>
       <PaginationContent>
+        {/* Previous */}
         <PaginationItem>
-          <PaginationPrevious onClick={() => setPage(Math.max(1, page - 1))} />
+          <PaginationPrevious onClick={() => goToPage(Math.max(1, page - 1))} />
         </PaginationItem>
 
-        {Array.from({ length: totalPages }).map((_, i) => (
-          <PaginationItem key={i}>
-            <PaginationLink isActive={page === i + 1} onClick={() => setPage(i + 1)}>
-              {i + 1}
-            </PaginationLink>
-          </PaginationItem>
-        ))}
+        {/* Page numbers */}
+        {Array.from({ length: totalPages }).map((_, i) => {
+          const pageNumber = i + 1
+          return (
+            <PaginationItem key={pageNumber}>
+              <PaginationLink isActive={page === pageNumber} onClick={() => goToPage(pageNumber)}>
+                {pageNumber}
+              </PaginationLink>
+            </PaginationItem>
+          )
+        })}
 
+        {/* Next */}
         <PaginationItem>
-          <PaginationNext onClick={() => setPage(Math.min(totalPages, page + 1))} />
+          <PaginationNext onClick={() => goToPage(Math.min(totalPages, page + 1))} />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

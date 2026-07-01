@@ -1,4 +1,3 @@
-
 import { CartActionButton } from '@/components/cart-action-button'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -16,10 +15,10 @@ import { getMovieImageSrc } from '@/lib/image-utils'
 import { getMovies, getMoviesByIds } from '@/lib/services/movie'
 import Image from 'next/image'
 import { addToCart, clearCart, removeFromCart } from './_actions/cart-actions'
+import { convertToEuro } from '@/lib/priceUtils'
 
 export default async function CartPage() {
-
- const cart = await getCart()
+  const cart = await getCart()
   const ids = Object.keys(cart)
 
   const movies = await getMovies()
@@ -32,13 +31,13 @@ export default async function CartPage() {
     const movie = cartMovies.find((m) => m.id === id)
     if (!movie) continue
 
-    total += movie.price * cart[id]
+    total += convertToEuro(movie.priceInCents) * cart[id]
     cartItems.push({
       movie,
       quantity: cart[id],
     })
   }
-  
+
   return (
     <div className="mx-auto max-w-4xl space-y-6 p-4">
       <div>
@@ -58,7 +57,7 @@ export default async function CartPage() {
                   loading="eager"
                   priority
                 />
-                <p>{m.price} kr</p>
+                <p>€{convertToEuro(m.priceInCents)}</p>
               </CardContent>
               <CardFooter>
                 <CartActionButton
@@ -88,7 +87,6 @@ export default async function CartPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-
             {cartItems.map((item) => (
               <TableRow key={`cart-item-${item.movie.id}`}>
                 <TableCell>{item.movie.title}</TableCell>
@@ -122,7 +120,7 @@ export default async function CartPage() {
                     </CartActionButton>
                   </div>
                 </TableCell>
-                <TableCell>{item.movie.price * item.quantity} kr</TableCell>
+                <TableCell>€{convertToEuro(item.movie.priceInCents) * item.quantity}</TableCell>
                 <TableCell>
                   <CartActionButton
                     size="sm"
@@ -140,7 +138,7 @@ export default async function CartPage() {
           <TableFooter>
             <TableRow>
               <TableCell colSpan={2}>Total</TableCell>
-              <TableCell>{total} kr</TableCell>
+              <TableCell>€{total.toFixed(2)}</TableCell>
               <TableCell>
                 <CartActionButton
                   size="sm"

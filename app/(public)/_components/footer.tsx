@@ -46,10 +46,7 @@ export default function Footer() {
             <Link href="/sign-in" className="text-sm transition-colors hover:text-purple-400">
               Sign In
             </Link>
-            <Link
-              href="/sign-up"
-              className="text-sm hover:text-purple-400 transition-colors"
-            >
+            <Link href="/sign-up" className="text-sm hover:text-purple-400 transition-colors">
               Register
             </Link>
             <Link href="/orders" className="text-sm transition-colors hover:text-purple-400">
