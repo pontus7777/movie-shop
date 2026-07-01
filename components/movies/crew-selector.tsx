@@ -1,38 +1,29 @@
-"use client";
+'use client'
 
-import { Crew } from "@/generated/prisma/client";
-import { Button } from "@/components/ui/button";
+import { Crew } from '@/generated/prisma/client'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu'
 
 type CrewSelectorProps = {
-  title: string;
-  crew: Crew[];
-  value: string[];
-  onChange: (value: string[]) => void;
-};
+  title: string
+  crew: Crew[]
+  value: string[]
+  onChange: (value: string[]) => void
+}
 
-export function CrewSelector({
-  title,
-  crew,
-  value,
-  onChange,
-}: CrewSelectorProps) {
+export function CrewSelector({ title, crew, value, onChange }: CrewSelectorProps) {
   return (
     <div className="space-y-2">
       <label className="text-sm font-medium">{title}</label>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full justify-between"
-          >
+          <Button type="button" variant="outline" className="w-full justify-between">
             {value.filter((id) => crew.some((c) => c.id === id)).length === 0
               ? `Select ${title}`
               : `${value.filter((id) => crew.some((c) => c.id === id)).length} selected`}
@@ -46,9 +37,9 @@ export function CrewSelector({
               checked={value.includes(member.id)}
               onCheckedChange={(checked) => {
                 if (checked) {
-                  onChange([...value, member.id]);
+                  onChange([...value, member.id])
                 } else {
-                  onChange(value.filter((id) => id !== member.id));
+                  onChange(value.filter((id) => id !== member.id))
                 }
               }}
             >
@@ -58,5 +49,5 @@ export function CrewSelector({
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  );
+  )
 }

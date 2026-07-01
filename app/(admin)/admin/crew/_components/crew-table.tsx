@@ -19,7 +19,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { Crew } from '@/generated/prisma/client'
 import { MoreHorizontalIcon } from 'lucide-react'
 import { deleteCrew } from '../_actions/delete-crew-action'
@@ -35,7 +43,6 @@ export function CrewTable({ crewMembers }: Props) {
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [editId, setEditId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-
 
   return (
     <>
@@ -66,17 +73,13 @@ export function CrewTable({ crewMembers }: Props) {
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setEditId(cm.id)}>
-                      Edit
-                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setEditId(cm.id)}>Edit</DropdownMenuItem>
 
                     <DropdownMenuSeparator />
 
                     <DropdownMenuSeparator />
 
-                    <DropdownMenuItem onClick={() => setDeleteId(cm.id)}>
-                      Delete
-                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setDeleteId(cm.id)}>Delete</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
 
@@ -114,11 +117,7 @@ export function CrewTable({ crewMembers }: Props) {
 
                 {/* Edit dialog */}
                 {editId === cm.id && (
-                  <EditCrewDialog
-                    crew={cm}
-                    open
-                    onOpenChange={() => setEditId(null)}
-                  />
+                  <EditCrewDialog crew={cm} open onOpenChange={() => setEditId(null)} />
                 )}
 
                 {/* Create dialog */}

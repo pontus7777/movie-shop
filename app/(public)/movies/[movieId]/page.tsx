@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator'
 import { CartActionButton } from '@/components/cart-action-button'
 import { getYoutubeEmbedUrl } from '@/lib/youtube-utils'
 import { addToCart } from '../../cart/_actions/cart-actions'
+import { convertToEuro } from '@/lib/priceUtils'
 
 export default async function MovieDetailsPage(props: PageProps<'/movies/[movieId]'>) {
   const params = await props.params
@@ -17,18 +18,25 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
 
   const movie = await prisma.movie.findUnique({
     where: { id: params.movieId },
-    include: { genres: true, crewMembers: true },
+    include: { genres: true, credits: true },
   })
 
   if (!movie) {
     notFound()
   }
+  const actors = await prisma.crew.findMany({
+    where: {
+      id: { in: movie.credits.filter((c) => c.role === 'ACTOR').map((c) => c.crewId) },
+    },
+  })
 
-  const actors = movie.crewMembers.filter((c) => c.role === 'ACTOR')
-  const directors = movie.crewMembers.filter((c) => c.role === 'DIRECTOR')
+  const directors = await prisma.crew.findMany({
+    where: {
+      id: { in: movie.credits.filter((c) => c.role === 'DIRECTOR').map((c) => c.crewId) },
+    },
+  })
 
-  // price is stored in smallest unit (e.g. cents/öre) per schema comment
-  const displayPrice = (movie.price / 100).toFixed(2)
+  const displayPrice = convertToEuro(movie.priceInCents)
   const posterSrc = getMovieImageSrc(movie.imageUrl)
   const trailerEmbedUrl = getYoutubeEmbedUrl(movie.trailerUrl)
 
@@ -59,13 +67,13 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
             />
           </div>
         )}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-b from-transparent to-background" />
+        <div className="to-background pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-b from-transparent" />
       </div>
 
       {/* ===== FLOATING INFO CARD ===== */}
       <div className="relative mx-auto max-w-5xl px-6">
         <div className="-mt-16 flex flex-col gap-6 sm:flex-row sm:items-end">
-          <div className="mx-auto w-35 shrink-0 overflow-hidden rounded-xl shadow-2xl shadow-black/50 ring-1 ring-white/10 sm:mx-0 sm:w-47.5">
+          <div className="mx-auto w-35 shrink-0 overflow-hidden rounded-xl shadow-2xl ring-1 shadow-black/50 ring-white/10 sm:mx-0 sm:w-47.5">
             <Image
               src={posterSrc}
               alt={movie.title}
@@ -78,7 +86,7 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
 
           <div className="flex-1 text-center sm:pb-1 sm:text-left">
             <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">{movie.title}</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="text-muted-foreground mt-1 text-sm">
               {movie.releaseYear} &middot; {movie.runtime} min
               {directors.length > 0 && (
                 <>
@@ -95,7 +103,7 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
               <div className="flex size-14 items-center justify-center rounded-full border-2 border-purple-500 bg-purple-950/40 text-base font-bold text-purple-300">
                 {movie.rating.toFixed(1)}
               </div>
-              <span className="mt-1 text-[10px] uppercase tracking-wide text-muted-foreground">
+              <span className="text-muted-foreground mt-1 text-[10px] tracking-wide uppercase">
                 Rating
               </span>
             </div>
@@ -117,13 +125,13 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
             {!movie.stock && <Badge variant="destructive">Out of stock</Badge>}
           </div>
 
-          <p className="text-center leading-relaxed text-foreground/90 sm:text-left">
+          <p className="text-foreground/90 text-center leading-relaxed sm:text-left">
             {movie.description}
           </p>
 
           {actors.length > 0 && (
-            <p className="text-center text-sm text-muted-foreground sm:text-left">
-              <span className="font-medium text-foreground">Cast: </span>
+            <p className="text-muted-foreground text-center text-sm sm:text-left">
+              <span className="text-foreground font-medium">Cast: </span>
               {actors.map((a) => a.name).join(', ')}
             </p>
           )}

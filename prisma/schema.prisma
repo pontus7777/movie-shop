@@ -87,19 +87,29 @@ model Verification {
 model Movie {
   id String @id @default(cuid())
 
-  title       String  @db.VarChar(100)
-  description String
-  // Price is in smallest possible unit
-  price       Int
-  releaseYear Int     @map("release_year")
-  imageUrl    String?
-  trailerUrl  String? @map("trailer_url")   // ← new line
-  stock       Boolean
-  runtime     Int
-  rating      Float?
+  title         String    @db.VarChar(100)
+  originalTitle String? // OPTIONAL
+  description   String
+  tagline       String?
+  priceInCents  Int
+  releaseYear   Int       @map("release_year")
+  releaseDate   DateTime? // OPTIONAL
+  imageUrl      String?
+  backdropUrl   String?
+  trailerUrl    String?
+  imdbId        String? // OPTIONAL can link to imdb link
+  adult         Boolean?  @default(false) // OPTIONAL
 
-  crewMembers Crew[]
-  genres      Genre[]
+  stock      Boolean
+  runtime    Int
+  rating     Float?
+  popularity Float?
+  budget     Int?
+  revenue    Int?
+
+  genres   Genre[]
+  keywords MovieKeyword[] @relation("MovieKeywords")
+  credits  CrewOnMovie[]
 
   orderItems OrderItem[]
   cartItems  CartItem[]
@@ -110,14 +120,35 @@ model Movie {
   @@map("movies")
 }
 
-model Crew {
-  id   String   @id @default(cuid())
-  name String
-  role CrewRole
+model MovieKeyword {
+  id     Int     @id
+  name   String
+  movies Movie[] @relation("MovieKeywords")
 
-  movies Movie[]
+  @@map("movie_keywords")
+}
+
+model Crew {
+  id      String        @id @default(cuid())
+  name    String
+  credits CrewOnMovie[]
 
   @@map("crew_members")
+}
+
+model CrewOnMovie {
+  id String @id @default(cuid())
+
+  crewId String
+  crew   Crew   @relation(fields: [crewId], references: [id])
+
+  movieId String
+  movie   Movie  @relation(fields: [movieId], references: [id])
+
+  role CrewRole
+
+  @@unique([crewId, movieId, role])
+  @@map("crew_on_movie")
 }
 
 enum CrewRole {
@@ -144,8 +175,8 @@ model Order {
 
   paymentMethod PaymentMethod
 
-  firstName String
-  lastName String
+  firstName  String
+  lastName   String
   street     String
   postalCode String
   city       String
@@ -165,6 +196,7 @@ enum PaymentMethod {
   PAYPAL
   SWISH
 }
+
 model OrderItem {
   id       String  @id @default(cuid())
   orderId  String // @unique
