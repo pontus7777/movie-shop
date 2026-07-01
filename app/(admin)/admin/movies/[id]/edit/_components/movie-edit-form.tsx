@@ -64,7 +64,23 @@ function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
       runtime: movie.runtime,
       imageUrl: movie.imageUrl ?? '',
 
-      crewMemberIds: movie.crewMembers.map((member) => member.id),
+      // crewMemberIds: movie.crewMembers.map((member) => member.id),
+      //==== Crew members =====
+      crewMembers: z
+        .array(
+          z.object({
+            isNew: z.boolean(),
+            crewId: z.string(),
+            name: z.string().trim().min(1, 'Crew member name is required'),
+            actor: z.boolean(),
+            director: z.boolean(),
+          }),
+        )
+        .min(1, 'Add at least one crew member')
+        .refine((crew) => crew.every((member) => member.actor || member.director), {
+          //The .refine() call checks every crew member.
+          message: 'Each crew member must have at least one role.',
+        }),
       genreIds: movie.genres.map((genre) => genre.id),
     },
     validators: {
