@@ -7,7 +7,6 @@ import prisma from '@/lib/prisma'
 
 const createCrewSchema = z.object({
   name: z.string().min(1),
-  role: z.enum(['ACTOR', 'DIRECTOR']),
   movieIds: z.array(z.string()).optional(),
 })
 
@@ -17,7 +16,6 @@ export async function createCrew(values: z.infer<typeof createCrewSchema>) {
   const newCrew = await prisma.crew.create({
     data: {
       name: data.name,
-      role: data.role,
     },
   })
 

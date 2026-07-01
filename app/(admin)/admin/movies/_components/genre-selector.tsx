@@ -12,13 +12,6 @@ type Props = {
 }
 
 export function GenreSelector({ title, genres, value, onChange }: Props) {
-  //   function toggle(id: number) {
-  //     if (value.includes(id)) {
-  //       onChange(value.filter((g) => g !== id))
-  //     } else {
-  //       onChange([...value, id])
-  //     }
-  //   }
   const toggleGenre = (id: number) => {
     if (value.includes(id)) {
       onChange(value.filter((g) => g !== id))
@@ -47,12 +40,17 @@ export function GenreSelector({ title, genres, value, onChange }: Props) {
             {genres.map((genre) => (
               <div
                 key={genre.id}
-                className="flex items-center justify-between rounded-md px-2 py-2 hover:bg-accent"
+                className="flex items-center justify-between rounded-md px-2 py-2 hover:bg-accent cursor-pointer"
+                onClick={() => toggleGenre(genre.id)}
               >
                 <div className="flex items-center gap-2">
                   <Checkbox
                     checked={value.includes(genre.id)}
-                    onCheckedChange={() => toggleGenre(genre.id)}
+                    onCheckedChange={() => {
+                      // prevent double toggle when clicking checkbox
+                      toggleGenre(genre.id)
+                    }}
+                    onClick={(e) => e.stopPropagation()} // important!
                   />
 
                   <span>{genre.name}</span>
@@ -65,22 +63,5 @@ export function GenreSelector({ title, genres, value, onChange }: Props) {
         </PopoverContent>
       </Popover>
     </div>
-
-    // <div className="space-y-2">
-    //   <p className="font-medium">{title}</p>
-
-    //   <div className="grid grid-cols-2 gap-2">
-    //     {genres.map((genre) => (
-    //       <label key={genre.id} className="flex items-center gap-2">
-    //         <input
-    //           type="checkbox"
-    //           checked={value.includes(genre.id)}
-    //           onChange={() => toggle(genre.id)}
-    //         />
-    //         {genre.name}
-    //       </label>
-    //     ))}
-    //   </div>
-    // </div>
   )
 }

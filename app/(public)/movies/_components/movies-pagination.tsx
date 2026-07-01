@@ -25,12 +25,10 @@ export function MoviesPagination({ page, totalPages }: MoviesPaginationProps) {
   return (
     <Pagination>
       <PaginationContent>
-        {/* Previous */}
         <PaginationItem>
           <PaginationPrevious onClick={() => goToPage(Math.max(1, page - 1))} />
         </PaginationItem>
 
-        {/* Page numbers */}
         {Array.from({ length: totalPages }).map((_, i) => {
           const pageNumber = i + 1
           return (
@@ -42,7 +40,6 @@ export function MoviesPagination({ page, totalPages }: MoviesPaginationProps) {
           )
         })}
 
-        {/* Next */}
         <PaginationItem>
           <PaginationNext onClick={() => goToPage(Math.min(totalPages, page + 1))} />
         </PaginationItem>
