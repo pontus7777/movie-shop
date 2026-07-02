@@ -1,10 +1,9 @@
-import Link from 'next/link'
-import ShopMoviecard, { MovieWithRelations } from '@/app/(public)/_components/shop-movie-card'
+import MovieCard from '@/app/(public)/_components/movie-card'
+import { MovieWithRelations } from '@/app/(public)/_components/shop-movie-card'
 import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
-import { convertToEuro } from '@/lib/priceUtils'
-import { MovieTable } from '@/components/movies/movie-table'
-import MovieCard from '@/app/(public)/_components/movie-card'
+import Link from 'next/link'
+import { MovieTable } from './_components/movie-table'
 
 export default async function Page() {
   const movies = (await prisma.movie.findMany({

@@ -24,7 +24,7 @@ export default function HotDealsCarousel({ movies }: Props) {
   return (
     <div className="relative w-full overflow-hidden rounded-xl">
       <Link href={`/movies/${movie.id}`}>
-        <div className="relative h-55 w-full md:h-70">
+        <div className="relative h-55 w-full md:h-110">
           <Image
             src={movie.backdropUrl ?? '/placeholder.jpg'}
             alt={movie.title}

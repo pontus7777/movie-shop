@@ -1,12 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { MovieWithGenres } from './movie-row'
-
-// type MovieWithGenre = Movie & {
-//   genres: {
-//     name: string;
-//   } | null;
-// };
+import { convertToEuro } from '@/lib/priceUtils'
 
 export default function MovieCard({
   movie,
@@ -24,7 +19,7 @@ export default function MovieCard({
       <div className="group relative rounded-xl overflow-hidden cursor-pointer bg-muted">
         {showDealBadge && (
           <div className="absolute top-4 left-4 bg-red-600 text-white text-sm font-bold px-3 py-1 rounded-md">
-            €{movie.price.toString()} ONLY
+            €{convertToEuro(movie.priceInCents)} ONLY
           </div>
         )}
 
