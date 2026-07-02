@@ -49,6 +49,76 @@ export default async function CartPage() {
                 <div className="flex flex-1 flex-col">
                   <h3 className="text-lg font-semibold">{item.movie.title}</h3>
 
+                  <p className="text-muted-foreground mb-4 text-sm">
+                    €{convertToEuro(item.movie.priceInCents)} each
+                  </p>
+
+                  <div className="mt-auto flex items-center">
+                    {/* Quantity controls */}
+                    <div className="flex items-center gap-2">
+                      <CartActionButton
+                        size="icon"
+                        variant="outline"
+                        movieId={item.movie.id}
+                        action={async (movieId) => {
+                          'use server'
+                          await removeFromCart(movieId, true)
+                        }}
+                        toastMessage="Removed one movie"
+                      >
+                        <Minus className="h-4 w-4" />
+                      </CartActionButton>
+
+                      <span className="w-8 text-center font-medium">{item.quantity}</span>
+
+                      <CartActionButton
+                        size="icon"
+                        variant="outline"
+                        movieId={item.movie.id}
+                        action={addToCart}
+                        toastMessage="Added one movie"
+                      >
+                        <Plus className="h-4 w-4" />
+                      </CartActionButton>
+                    </div>
+
+                    {/* Line total */}
+                    <p className="ml-auto mr-4 text-lg font-bold tracking-tight">
+                      €{(convertToEuro(item.movie.priceInCents) * item.quantity).toFixed(2)}
+                    </p>
+
+                    {/* Remove */}
+                    <CartActionButton
+                      size="icon"
+                      variant="ghost"
+                      movieId={item.movie.id}
+                      action={removeFromCart}
+                      toastMessage="Removed from cart"
+                    >
+                      <Trash className="h-4 w-4" />
+                    </CartActionButton>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* <div className="m-5 space-y-4">
+          {cart.items.map((item) => (
+            <Card key={item.movie.id}>
+              <CardContent className="flex gap-4 p-4">
+                <Image
+                  src={getMovieImageSrc(item.movie.imageUrl)}
+                  alt={item.movie.title}
+                  width={90}
+                  height={130}
+                  className="rounded-md object-cover"
+                />
+
+                <div className="flex flex-1 flex-col">
+                  <h3 className="text-lg font-semibold">{item.movie.title}</h3>
+
                   <p className="text-muted-foreground">€{convertToEuro(item.movie.priceInCents)}</p>
 
                   <div className="flex items-center gap-2">
@@ -67,12 +137,12 @@ export default async function CartPage() {
 
                     <span className="w-8 text-center">{item.quantity}</span>
 
-                    {/* Line total */}
+                    {/* Line total * /}
                     <p className="ml-auto mr-4 text-lg font-bold tracking-tight">
                       €{(convertToEuro(item.movie.priceInCents) * item.quantity).toFixed(2)}
                     </p>
 
-                    {/* Remove */}
+                    {/* Remove * /}
                     <CartActionButton
                       size="icon"
                       variant="outline"
@@ -97,7 +167,7 @@ export default async function CartPage() {
               </CardContent>
             </Card>
           ))}
-        </div>
+        </div> */}
 
         <div className="m-5">
           <Card className="sticky top-16">
