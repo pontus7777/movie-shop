@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { authClient } from '@/lib/auth-client'
+import { mergeCurrentUserCart } from '../../_actions/merge-cart'
 
 const formSchema = z
   .object({
@@ -45,6 +46,7 @@ function RegisterForm() {
         toast.error(result.error.message || 'Could not register account')
         return
       }
+      await mergeCurrentUserCart()
 
       toast.success('Registered account!')
       router.push('/')
