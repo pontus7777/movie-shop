@@ -4,18 +4,29 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 import prisma from '@/lib/prisma'
-import { convertFromSek } from '@/lib/priceUtils'
+import { convertFromEuro } from '@/lib/priceUtils'
 
 const createMovieSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(32, 'Title must be less than 32 characters'),
-  description: z.string().min(1, 'Description is required').max(1000),
-  price: z.number(),
+  title: z.string().min(1).max(32),
+  description: z.string().min(1).max(1000),
+  price: z
+    .string()
+    .refine((val) => /^\d+(\.\d{1,2})?$/.test(val), 'Price must be a valid number like 21.29'),
   releaseYear: z.number().min(0).max(9999),
   stock: z.boolean(),
   runtime: z.number().min(10),
-  imageUrl: z.union([z.literal(''), z.string().url('Invalid URL')]),
-  crewMemberIds: z.array(z.string()),
-  genreIds: z.array(z.number()),
+  imageUrl: z.string(),
+
+  crew: z
+    .array(
+      z.object({
+        id: z.string(),
+        role: z.enum(['ACTOR', 'DIRECTOR']),
+      }),
+    )
+    .min(1, 'Select at least one crew member'),
+
+  genreIds: z.array(z.number()).min(1, 'Select at least one genre'),
 })
 
 export async function createMovie(values: z.infer<typeof createMovieSchema>) {
@@ -26,23 +37,29 @@ export async function createMovie(values: z.infer<typeof createMovieSchema>) {
       data: {
         title: data.title,
         description: data.description,
-        price: convertFromSek(data.price), // converts 149 sek to 14900 for example
+        priceInCents: convertFromEuro(parseFloat(data.price)),
         releaseYear: data.releaseYear,
         stock: data.stock,
         runtime: data.runtime,
-        imageUrl: data.imageUrl.trim() === '' ? null : data.imageUrl,
-        // crewMembers: {
-        //   connect: data.crewMemberIds.map((id) => ({ id })),
-        // },
+        imageUrl: data.imageUrl,
+
         genres: {
           connect: data.genreIds.map((id) => ({ id })),
         },
+
+        credits: {
+          create: data.crew.map((c) => ({
+            crewId: c.id,
+            role: c.role,
+          })),
+        },
       },
     })
+
     revalidatePath(`/admin/movies`)
     return newMovie
   } catch (error) {
-    console.error(error)
-    throw new Error('Failed to create movie')
+    console.log('Error creating a movie', error)
+    throw new Error('Faild to create a movie: ')
   }
 }

@@ -45,93 +45,81 @@ export function CrewTable({ crewMembers }: Props) {
   const [loading, setLoading] = useState(false)
 
   return (
-    <>
-      <Table>
-        <TableCaption>A list of all available crews.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-25"></TableHead>
-            <TableHead>Name</TableHead>
-            {/* <TableHead>Role</TableHead> */}
-            <TableHead className="text-right">Actions</TableHead>
+    <Table>
+      <TableCaption>A list of all available crews.</TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-25">Index</TableHead>
+          <TableHead>Name</TableHead>
+          <TableHead className="text-right">Actions</TableHead>
+        </TableRow>
+      </TableHeader>
+
+      <TableBody>
+        {crewMembers.map((cm, index) => (
+          <TableRow key={cm.id}>
+            <TableCell className="font-medium">{index + 1}</TableCell>
+            <TableCell>{cm.name}</TableCell>
+
+            <TableCell className="text-right">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="size-8">
+                    <MoreHorizontalIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => setEditId(cm.id)}>Edit</DropdownMenuItem>
+
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem variant="destructive" onClick={() => setDeleteId(cm.id)}>
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Delete dialog */}
+              <AlertDialog open={deleteId === cm.id} onOpenChange={() => setDeleteId(null)}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete crew?</AlertDialogTitle>
+                    <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
+                  </AlertDialogHeader>
+
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+                    <AlertDialogAction
+                      variant="destructive"
+                      onClick={async () => {
+                        try {
+                          setLoading(true)
+                          await deleteCrew(cm.id)
+                          toast.success('Crew deleted')
+                        } catch {
+                          toast.error('Failed to delete crew')
+                        } finally {
+                          setLoading(false)
+                          setDeleteId(null)
+                        }
+                      }}
+                    >
+                      {loading ? <Spinner /> : 'Delete'}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
+              {/* Edit dialog */}
+              {editId === cm.id && (
+                <EditCrewDialog crew={cm} open onOpenChange={() => setEditId(null)} />
+              )}
+            </TableCell>
           </TableRow>
-        </TableHeader>
-
-        <TableBody>
-          {crewMembers.map((cm, index) => (
-            <TableRow key={cm.id}>
-              <TableCell className="font-medium">{index + 1}</TableCell>
-              <TableCell>{cm.name}</TableCell>
-              {/* <TableCell>{cm.role}</TableCell> */}
-
-              <TableCell className="text-right">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="size-8">
-                      <MoreHorizontalIcon />
-                    </Button>
-                  </DropdownMenuTrigger>
-
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setEditId(cm.id)}>Edit</DropdownMenuItem>
-
-                    <DropdownMenuSeparator />
-
-                    <DropdownMenuSeparator />
-
-                    <DropdownMenuItem onClick={() => setDeleteId(cm.id)}>Delete</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-                {/* Delete dialog */}
-                <AlertDialog open={deleteId === cm.id} onOpenChange={() => setDeleteId(null)}>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Delete crew?</AlertDialogTitle>
-                      <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
-                    </AlertDialogHeader>
-
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-
-                      <AlertDialogAction
-                        variant="destructive"
-                        onClick={async () => {
-                          try {
-                            setLoading(true)
-                            await deleteCrew(cm.id)
-                            toast.success('Crew deleted')
-                          } catch {
-                            toast.error('Failed to delete crew')
-                          } finally {
-                            setLoading(false)
-                            setDeleteId(null)
-                          }
-                        }}
-                      >
-                        {loading ? <Spinner /> : 'Delete'}
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-
-                {/* Edit dialog */}
-                {editId === cm.id && (
-                  <EditCrewDialog crew={cm} open onOpenChange={() => setEditId(null)} />
-                )}
-
-                {/* Create dialog */}
-                {/* {createOpen && (
-                  <CreateCrewDialog
-                    open
-                    onOpenChange={() => setCreateOpen(false)}
-                  />
-                )} */}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </>
+        ))}
+      </TableBody>
+    </Table>
   )
 }

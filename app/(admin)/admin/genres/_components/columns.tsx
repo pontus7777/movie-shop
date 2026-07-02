@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { MoreHorizontal } from 'lucide-react'
-import { EditGenreMenuItem } from './edit-genre-menuitem'
+import { EditGenreMenuItem } from './edit-genre-menu-item'
 import { DeleteGenreDialog } from './delete-genre-dialog' // ★ NEW
 
 export const columns: ColumnDef<Genre>[] = [
