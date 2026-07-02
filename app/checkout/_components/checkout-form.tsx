@@ -96,6 +96,7 @@ function CheckoutForm() {
               </form.Field>
             ))}
             <Separator className="my-2" />
+
             <form.Field name="paymentMethod">
               {(field) => {
                 const invalid = field.state.meta.isTouched && !field.state.meta.isValid
@@ -155,6 +156,9 @@ function CheckoutForm() {
                                 }
                                 // field.handleChange(e.target.value)
                               }
+                              inputMode="numeric"
+                              maxLength={19}
+                              autoComplete="cc-number"
                             />
 
                             {invalid && <FieldError errors={field.state.meta.errors} />}
@@ -177,7 +181,22 @@ function CheckoutForm() {
                                 placeholder="MM/YY"
                                 value={field.state.value}
                                 onBlur={field.handleBlur}
-                                onChange={(e) => field.handleChange(e.target.value)}
+                                onChange={
+                                  (e) => {
+                                    let value = e.target.value.replace(/\D/g, '').slice(0, 4)
+
+                                    if (value.length > 2) {
+                                      value = `${value.slice(0, 2)}/${value.slice(2)}`
+                                    }
+
+                                    field.handleChange(value)
+                                  }
+
+                                  // field.handleChange(e.target.value)
+                                }
+                                inputMode="numeric"
+                                maxLength={5}
+                                autoComplete="cc-exp"
                               />
 
                               {invalid && <FieldError errors={field.state.meta.errors} />}
@@ -189,7 +208,6 @@ function CheckoutForm() {
                       <form.Field name="cvv">
                         {(field) => {
                           const invalid = field.state.meta.isTouched && !field.state.meta.isValid
-
                           return (
                             <Field data-invalid={invalid}>
                               <FieldLabel htmlFor={field.name}>CVV</FieldLabel>
@@ -199,9 +217,13 @@ function CheckoutForm() {
                                 placeholder="123"
                                 value={field.state.value}
                                 onBlur={field.handleBlur}
-                                onChange={(e) => field.handleChange(e.target.value)}
+                                onChange={(e) => {
+                                  field.handleChange(e.target.value.replace(/\D/g, '').slice(0, 3))
+                                }}
+                                inputMode="numeric"
+                                maxLength={3}
+                                autoComplete="cc-csc"
                               />
-
                               {invalid && <FieldError errors={field.state.meta.errors} />}
                             </Field>
                           )
