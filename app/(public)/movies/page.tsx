@@ -70,7 +70,7 @@ export default async function MoviesPage(props: PageProps<'/movies'>) {
           )}
         </div>
       </div>
-      <MoviesPagination page={page} totalPages={totalPages} />
+      <MoviesPagination page={page} totalPages={totalPages} query={query} />
     </div>
   )
 }

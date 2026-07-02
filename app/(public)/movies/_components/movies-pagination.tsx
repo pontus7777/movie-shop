@@ -13,13 +13,15 @@ import {
 type MoviesPaginationProps = {
   page: number
   totalPages: number
+  query?: string
 }
 
-export function MoviesPagination({ page, totalPages }: MoviesPaginationProps) {
+export function MoviesPagination({ page, totalPages, query }: MoviesPaginationProps) {
   const router = useRouter()
 
   const goToPage = (p: number) => {
-    router.push(`/movies?page=${p}`)
+    const q = query ? `&q=${encodeURIComponent(query)}` : ''
+    router.push(`/movies?page=${p}${q}`)
   }
 
   return (

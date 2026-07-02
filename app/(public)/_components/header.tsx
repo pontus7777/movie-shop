@@ -23,7 +23,7 @@ export default function Header({
   function handleSearchSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!searchQuery.trim()) return
-    router.push(`/movies?q=${encodeURIComponent(searchQuery.trim())}`)
+    router.push(`/movies?q=${encodeURIComponent(searchQuery.trim())}&page=1`)
   }
 
   async function handleSignOut() {
@@ -63,7 +63,7 @@ export default function Header({
               className="rounded-full"
               onClick={() => {
                 if (isSearchOpen && searchQuery.trim()) {
-                  router.push(`/movies?q=${encodeURIComponent(searchQuery.trim())}`)
+                  router.push(`/movies?q=${encodeURIComponent(searchQuery.trim())}&page=1`)
                 } else {
                   setIsSearchOpen(!isSearchOpen)
                 }
