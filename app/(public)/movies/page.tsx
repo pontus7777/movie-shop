@@ -60,7 +60,10 @@ export default async function MoviesPage(props: PageProps<'/movies'>) {
           {/* ★ CHANGED — was movies.map(...) directly, now checks for empty results first */}
           {movies.length > 0 ? (
             movies.map((movie) => {
-              const quantity = cart[movie.id] ?? 0
+              // const quantity = cart[movie.id] ?? 0
+              const cartItem = cart.items.find((item) => item.movie.id === movie.id)
+
+              const quantity = cartItem?.quantity ?? 0
               return <ShopMovieCard key={movie.id} movie={movie} quantity={quantity} />
             })
           ) : (
