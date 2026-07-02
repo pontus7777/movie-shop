@@ -117,8 +117,6 @@ model Movie {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  credits CrewOnMovie[]
-
   @@map("movies")
 }
 
@@ -136,21 +134,6 @@ model Crew {
   credits CrewOnMovie[]
 
   @@map("crew_members")
-}
-
-model CrewOnMovie {
-  id String @id @default(cuid())
-
-  crewId String
-  crew   Crew   @relation(fields: [crewId], references: [id])
-
-  movieId String
-  movie   Movie  @relation(fields: [movieId], references: [id])
-
-  role CrewRole
-
-  @@unique([crewId, movieId, role])
-  @@map("crew_on_movie")
 }
 
 model CrewOnMovie {
@@ -190,18 +173,35 @@ model Order {
   items     OrderItem[]
   user      User        @relation(fields: [userId], references: [id])
 
-  paymentMethod PaymentMethod
+  status OrderStatus @default(PENDING)
 
-  firstName  String
-  lastName   String
-  firstName  String
-  lastName   String
+  paymentMethod   PaymentMethod
+  shippingAddress ShippingAddress?
+
+  // firstName       String
+  // lastName        String
+
+  // street     String
+  // postalCode String
+  // city       String
+  // country    String
+
+  @@map("orders")
+}
+
+model ShippingAddress {
+  id String @id @default(cuid())
+
+  firstName String
+  lastName  String
+
   street     String
   postalCode String
   city       String
   country    String
 
-  @@map("orders")
+  orderId String @unique
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
 enum OrderStatus {
