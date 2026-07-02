@@ -7,17 +7,18 @@ import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
 import { DeleteMovieBtn } from './_components/delete-movie-btn'
 import { getMovieImageSrc } from '@/lib/image-utils'
+import { convertToEuro } from '@/lib/priceUtils'
 
-export default async function MovieDetailsPage({ params }: PageProps<'/admin/movies/[id]'>) {
-  // const params = await props.params
+export default async function MovieDetailsPage(props: PageProps<'/admin/movies/[id]'>) {
+  const params = await props.params
 
-  if (!(await params).id) {
+  if (!params.id) {
     notFound()
   }
 
   const movie = await prisma.movie.findUnique({
     where: {
-      id: (await params).id,
+      id: params.id,
     },
     include: {
       genres: true,
@@ -26,19 +27,19 @@ export default async function MovieDetailsPage({ params }: PageProps<'/admin/mov
           crew: true,
         },
       },
+      keywords: true,
+      orderItems: true,
+      cartItems: true,
     },
   })
 
   if (!movie) {
     notFound()
   }
-  // const actors = movie.crewMembers.filter(
-  //   (member) => member.role === "ACTOR"
-  // )
 
-  // const directors = movie.crewMembers.filter(
-  //   (member) => member.role === "DIRECTOR"
-  // )
+  const actors = movie.credits.filter((c) => c.role === 'ACTOR').map((c) => c.crew)
+
+  const directors = movie.credits.filter((c) => c.role === 'DIRECTOR').map((c) => c.crew)
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 p-4">
@@ -86,25 +87,23 @@ export default async function MovieDetailsPage({ params }: PageProps<'/admin/mov
           <p className="whitespace-pre-line">{movie.description}</p>
 
           <div className="text-muted-foreground grid gap-2 text-sm font-medium">
-            <p>Price: ${Number(movie.price).toFixed(2)}</p>
+            <p>Price: $ {convertToEuro(movie.priceInCents)}</p>
             <p>Release year: {movie.releaseYear}</p>
             <p>Runtime: {movie.runtime} minutes</p>
             <p>Stock: {movie.stock ? 'Available' : 'Out of stock'}</p>
             <p>
-              Genre:
-              {movie.genres.length ? movie.genres.map((g) => g.name).join(', ') : 'No genre'}
+              Genre: {movie.genres.length ? movie.genres.map((g) => g.name).join(', ') : 'No genre'}
             </p>
             <p>
-              Actors:
-              {actors.length ? actors.map((actor) => actor.name).join(', ') : 'No actors'}
+              Actors: {actors.length ? actors.map((actor) => actor.name).join(', ') : 'No actors'}
             </p>
 
-            {/* <p>
-              Directors:
-              {movie
-                ? movie.credits.map((director) => director.crew.name).join(', ')
+            <p>
+              Directors:{' '}
+              {directors.length
+                ? directors.map((director) => director.name).join(', ')
                 : 'No directors'}
-            </p> */}
+            </p>
           </div>
         </div>
       </div>
