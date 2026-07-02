@@ -29,21 +29,9 @@ export const checkoutSchema = z
       return
     }
 
-    const [month, year] = data.expiry.split('/').map(Number)
-
-    const now = new Date()
-    const currentMonth = now.getMonth() + 1
-    const currentYear = now.getFullYear() % 100
-
-    if (year < currentYear || (year === currentYear && month < currentMonth)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['expiry'],
-        message: 'Card has expired.',
-      })
-    }
-
-    const cardNumber = data.cardNumber?.trim().replace(/\s/g, '') ?? ''
+    const cardNumber = data.cardNumber?.trim().replace(/\s/g, '')
+    const expiry = data.expiry.trim()
+    const cvv = data.cvv.trim()
 
     if (!/^\d{16}$/.test(cardNumber)) {
       ctx.addIssue({
@@ -53,16 +41,30 @@ export const checkoutSchema = z
       })
     }
 
-    if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(data.expiry.trim())) {
+    if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['expiry'],
         message: 'Expiry must be in MM/YY format.',
       })
       return
+    } else {
+      const [month, year] = data.expiry.split('/').map(Number)
+
+      const now = new Date()
+      const currentMonth = now.getMonth() + 1
+      const currentYear = now.getFullYear() % 100
+
+      if (year < currentYear || (year === currentYear && month < currentMonth)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['expiry'],
+          message: 'Card has expired.',
+        })
+      }
     }
 
-    if (!/^\d{3}$/.test(data.cvv.trim())) {
+    if (!/^\d{3}$/.test(cvv)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['cvv'],
