@@ -1,28 +1,85 @@
 import { headers } from 'next/headers'
+import { Movie } from '@/generated/prisma/client'
 
 import { auth } from '@/lib/auth'
-
+import { getMoviesByIds } from '../services/movie'
+import { getCookieCart } from './cookie-cart'
+import { getDatabaseCart } from './db-cart'
 export * from './cookie-cart'
 export * from './db-cart'
 export * from './merge-cart'
 
-import { getCookieCart } from './cookie-cart'
-import { getDatabaseCart } from './db-cart'
+export type CartItem = {
+  movie: Movie
+  quantity: number
+}
 
-export async function getCart(): Promise<Record<string, number>> {
+export type CartData = {
+  items: CartItem[]
+}
+
+export async function getCart(): Promise<CartData> {
   const session = await auth.api.getSession({
     headers: await headers(),
   })
 
-  if (!session) {
-    return getCookieCart()
+  if (session) {
+    const cart = await getDatabaseCart(session.user.id)
+
+    return {
+      items:
+        cart?.items.map((item) => ({
+          movie: item.movie,
+          quantity: item.quantity,
+        })) ?? [],
+    }
   }
 
-  const cart = await getDatabaseCart(session.user.id)
+  const cookieCart = await getCookieCart()
 
-  if (!cart) {
-    return {}
+  const ids = Object.keys(cookieCart)
+
+  if (ids.length === 0) {
+    return {
+      items: [],
+    }
   }
 
-  return Object.fromEntries(cart.items.map((item) => [item.movieId, item.quantity]))
+  const movies = await getMoviesByIds(ids)
+
+  return {
+    items: movies.map((movie) => ({
+      movie,
+      quantity: cookieCart[movie.id],
+    })),
+  }
 }
+
+// import { headers } from 'next/headers'
+
+// import { auth } from '@/lib/auth'
+
+// export * from './cookie-cart'
+// export * from './db-cart'
+// export * from './merge-cart'
+
+// import { getCookieCart } from './cookie-cart'
+// import { getDatabaseCart } from './db-cart'
+
+// export async function getCart(): Promise<Record<string, number>> {
+//   const session = await auth.api.getSession({
+//     headers: await headers(),
+//   })
+
+//   if (!session) {
+//     return getCookieCart()
+//   }
+
+//   const cart = await getDatabaseCart(session.user.id)
+
+//   if (!cart) {
+//     return {}
+//   }
+
+//   return Object.fromEntries(cart.items.map((item) => [item.movieId, item.quantity]))
+// }
