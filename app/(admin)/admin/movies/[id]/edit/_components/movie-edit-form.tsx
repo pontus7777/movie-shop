@@ -63,7 +63,23 @@ function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
       runtime: movie.runtime,
       imageUrl: movie.imageUrl ?? '',
 
-      crewMemberIds: movie.crewMembers.map((member) => member.id),
+      // crewMemberIds: movie.crewMembers.map((member) => member.id),
+      //==== Crew members =====
+      crewMembers: z
+        .array(
+          z.object({
+            isNew: z.boolean(),
+            crewId: z.string(),
+            name: z.string().trim().min(1, 'Crew member name is required'),
+            actor: z.boolean(),
+            director: z.boolean(),
+          }),
+        )
+        .min(1, 'Add at least one crew member')
+        .refine((crew) => crew.every((member) => member.actor || member.director), {
+          //The .refine() call checks every crew member.
+          message: 'Each crew member must have at least one role.',
+        }),
       genreIds: movie.genres.map((genre) => genre.id),
     },
     validators: {
@@ -85,8 +101,8 @@ function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
         stock: movie.stock,
         runtime: movie.runtime,
         imageUrl: updatedMovie.imageUrl ?? '',
-        crewMemberIds: updatedMovie.crewMembers.map((member) => member.id),
-        genreIds: updatedMovie.genres.map((genre) => genre.id),
+        crewMemberIds: updatedMovie.crewMembers.map(),
+        genreIds: updatedMovie.genres.map((genre: { id: number }) => genre.id),
       })
 
       toast.success('Form edited successfully', {})
@@ -94,9 +110,13 @@ function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
       router.refresh()
     },
   })
-  const actors = crewMembers.filter((member) => member.role === 'ACTOR')
+  // const actors = crewMembers.filter(
+  //   (member) => member.role === "ACTOR"
+  // );
 
-  const directors = crewMembers.filter((member) => member.role === 'DIRECTOR')
+  // const directors = crewMembers.filter(
+  //   (member) => member.role === "DIRECTOR"
+  // );
   return (
     <form
       method="POST"
@@ -240,7 +260,7 @@ function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
           }}
         </form.Field>
         {/* ====Crew: CheckBox Component actors, derictors ====== */}
-        <form.Field name="crewMemberIds">
+        {/* <form.Field name="crewMemberIds">
           {(field) => (
             <div className="space-y-4">
               <CrewSelector
@@ -258,7 +278,7 @@ function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
               />
             </div>
           )}
-        </form.Field>
+        </form.Field> */}
 
         <form.Field name="genreIds">
           {(field) => {

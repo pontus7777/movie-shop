@@ -21,16 +21,24 @@ export default async function MovieDetailsPage({ params }: PageProps<'/admin/mov
     },
     include: {
       genres: true,
-      crewMembers: true,
+      credits: {
+        include: {
+          crew: true,
+        },
+      },
     },
   })
 
   if (!movie) {
     notFound()
   }
-  const actors = movie.crewMembers.filter((member) => member.role === 'ACTOR')
+  // const actors = movie.crewMembers.filter(
+  //   (member) => member.role === "ACTOR"
+  // )
 
-  const directors = movie.crewMembers.filter((member) => member.role === 'DIRECTOR')
+  // const directors = movie.crewMembers.filter(
+  //   (member) => member.role === "DIRECTOR"
+  // )
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 p-4">
@@ -91,12 +99,12 @@ export default async function MovieDetailsPage({ params }: PageProps<'/admin/mov
               {actors.length ? actors.map((actor) => actor.name).join(', ') : 'No actors'}
             </p>
 
-            <p>
+            {/* <p>
               Directors:
-              {directors.length
-                ? directors.map((director) => director.name).join(', ')
+              {movie
+                ? movie.credits.map((director) => director.crew.name).join(', ')
                 : 'No directors'}
-            </p>
+            </p> */}
           </div>
         </div>
       </div>

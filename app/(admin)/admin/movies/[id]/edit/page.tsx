@@ -2,7 +2,6 @@ import prisma from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import { EditMovieForm } from './_components/movie-edit-form'
 
-// changed page props from /admin/movies/[id]/edit
 export default async function EditMoviePage(props: PageProps<'/admin/movies/[id]'>) {
   const params = await props.params
 
@@ -12,8 +11,12 @@ export default async function EditMoviePage(props: PageProps<'/admin/movies/[id]
         id: params.id,
       },
       include: {
-        crewMembers: true,
         genres: true,
+        credits: {
+          include: {
+            crew: true,
+          },
+        },
       },
     }),
 
@@ -22,6 +25,7 @@ export default async function EditMoviePage(props: PageProps<'/admin/movies/[id]
         name: 'asc',
       },
     }),
+
     prisma.genre.findMany({
       orderBy: {
         name: 'asc',

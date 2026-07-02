@@ -2,15 +2,25 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 
 import { CreateMovieForm } from './_components/create-movie-form'
 import prisma from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 
 export default async function CreateMoviePage() {
-  const [crewMembers, genres] = await Promise.all([
+  const [crew, genres] = await Promise.all([
     prisma.crew.findMany({
-      orderBy: [{ role: 'asc' }, { name: 'asc' }],
+      select: {
+        id: true,
+        name: true,
+      },
+      orderBy: [{ name: 'asc' }],
     }),
     prisma.genre.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
       orderBy: { name: 'asc' },
     }),
+  ])
   ])
   return (
     <div className="mx-auto mt-10 flex w-full justify-center px-4">
@@ -21,7 +31,7 @@ export default async function CreateMoviePage() {
         </CardHeader>
 
         <CardContent>
-          <CreateMovieForm crewMembers={crewMembers} genres={genres} />
+          <CreateMovieForm crew={crew} genres={genres} />
         </CardContent>
       </Card>
     </div>

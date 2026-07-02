@@ -26,9 +26,6 @@ type TableGenreProps = {
 }
 
 function GenresTable({ genres }: TableGenreProps) {
-  // const [loading, setLoading] = useState(false)
-  // Imeplement this somehow
-
   return (
     <Table>
       <TableCaption>A list of all available genres.</TableCaption>

@@ -12,6 +12,7 @@ export default async function UserLayout({
 }>) {
   const cart = await getCart()
   // const cartCount = Object.values(cart).reduce((sum, quantity) => sum + quantity, 0)
+
   const cartCount = cart.items.reduce((sum, item) => sum + item.quantity, 0)
 
   const session = await auth.api.getSession({

@@ -14,8 +14,8 @@ import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { createMovie } from '../../_actions/create-movie-action'
 import { Crew } from '@/generated/prisma/client'
-import { CrewSelector } from '@/components/movies/crew-selector'
 import { GenreSelector } from '@/components/movies/genre-selector'
+import { MovieCrewEditor } from '@/components/movies/movie-crew-editor'
 
 type Props = {
   crewMembers: Crew[]
@@ -25,8 +25,12 @@ type Props = {
 const formSchema = z.object({
   title: z.string().min(1, 'Title is required').max(32, 'Title must be less than 32 characters'),
   description: z.string().min(1, 'Description is required').max(1000),
-  price: z.number(),
-  releaseYear: z.number().min(0).max(9999),
+  price: z.number().positive('Price must be greater than 0'),
+  releaseYear: z
+    .number()
+    .int()
+    .min(1888)
+    .max(new Date().getFullYear() + 5),
   stock: z.boolean(),
   runtime: z.number().min(10),
   imageUrl: z.string(),
@@ -34,7 +38,7 @@ const formSchema = z.object({
   genreIds: z.array(z.number()).min(1),
 })
 
-function CreateMovieForm({ crewMembers, genres }: Props) {
+function CreateMovieForm({ genres, crew }: Props) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
@@ -43,25 +47,35 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
       title: '',
       description: '',
       price: 1,
-      releaseYear: 1920,
+      releaseYear: new Date().getFullYear(),
       stock: false,
       runtime: 10,
       imageUrl: '',
       crewMemberIds: [] as string[],
       genreIds: [] as number[],
+      crewMembers: [
+        {
+          isNew: false,
+          crewId: '',
+          name: '',
+          actor: false,
+          director: false,
+        },
+      ],
     },
     validators: {
       onSubmit: formSchema,
       onBlur: formSchema,
     },
     onSubmit: async ({ value }) => {
+      console.log('SUBMIT FIRED', value)
       setLoading(true)
       try {
         const newMovie = await createMovie(value)
 
         toast.success('Movie created successfully')
 
-        router.push(`/admin/movies/${newMovie.id}`) //need and issue to work on that!!!
+        router.push(`/admin/movies/${newMovie.id}`)
       } catch (err) {
         console.log(err)
         toast.error('Failed to submit form', {
@@ -279,6 +293,28 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
             )
           }}
         </form.Field>
+
+        {/* <form.Field name="genreIds">
+            {(field) => {
+
+              const value = field.state.value as number[]
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid
+
+              return (
+                <Field data-invalid={isInvalid}>
+                    <GenreSelector
+                        title="Genres"
+                        genres={genres}
+                        value={field.state.value}
+                        onChange={field.handleChange}
+                      />
+
+                      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                    </Field>
+                  )
+                }}
+          </form.Field> */}
       </FieldGroup>
 
       <div className="flex justify-end gap-2">

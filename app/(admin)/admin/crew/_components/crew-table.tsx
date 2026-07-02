@@ -52,7 +52,7 @@ export function CrewTable({ crewMembers }: Props) {
           <TableRow>
             <TableHead className="w-25"></TableHead>
             <TableHead>Name</TableHead>
-            <TableHead>Role</TableHead>
+            {/* <TableHead>Role</TableHead> */}
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -62,7 +62,7 @@ export function CrewTable({ crewMembers }: Props) {
             <TableRow key={cm.id}>
               <TableCell className="font-medium">{index + 1}</TableCell>
               <TableCell>{cm.name}</TableCell>
-              <TableCell>{cm.role}</TableCell>
+              {/* <TableCell>{cm.role}</TableCell> */}
 
               <TableCell className="text-right">
                 <DropdownMenu>

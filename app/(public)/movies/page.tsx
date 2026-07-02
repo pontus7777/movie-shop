@@ -9,11 +9,23 @@ export default async function MoviesPage(props: PageProps<'/movies'>) {
   const pageSize = 12
 
   const page = Number(params.page) || 1
+  const query = typeof params.q === 'string' ? params.q.trim() : '' // ★ NEW — reads ?q= from URL
 
   const skip = (page - 1) * pageSize
 
+  // ★ NEW — was just { stock: true }, now also filters by title when query exists
+  const where = {
+    stock: true,
+    ...(query && {
+      title: {
+        contains: query,
+        mode: 'insensitive' as const,
+      },
+    }),
+  }
+
   const movies = (await prisma.movie.findMany({
-    where: { stock: true },
+    where, // ★ CHANGED — was where: { stock: true }, now uses the variable above
     orderBy: { popularity: 'desc' },
     skip,
     take: pageSize,
@@ -26,9 +38,7 @@ export default async function MoviesPage(props: PageProps<'/movies'>) {
     },
   })) as MovieWithRelations[]
 
-  const total = await prisma.movie.count({
-    where: { stock: true },
-  })
+  const total = await prisma.movie.count({ where }) // ★ CHANGED — was where: { stock: true }, now uses variable so count matches the filter
 
   const totalPages = Math.ceil(total / pageSize)
 
@@ -37,21 +47,32 @@ export default async function MoviesPage(props: PageProps<'/movies'>) {
   return (
     <div className="min-h-lvh space-y-4 p-6">
       <h1 className="text-2xl font-bold">Movies</h1>
-
+      {/* ★ NEW — only shows when there's an active search query */}
+      {query && (
+        <p className="text-sm text-muted-foreground">
+          Showing results for{' '}
+          <span className="font-medium text-foreground">&ldquo;{query}&rdquo;</span> — {total}{' '}
+          {total === 1 ? 'movie' : 'movies'} found
+        </p>
+      )}
       <div className="flex justify-center">
         <div className="grid w-full max-w-5xl grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
-          {movies.map((movie) => {
-            //const quantity = cart[movie.id] ?? 0
+          {/* ★ CHANGED — was movies.map(...) directly, now checks for empty results first */}
+          {movies.length > 0 ? (
+            movies.map((movie) => {
+              // const quantity = cart[movie.id] ?? 0
+              const cartItem = cart.items.find((item) => item.movie.id === movie.id)
 
-            const cartItem = cart.items.find((item) => item.movie.id === movie.id)
-
-            const quantity = cartItem?.quantity ?? 0
-
-            return <ShopMovieCard key={movie.id} movie={movie} quantity={quantity} />
-          })}
+              const quantity = cartItem?.quantity ?? 0
+              return <ShopMovieCard key={movie.id} movie={movie} quantity={quantity} />
+            })
+          ) : (
+            <p className="col-span-full py-12 text-center text-muted-foreground">
+              No movies found matching &ldquo;{query}&rdquo;. {/* ★ NEW */}
+            </p>
+          )}
         </div>
       </div>
-
       <MoviesPagination page={page} totalPages={totalPages} />
     </div>
   )
