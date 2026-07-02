@@ -217,11 +217,12 @@ enum PaymentMethod {
 }
 
 model OrderItem {
-  id       String  @id @default(cuid())
-  orderId  String // @unique
-  movieId  String // @unique
-  quantity Int
-  price    Decimal
+  id           String @id @default(cuid())
+  orderId      String // @unique
+  movieId      String // @unique
+  quantity     Int
+  //price    Decimal
+  priceInCents Int
 
   order Order @relation(fields: [orderId], references: [id])
   movie Movie @relation(fields: [movieId], references: [id])
