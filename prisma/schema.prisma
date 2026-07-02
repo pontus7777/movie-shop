@@ -178,14 +178,6 @@ model Order {
   paymentMethod   PaymentMethod
   shippingAddress ShippingAddress?
 
-  // firstName       String
-  // lastName        String
-
-  // street     String
-  // postalCode String
-  // city       String
-  // country    String
-
   @@map("orders")
 }
 
@@ -221,7 +213,6 @@ model OrderItem {
   orderId      String // @unique
   movieId      String // @unique
   quantity     Int
-  //price    Decimal
   priceInCents Int
 
   order Order @relation(fields: [orderId], references: [id])
@@ -252,136 +243,3 @@ model CartItem {
   @@unique([cartId, movieId])
   @@map("cart_items")
 }
-
-// model Movie {
-//   id String @id @default(cuid())
-
-//   title       String  @db.VarChar(100)
-//   description String
-//   // Price is in smallest possible unit
-//   price       Int
-//   releaseYear Int     @map("release_year")
-//   imageUrl    String?
-//   stock       Boolean
-//   runtime     Int
-//   rating      Float?
-
-//   crewMembers Crew[]
-//   genres      Genre[]
-
-//   orderItems OrderItem[]
-//   cartItems  CartItem[]
-
-//   createdAt    DateTime      @default(now())
-//   updatedAt    DateTime      @default(now()) @updatedAt
-//   crewOnMovies CrewOnMovie[]
-
-//   @@map("movies")
-// }
-
-// model Crew {
-//   id      String        @id @default(cuid())
-//   name    String
-//   credits CrewOnMovie[]
-
-//   // role CrewRole
-//   // movies Movie[]
-//   movie   Movie?  @relation(fields: [movieId], references: [id])
-//   movieId String?
-
-//   @@map("crew_members")
-// }
-
-// model CrewOnMovie {
-//   id      String   @id @default(cuid())
-//   crewId  String
-//   movieId String
-//   role    CrewRole
-
-//   crew  Crew  @relation(fields: [crewId], references: [id])
-//   movie Movie @relation(fields: [movieId], references: [id])
-
-//   @@unique([crewId, movieId, role])
-// }
-
-// enum CrewRole {
-//   ACTOR
-//   DIRECTOR
-// }
-
-// model Genre {
-//   id          Int     @id @default(autoincrement())
-//   name        String  @unique @db.VarChar(50)
-//   description String
-//   movies      Movie[]
-
-//   @@map("genres")
-// }
-
-// model Order {
-//   id        String      @id @default(cuid())
-//   userId    String
-//   createdAt DateTime    @default(now())
-//   total     Int
-//   items     OrderItem[]
-//   user      User        @relation(fields: [userId], references: [id])
-
-//   paymentMethod PaymentMethod
-
-//   firstName  String
-//   lastName   String
-//   street     String
-//   postalCode String
-//   city       String
-//   country    String
-
-//   @@map("orders")
-// }
-
-// enum OrderStatus {
-//   PENDING
-//   PAID
-//   CANCELLED
-// }
-
-// enum PaymentMethod {
-//   CARD
-//   PAYPAL
-//   SWISH
-// }
-
-// model OrderItem {
-//   id       String  @id @default(cuid())
-//   orderId  String // @unique
-//   movieId  String // @unique
-//   quantity Int
-//   price    Decimal
-
-//   order Order @relation(fields: [orderId], references: [id])
-//   movie Movie @relation(fields: [movieId], references: [id])
-
-//   @@unique([orderId, movieId])
-//   @@map("order_items")
-// }
-
-// model Cart {
-//   id     String     @id @default(cuid())
-//   userId String     @unique
-//   user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-//   items  CartItem[]
-
-//   @@map("carts")
-// }
-
-// model CartItem {
-//   id       String @id @default(cuid())
-//   cartId   String // @unique
-//   movieId  String // @unique
-//   quantity Int    @default(1)
-
-//   cart  Cart  @relation(fields: [cartId], references: [id])
-//   movie Movie @relation(fields: [movieId], references: [id])
-
-//   @@unique([cartId, movieId])
-//   @@map("cart_items")
-// }
