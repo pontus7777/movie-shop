@@ -22,7 +22,6 @@ export default async function UsersPage() {
 
       {/* Stats */}
       <StatsTable
-        users={users}
         totalUsers={totalUsers}
         admins={admins}
         verifiedUsers={verifiedUsers}
