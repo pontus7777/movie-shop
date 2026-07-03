@@ -1,15 +1,7 @@
 import { CartActionButton } from '@/components/cart-action-button'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+
 import { getCart } from '@/lib/cart'
 import { addToCart, clearCart, removeFromCart } from './_actions/cart-actions'
 import { convertToEuro } from '@/lib/priceUtils'
@@ -17,14 +9,15 @@ import { getMovieImageSrc } from '@/lib/image-utils'
 import Image from 'next/image'
 import { Minus, Plus, Trash } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
-import { Badge } from '@/components/ui/badge'
 
 export default async function CartPage() {
   const cart = await getCart()
-  // const ids = Object.keys(cart)
 
+  // const ids = Object.keys(cart)
   // const movies = await getMovies()
   // const cartMovies = await getMoviesByIds(ids)
+
+  const isCartEmpty = cart.items.length === 0
 
   const total = cart.items.reduce(
     (sum, item) => sum + convertToEuro(item.movie.priceInCents) * item.quantity,
@@ -103,72 +96,6 @@ export default async function CartPage() {
             </Card>
           ))}
         </div>
-
-        {/* <div className="m-5 space-y-4">
-          {cart.items.map((item) => (
-            <Card key={item.movie.id}>
-              <CardContent className="flex gap-4 p-4">
-                <Image
-                  src={getMovieImageSrc(item.movie.imageUrl)}
-                  alt={item.movie.title}
-                  width={90}
-                  height={130}
-                  className="rounded-md object-cover"
-                />
-
-                <div className="flex flex-1 flex-col">
-                  <h3 className="text-lg font-semibold">{item.movie.title}</h3>
-
-                  <p className="text-muted-foreground">€{convertToEuro(item.movie.priceInCents)}</p>
-
-                  <div className="flex items-center gap-2">
-                    <CartActionButton
-                      size="icon"
-                      variant="outline"
-                      movieId={item.movie.id}
-                      action={async (movieId) => {
-                        'use server'
-                        await removeFromCart(movieId, true)
-                      }}
-                      toastMessage="Removed one movie"
-                    >
-                      <Minus />
-                    </CartActionButton>
-
-                    <span className="w-8 text-center">{item.quantity}</span>
-
-                    {/* Line total * /}
-                    <p className="ml-auto mr-4 text-lg font-bold tracking-tight">
-                      €{(convertToEuro(item.movie.priceInCents) * item.quantity).toFixed(2)}
-                    </p>
-
-                    {/* Remove * /}
-                    <CartActionButton
-                      size="icon"
-                      variant="outline"
-                      movieId={item.movie.id}
-                      action={addToCart}
-                      toastMessage="Added one movie"
-                    >
-                      <Plus />
-                    </CartActionButton>
-                    <p> €{(convertToEuro(item.movie.priceInCents) * item.quantity).toFixed(2)}</p>
-                    <CartActionButton
-                      variant="ghost"
-                      className="ml-auto"
-                      movieId={item.movie.id}
-                      action={removeFromCart}
-                      toastMessage="Removed from cart"
-                    >
-                      <Trash />
-                    </CartActionButton>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div> */}
-
         <div className="m-5">
           <Card className="sticky top-16">
             <CardHeader>
@@ -201,9 +128,19 @@ export default async function CartPage() {
                 Clear Cart
               </CartActionButton>
 
-              <Button asChild className="w-full">
+              {/* <Button asChild className="w-full">
                 <a href="/checkout">Checkout</a>
-              </Button>
+              </Button> */}
+
+              {isCartEmpty ? (
+                <Button className="w-full" disabled>
+                  Checkout
+                </Button>
+              ) : (
+                <Button asChild className="w-full">
+                  <a href="/checkout">Checkout</a>
+                </Button>
+              )}
             </CardContent>
           </Card>
         </div>

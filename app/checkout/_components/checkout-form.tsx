@@ -13,7 +13,11 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 
-function CheckoutForm() {
+type checkoutFormProps = {
+  isCartEmpty: boolean
+}
+
+function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
   const form = useForm({
     defaultValues: {
       firstName: '',
@@ -240,8 +244,9 @@ function CheckoutForm() {
 
             <form.Subscribe selector={(state) => state.isSubmitting}>
               {(isSubmitting) => (
-                <Button type="submit" disabled={isSubmitting} className="w-full">
-                  {isSubmitting ? 'Processing...' : 'Place Order'}
+                <Button type="submit" disabled={isSubmitting || isCartEmpty} className="w-full">
+                  {/* {isSubmitting ? 'Processing...' : 'Place Order'} */}
+                  {isCartEmpty ? 'Cart is empty' : isSubmitting ? 'Processing...' : 'Place Order'}
                 </Button>
               )}
             </form.Subscribe>
