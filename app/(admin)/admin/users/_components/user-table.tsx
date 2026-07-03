@@ -11,6 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Prisma } from '@/generated/prisma/client'
+import prisma from '@/lib/prisma'
 
 type UserWithRelations = Prisma.UserGetPayload<{
   include: {
@@ -21,13 +22,16 @@ type UserWithRelations = Prisma.UserGetPayload<{
 type Props = {
   users: UserWithRelations[]
 }
+const totalUsers = await prisma.user.count()
 
 export function UserTable({ users }: Props) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>All Users</CardTitle>
-        <CardDescription>Showing 7 of 1,248 users</CardDescription>
+        <CardDescription>
+          Showing {users.length} of {totalUsers} users
+        </CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -38,7 +42,7 @@ export function UserTable({ users }: Props) {
               <TableHead>Role</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Orders</TableHead>
-              <TableHead>Joined</TableHead> {/* createdAt */}
+              <TableHead>Joined</TableHead>
               <TableHead className="w-15" />
             </TableRow>
           </TableHeader>
@@ -77,7 +81,7 @@ export function UserTable({ users }: Props) {
 
                     <TableCell>{user.orders.length}</TableCell>
 
-                    <TableCell>{user.createdAt.toLocaleDateString()}</TableCell>
+                    <TableCell>{user.createdAt.toLocaleDateString('SV-se')}</TableCell>
 
                     <TableCell>
                       <Button variant="ghost" size="icon">
