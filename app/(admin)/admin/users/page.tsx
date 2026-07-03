@@ -63,13 +63,13 @@ export default function UsersPage() {
           <Input placeholder="Search by name or email..." className="md:max-w-sm" />
 
           <Select>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-45">
               <SelectValue placeholder="Role" />
             </SelectTrigger>
           </Select>
 
           <Select>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-45">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
           </Select>
@@ -92,7 +92,7 @@ export default function UsersPage() {
                 <TableHead>Status</TableHead>
                 <TableHead>Orders</TableHead>
                 <TableHead>Joined</TableHead>
-                <TableHead className="w-[60px]" />
+                <TableHead className="w-15" />
               </TableRow>
             </TableHeader>
 
