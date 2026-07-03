@@ -14,15 +14,34 @@ type MoviesPaginationProps = {
   page: number
   totalPages: number
   query?: string
+  genreIds?: number[]
+  directorIds?: string[]
+  actorIds?: string[]
 }
 
-export function MoviesPagination({ page, totalPages, query }: MoviesPaginationProps) {
+export function MoviesPagination({
+  page,
+  totalPages,
+  query,
+  genreIds = [],
+  directorIds = [],
+  actorIds = [],
+}: MoviesPaginationProps) {
   const router = useRouter()
 
   const goToPage = (p: number) => {
-    const q = query ? `&q=${encodeURIComponent(query)}` : ''
-    router.push(`/movies?page=${p}${q}`)
+    const params = new URLSearchParams()
+
+    if (query) params.set('q', query)
+    genreIds.forEach((id) => params.append('genre', String(id)))
+    directorIds.forEach((id) => params.append('director', id))
+    actorIds.forEach((id) => params.append('actor', id))
+    params.set('page', String(p))
+
+    router.push(`/movies?${params.toString()}`)
   }
+
+  if (totalPages <= 1) return null
 
   return (
     <Pagination>
