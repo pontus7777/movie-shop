@@ -11,7 +11,6 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Prisma } from '@/generated/prisma/client'
-import prisma from '@/lib/prisma'
 
 type UserWithRelations = Prisma.UserGetPayload<{
   include: {
@@ -21,10 +20,13 @@ type UserWithRelations = Prisma.UserGetPayload<{
 
 type Props = {
   users: UserWithRelations[]
+  totalUsers: number
+  admins: number
+  verifiedUsers: number
+  newUsers: number
 }
-const totalUsers = await prisma.user.count()
 
-export function UserTable({ users }: Props) {
+export function UserTable({ users, totalUsers, admins, verifiedUsers, newUsers }: Props) {
   return (
     <Card>
       <CardHeader>
@@ -50,46 +52,47 @@ export function UserTable({ users }: Props) {
           <TableBody>
             {users.map((user, index) => {
               return (
-                <>
-                  <TableRow key={user.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Avatar>
-                          <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
-                        </Avatar>
+                <TableRow key={user.id}>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <Avatar>
+                        <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
+                      </Avatar>
 
-                        <div>
-                          <p className="font-medium">{user.name}</p>
-                          <p className="text-sm text-muted-foreground">{user.email}</p>
-                        </div>
+                      <div>
+                        <p className="font-medium">{user.name}</p>
+                        <p className="text-sm text-muted-foreground">{user.email}</p>
                       </div>
-                    </TableCell>
+                    </div>
+                  </TableCell>
 
-                    <TableCell>{user.role}</TableCell>
+                  <TableCell>{user.role}</TableCell>
 
-                    <TableCell>
-                      <Badge
-                        className={
-                          user.emailVerified
-                            ? 'bg-green-500 hover:bg-green-600'
-                            : 'bg-red-500 hover:bg-red-600'
-                        }
-                      >
-                        {user.emailVerified ? 'Verified' : 'Not Verified'}
-                      </Badge>
-                    </TableCell>
+                  <TableCell>
+                    <Badge
+                      className={
+                        user.emailVerified
+                          ? 'bg-green-500 hover:bg-green-600'
+                          : 'bg-red-500 hover:bg-red-600'
+                      }
+                    >
+                      {user.emailVerified ? 'Verified' : 'Not Verified'}
+                    </Badge>
+                  </TableCell>
 
-                    <TableCell>{user.orders.length}</TableCell>
+                  <TableCell>{user.orders.length}</TableCell>
 
-                    <TableCell>{user.createdAt.toLocaleDateString('SV-se')}</TableCell>
+                  <TableCell>
+                    {/* {user.createdAt.toLocaleDateString('SV-se')} */}
+                    {newUsers ? new Date(user.createdAt).toLocaleDateString('SV-se') : 'N/A'}
+                  </TableCell>
 
-                    <TableCell>
-                      <Button variant="ghost" size="icon">
-                        ⋮
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                </>
+                  <TableCell>
+                    <Button variant="ghost" size="icon">
+                      ⋮
+                    </Button>
+                  </TableCell>
+                </TableRow>
               )
             })}
 
