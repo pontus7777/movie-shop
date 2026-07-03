@@ -1,5 +1,3 @@
-// lib/dashboard.ts
-
 import prisma from '@/lib/prisma'
 
 export async function getUsersDashboard() {
@@ -10,7 +8,7 @@ export async function getUsersDashboard() {
     prisma.user.count(),
     prisma.user.count({
       where: {
-        role: 'ADMIN'.toLowerCase(),
+        OR: [{ role: 'ADMIN' }, { role: 'admin' }],
       },
     }),
     prisma.user.count({
