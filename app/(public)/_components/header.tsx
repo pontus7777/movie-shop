@@ -20,9 +20,13 @@ export default function Header({
   const [searchQuery, setSearchQuery] = useState('')
   const [signingOut, setSigningOut] = useState(false)
 
+  // REPLACE WITH:
   function handleSearchSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!searchQuery.trim()) return
+    if (!searchQuery.trim()) {
+      router.push('/movies')
+      return
+    }
     router.push(`/movies?q=${encodeURIComponent(searchQuery.trim())}&page=1`)
   }
 
@@ -50,7 +54,12 @@ export default function Header({
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value)
+                if (!e.target.value.trim()) {
+                  router.push('/movies')
+                }
+              }}
               placeholder="Search movies..."
               className={`transition-all duration-300 ease-in-out bg-muted border border-border rounded-full text-sm px-3 py-1.5 outline-none focus:border-purple-500 ${
                 isSearchOpen ? 'w-48 opacity-100 mr-2' : 'w-0 opacity-0'
@@ -64,6 +73,8 @@ export default function Header({
               onClick={() => {
                 if (isSearchOpen && searchQuery.trim()) {
                   router.push(`/movies?q=${encodeURIComponent(searchQuery.trim())}&page=1`)
+                } else if (isSearchOpen && !searchQuery.trim()) {
+                  router.push('/movies')
                 } else {
                   setIsSearchOpen(!isSearchOpen)
                 }
