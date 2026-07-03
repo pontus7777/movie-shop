@@ -5,8 +5,16 @@ import { StatsTable } from './_components/user-stats'
 import { FilterUsers } from './_components/user-filter'
 import { getUsersDashboard } from './lib/queries'
 
-export default async function UsersPage() {
-  const { users, totalUsers, admins, verifiedUsers, newUsers } = await getUsersDashboard()
+type Props = {
+  searchParams: Promise<{
+    page?: string
+  }>
+}
+export default async function UsersPage({ searchParams }: Props) {
+  const { page } = await searchParams
+
+  const currentPage = Number(page) || 1
+  const data = await getUsersDashboard(currentPage)
 
   return (
     <div className="space-y-6">
@@ -22,10 +30,10 @@ export default async function UsersPage() {
 
       {/* Stats */}
       <StatsTable
-        totalUsers={totalUsers}
-        admins={admins}
-        verifiedUsers={verifiedUsers}
-        newUsers={newUsers}
+        totalUsers={data.totalUsers}
+        admins={data.admins}
+        verifiedUsers={data.verifiedUsers}
+        newUsers={data.newUsers}
       />
 
       {/* Filters */}
@@ -33,11 +41,13 @@ export default async function UsersPage() {
 
       {/* Users Table */}
       <UserTable
-        users={users}
-        totalUsers={totalUsers}
-        admins={admins}
-        verifiedUsers={verifiedUsers}
-        newUsers={newUsers}
+        users={data.users}
+        totalUsers={data.totalUsers}
+        admins={data.admins}
+        verifiedUsers={data.verifiedUsers}
+        newUsers={data.newUsers}
+        currentPage={data.currentPage}
+        totalPages={data.totalPages}
       />
     </div>
   )
