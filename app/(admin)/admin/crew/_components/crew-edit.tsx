@@ -23,7 +23,6 @@ type Props = {
 
 export function EditCrewDialog({ crew, open, onOpenChange }: Props) {
   const [name, setName] = useState(crew.name)
-  // const [role, setRole] = useState<'ACTOR' | 'DIRECTOR'>(crew.role)
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit() {
@@ -54,19 +53,10 @@ export function EditCrewDialog({ crew, open, onOpenChange }: Props) {
 
         <div className="space-y-4 py-4">
           <input
-            className="w-full rounded border p-2"
+            className="w-full border rounded p-2"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-
-          {/* <select
-            className="w-full border rounded p-2"
-            value={role}
-            onChange={(e) => setRole(e.target.value as 'ACTOR' | 'DIRECTOR')}
-          >
-            <option value="ACTOR">Actor</option>
-            <option value="DIRECTOR">Director</option>
-          </select>*/}
         </div>
 
         <AlertDialogFooter>

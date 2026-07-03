@@ -9,10 +9,16 @@ export async function mergeCookieCart(userId: string) {
     return
   }
 
-  const cart = await prisma.cart.findUnique({
-    where: {
-      userId,
-    },
+  // const cart = await prisma.cart.findUnique({
+  //   where: {
+  //     userId,
+  //   },
+  // })
+
+  const cart = await prisma.cart.upsert({
+    where: { userId },
+    update: {},
+    create: { userId },
   })
 
   if (!cart) {

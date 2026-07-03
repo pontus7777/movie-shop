@@ -4,119 +4,68 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 import prisma from '@/lib/prisma'
-import { convertFromSek } from '@/lib/priceUtils'
-import { CrewRole } from '@/generated/prisma/client'
 import { convertFromEuro } from '@/lib/priceUtils'
 
 const editMovieSchema = z.object({
   id: z.string().min(1),
-  title: z.string().min(1, 'Title is required').max(32, 'Title must be less than 32 characters'),
-  description: z.string().min(1, 'Description is required').max(1000),
-  price: z.number(),
+  title: z.string().min(1).max(50),
+  description: z.string().min(1).max(1000),
+  price: z
+    .string()
+    .refine((val) => /^\d+(\.\d{1,2})?$/.test(val), 'Price must be a valid number like 21.29'),
   releaseYear: z.number().min(0).max(9999),
   stock: z.boolean(),
   runtime: z.number().min(10),
   imageUrl: z.union([z.literal(''), z.string().url('Invalid URL')]),
-  credits: z
-    .array(
-      z.object({
-        crewId: z.string(),
-        name: z.string().trim().min(1, 'Crew member name is required'),
-        actor: z.boolean(),
-        director: z.boolean(),
-      }),
-    )
-    .min(1, 'At least one crew member is required')
-    .refine((crew) => crew.every((member) => member.actor || member.director), {
-      message: 'Each crew member must have at least one role.',
-    }),
-  genreIds: z.array(z.number()),
 
-  //   id: z.string().min(1),
-  //   title: z.string().min(1, 'Title is required').max(32, 'Title must be less than 32 characters'),
-  //   description: z.string().min(1, 'Description is required').max(1000),
-  //   price: z.number(),
-  //   releaseYear: z.number().min(0).max(9999),
-  //   stock: z.boolean(),
-  //   runtime: z.number().min(10),
-  //   imageUrl: z.union([
-  //       z.literal(""),
-  //       z.string().url("Invalid URL"),
-  // ]),
-  //   crewMemberIds: z.array(z.string()),
-  //   genreIds: z.array(z.number()),
+  // FIX: crew must include roles
+  crew: z.array(
+    z.object({
+      id: z.string(),
+      role: z.enum(['ACTOR', 'DIRECTOR']),
+    }),
+  ),
+
+  genreIds: z.array(z.number()),
 })
 
 export async function editMovie(values: z.infer<typeof editMovieSchema>) {
   const data = editMovieSchema.parse(values)
 
   const updatedMovie = await prisma.movie.update({
-    where: {
-      id: data.id,
-    },
+    where: { id: data.id },
     data: {
       title: data.title,
       description: data.description,
-      price: convertFromEuro(data.price),
+      priceInCents: convertFromEuro(parseFloat(data.price)),
       releaseYear: data.releaseYear,
       stock: data.stock,
       runtime: data.runtime,
       imageUrl: data.imageUrl.trim() || null,
 
+      // FIX: update credits correctly
+      credits: {
+        deleteMany: {}, // remove old credits
+        create: data.crew.map((c) => ({
+          crewId: c.id,
+          role: c.role,
+        })),
+      },
+
       genres: {
         set: data.genreIds.map((id) => ({ id })),
       },
+    },
 
+    include: {
       credits: {
-        deleteMany: {},
-
-        create: data.credits.flatMap((member) => [
-          ...(member.actor
-            ? [
-                {
-                  role: CrewRole.ACTOR,
-
-                  crew: {
-                    connectOrCreate: {
-                      where: {
-                        name: member.name,
-                      },
-                      create: {
-                        name: member.name,
-                      },
-                    },
-                  },
-                },
-              ]
-            : []),
-
-          ...(member.director
-            ? [
-                {
-                  role: CrewRole.DIRECTOR,
-
-                  crew: {
-                    connectOrCreate: {
-                      where: {
-                        name: member.name,
-                      },
-                      create: {
-                        name: member.name,
-                      },
-                    },
-                  },
-                },
-              ]
-            : []),
-        ]),
+        include: { crew: true },
       },
+      genres: true,
     },
   })
 
   revalidatePath('/admin/movies')
 
-  return {
-    ...updatedMovie,
-    price: data.price.toString(),
-  }
+  return updatedMovie
 }
