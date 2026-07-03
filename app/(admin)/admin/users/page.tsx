@@ -3,8 +3,14 @@ import { Button } from '@/components/ui/button'
 import { UserTable } from './_components/user-table'
 import { StatsTable } from './_components/user-stats'
 import { FilterUsers } from './_components/user-filter'
+import prisma from '@/lib/prisma'
 
-export default function UsersPage() {
+export default async function UsersPage() {
+  const users = await prisma.user.findMany({
+    include: {
+      orders: true,
+    },
+  })
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -24,7 +30,7 @@ export default function UsersPage() {
       <FilterUsers />
 
       {/* Users Table */}
-      <UserTable />
+      <UserTable users={users} />
     </div>
   )
 }
