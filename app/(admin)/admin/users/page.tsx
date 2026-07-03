@@ -3,14 +3,11 @@ import { Button } from '@/components/ui/button'
 import { UserTable } from './_components/user-table'
 import { StatsTable } from './_components/user-stats'
 import { FilterUsers } from './_components/user-filter'
-import prisma from '@/lib/prisma'
+import { getUsersDashboard } from './lib/queries'
 
 export default async function UsersPage() {
-  const users = await prisma.user.findMany({
-    include: {
-      orders: true,
-    },
-  })
+  const { users, totalUsers, admins, verifiedUsers, newUsers } = await getUsersDashboard()
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -24,13 +21,25 @@ export default async function UsersPage() {
       </div>
 
       {/* Stats */}
-      <StatsTable users={users} />
+      <StatsTable
+        users={users}
+        totalUsers={totalUsers}
+        admins={admins}
+        verifiedUsers={verifiedUsers}
+        newUsers={newUsers}
+      />
 
       {/* Filters */}
       <FilterUsers />
 
       {/* Users Table */}
-      <UserTable users={users} />
+      <UserTable
+        users={users}
+        totalUsers={totalUsers}
+        admins={admins}
+        verifiedUsers={verifiedUsers}
+        newUsers={newUsers}
+      />
     </div>
   )
 }
