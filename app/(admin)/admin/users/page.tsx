@@ -24,7 +24,7 @@ export default async function UsersPage() {
       </div>
 
       {/* Stats */}
-      <StatsTable />
+      <StatsTable users={users} />
 
       {/* Filters */}
       <FilterUsers />
