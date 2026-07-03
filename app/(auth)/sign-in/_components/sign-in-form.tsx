@@ -46,7 +46,7 @@ function SignInForm() {
 
       toast.success('Sign in successeded ')
 
-      router.push('/')
+      window.location.href = '/movies'
       router.refresh()
     },
   })
@@ -135,7 +135,7 @@ function SignInForm() {
             {(isSubmitting) => (
               <Field orientation="horizontal">
                 <Button type="submit" disabled={isSubmitting}>
-                  Sign in
+                  {isSubmitting ? 'Signing in...' : 'Sign in'}
                 </Button>
               </Field>
             )}
