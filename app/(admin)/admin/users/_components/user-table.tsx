@@ -10,8 +10,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Prisma } from '@/generated/prisma/client'
 
-export function UserTable({}) {
+type UserWithRelations = Prisma.UserGetPayload<{
+  include: {
+    orders: true
+  }
+}>
+
+type Props = {
+  users: UserWithRelations[]
+}
+
+export function UserTable({ users }: Props) {
   return (
     <Card>
       <CardHeader>
@@ -27,42 +38,56 @@ export function UserTable({}) {
               <TableHead>Role</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Orders</TableHead>
-              <TableHead>Joined</TableHead>
+              <TableHead>Joined</TableHead> {/* createdAt */}
               <TableHead className="w-15" />
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            <TableRow>
-              <TableCell>
-                <div className="flex items-center gap-3">
-                  <Avatar>
-                    <AvatarFallback>SJ</AvatarFallback>
-                  </Avatar>
+            {users.map((user, index) => {
+              return (
+                <>
+                  <TableRow key={user.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <Avatar>
+                          <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
+                        </Avatar>
 
-                  <div>
-                    <p className="font-medium">Sarah Johnson</p>
-                    <p className="text-sm text-muted-foreground">sarah@email.com</p>
-                  </div>
-                </div>
-              </TableCell>
+                        <div>
+                          <p className="font-medium">{user.name}</p>
+                          <p className="text-sm text-muted-foreground">{user.email}</p>
+                        </div>
+                      </div>
+                    </TableCell>
 
-              <TableCell>Admin</TableCell>
+                    <TableCell>{user.role}</TableCell>
 
-              <TableCell>
-                <Badge>Active</Badge>
-              </TableCell>
+                    <TableCell>
+                      <Badge
+                        className={
+                          user.emailVerified
+                            ? 'bg-green-500 hover:bg-green-600'
+                            : 'bg-red-500 hover:bg-red-600'
+                        }
+                      >
+                        {user.emailVerified ? 'Verified' : 'Not Verified'}
+                      </Badge>
+                    </TableCell>
 
-              <TableCell>32</TableCell>
+                    <TableCell>{user.orders.length}</TableCell>
 
-              <TableCell>Jul 1, 2026</TableCell>
+                    <TableCell>{user.createdAt.toLocaleDateString()}</TableCell>
 
-              <TableCell>
-                <Button variant="ghost" size="icon">
-                  ⋮
-                </Button>
-              </TableCell>
-            </TableRow>
+                    <TableCell>
+                      <Button variant="ghost" size="icon">
+                        ⋮
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                </>
+              )
+            })}
 
             {/* More rows... */}
           </TableBody>
