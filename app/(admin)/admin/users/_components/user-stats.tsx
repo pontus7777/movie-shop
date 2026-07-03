@@ -1,21 +1,13 @@
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Prisma } from '@/generated/prisma/client'
-
-type UserWithRelations = Prisma.UserGetPayload<{
-  include: {
-    orders: true
-  }
-}>
 
 type Props = {
-  users: UserWithRelations[]
   totalUsers: number
   newUsers: number
   admins: number
   verifiedUsers?: number
 }
 
-export function StatsTable({ users, totalUsers, admins, verifiedUsers, newUsers }: Props) {
+export function StatsTable({ totalUsers, admins, verifiedUsers, newUsers }: Props) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card>
