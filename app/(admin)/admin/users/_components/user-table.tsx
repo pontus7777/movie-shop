@@ -1,7 +1,14 @@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import {
   Table,
   TableBody,
@@ -11,6 +18,15 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Prisma } from '@/generated/prisma/client'
+import Link from 'next/link'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination'
 
 type UserWithRelations = Prisma.UserGetPayload<{
   include: {
@@ -24,9 +40,19 @@ type Props = {
   admins: number
   verifiedUsers: number
   newUsers: number
+  currentPage: number
+  totalPages: number
 }
 
-export function UserTable({ users, totalUsers, admins, verifiedUsers, newUsers }: Props) {
+export function UserTable({
+  users,
+  totalUsers,
+  admins,
+  verifiedUsers,
+  newUsers,
+  currentPage,
+  totalPages,
+}: Props) {
   return (
     <Card>
       <CardHeader>
@@ -100,6 +126,28 @@ export function UserTable({ users, totalUsers, admins, verifiedUsers, newUsers }
           </TableBody>
         </Table>
       </CardContent>
+
+      <CardFooter>
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious href={currentPage > 1 ? `?page=${currentPage - 1}` : '#'} />
+            </PaginationItem>
+
+            {Array.from({ length: totalPages }).map((_, index) => (
+              <PaginationItem key={index}>
+                <PaginationLink href={`?page=${index + 1}`} isActive={currentPage === index + 1}>
+                  {index + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+
+            <PaginationItem>
+              <PaginationNext href={currentPage < totalPages ? `?page=${currentPage + 1}` : '#'} />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </CardFooter>
     </Card>
   )
 }
