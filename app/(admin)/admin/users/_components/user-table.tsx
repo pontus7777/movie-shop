@@ -37,22 +37,11 @@ type UserWithRelations = Prisma.UserGetPayload<{
 type Props = {
   users: UserWithRelations[]
   totalUsers: number
-  admins: number
-  verifiedUsers: number
-  newUsers: number
   currentPage: number
   totalPages: number
 }
 
-export function UserTable({
-  users,
-  totalUsers,
-  admins,
-  verifiedUsers,
-  newUsers,
-  currentPage,
-  totalPages,
-}: Props) {
+export function UserTable({ users, totalUsers, currentPage, totalPages }: Props) {
   return (
     <Card>
       <CardHeader>
@@ -98,8 +87,8 @@ export function UserTable({
                     <Badge
                       className={
                         user.emailVerified
-                          ? 'bg-green-500 hover:bg-green-600'
-                          : 'bg-red-500 hover:bg-red-600'
+                          ? 'bg-green-400 hover:bg-green-600'
+                          : 'bg-red-400 hover:bg-red-600'
                       }
                     >
                       {user.emailVerified ? 'Verified' : 'Not Verified'}
@@ -109,8 +98,7 @@ export function UserTable({
                   <TableCell>{user.orders.length}</TableCell>
 
                   <TableCell>
-                    {/* {user.createdAt.toLocaleDateString('SV-se')} */}
-                    {newUsers ? new Date(user.createdAt).toLocaleDateString('SV-se') : 'N/A'}
+                    {user.createdAt ? new Date(user.createdAt).toLocaleDateString('sv-SE') : 'N/A'}
                   </TableCell>
 
                   <TableCell>
