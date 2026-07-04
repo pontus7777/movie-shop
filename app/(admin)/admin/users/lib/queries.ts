@@ -1,37 +1,88 @@
 import prisma from '@/lib/prisma'
+import { Prisma } from '@/generated/prisma/client'
+import { UserFilters } from './types'
 
 const PAGE_SIZE = 10
 
-export async function getUsersDashboard(page = 1) {
+export async function getUserStats() {
   const thirtyDaysAgo = new Date()
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
-  const [totalUsers, admins, verifiedUsers, newUsers, users] = await Promise.all([
-    //query1
-    prisma.user.count(), //SELECT COUNT(*) FROM User;
-    //query2
+  const [totalUsers, admins, verifiedUsers, newUsers] = await Promise.all([
+    prisma.user.count(),
+
     prisma.user.count({
       where: {
-        OR: [{ role: 'ADMIN' }, { role: 'admin' }], //SELECT COUNT(*) FROM User WHERE role = 'ADMIN' OR role = 'admin';
+        // role: 'ADMIN',
+        role: {
+          equals: 'admin',
+          mode: 'insensitive',
+        },
       },
     }),
-    //query3
+
     prisma.user.count({
-      //SELECT COUNT(*) FROM User WHERE emailVerified =true;
       where: {
         emailVerified: true,
       },
     }),
-    //query4
+
     prisma.user.count({
       where: {
         createdAt: {
-          gte: thirtyDaysAgo, //createdAt >= thirtyDaysAgo
+          gte: thirtyDaysAgo,
         },
       },
     }),
-    //query5
+  ])
+
+  return {
+    totalUsers,
+    admins,
+    verifiedUsers,
+    newUsers,
+  }
+}
+
+export async function getUsers({ page = 1, search, role, status }: UserFilters) {
+  const where: Prisma.UserWhereInput = {}
+
+  if (search) {
+    where.OR = [
+      {
+        name: {
+          contains: search,
+          mode: 'insensitive',
+        },
+      },
+      {
+        email: {
+          contains: search,
+          mode: 'insensitive',
+        },
+      },
+    ]
+  }
+
+  if (role) {
+    where.role = role
+  }
+
+  if (status === 'verified') {
+    where.emailVerified = true
+  }
+
+  if (status === 'unverified') {
+    where.emailVerified = false
+  }
+
+  const [totalUsers, users] = await Promise.all([
+    prisma.user.count({
+      where,
+    }),
+
     prisma.user.findMany({
+      where,
       include: {
         orders: true,
       },
@@ -46,9 +97,6 @@ export async function getUsersDashboard(page = 1) {
   return {
     users,
     totalUsers,
-    admins,
-    verifiedUsers,
-    newUsers,
     totalPages: Math.ceil(totalUsers / PAGE_SIZE),
     currentPage: page,
   }
