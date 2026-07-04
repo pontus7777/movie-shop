@@ -1,20 +1,34 @@
 import { Button } from '@/components/ui/button'
 
 import { UserTable } from './_components/user-table'
-import { StatsTable } from './_components/user-stats'
+import { UserStats } from './_components/user-stats'
 import { FilterUsers } from './_components/user-filter'
-import { getUsersDashboard } from './lib/queries'
+import { getUserStats, getUsers } from './lib/queries'
 
 type Props = {
   searchParams: Promise<{
     page?: string
+    search?: string
+    role?: string
+    status?: 'verified' | 'unverified'
   }>
 }
+
 export default async function UsersPage({ searchParams }: Props) {
-  const { page } = await searchParams
+  const { page, search, role, status } = await searchParams
 
   const currentPage = Number(page) || 1
-  const data = await getUsersDashboard(currentPage)
+
+  // Fetch both in parallel
+  const [stats, usersData] = await Promise.all([
+    getUserStats(),
+    getUsers({
+      page: currentPage,
+      search,
+      role,
+      status,
+    }),
+  ])
 
   return (
     <div className="space-y-6">
@@ -29,11 +43,11 @@ export default async function UsersPage({ searchParams }: Props) {
       </div>
 
       {/* Stats */}
-      <StatsTable
-        totalUsers={data.totalUsers}
-        admins={data.admins}
-        verifiedUsers={data.verifiedUsers}
-        newUsers={data.newUsers}
+      <UserStats
+        totalUsers={stats.totalUsers}
+        admins={stats.admins}
+        verifiedUsers={stats.verifiedUsers}
+        newUsers={stats.newUsers}
       />
 
       {/* Filters */}
@@ -41,13 +55,10 @@ export default async function UsersPage({ searchParams }: Props) {
 
       {/* Users Table */}
       <UserTable
-        users={data.users}
-        totalUsers={data.totalUsers}
-        admins={data.admins}
-        verifiedUsers={data.verifiedUsers}
-        newUsers={data.newUsers}
-        currentPage={data.currentPage}
-        totalPages={data.totalPages}
+        users={usersData.users}
+        totalUsers={usersData.totalUsers}
+        currentPage={usersData.currentPage}
+        totalPages={usersData.totalPages}
       />
     </div>
   )
