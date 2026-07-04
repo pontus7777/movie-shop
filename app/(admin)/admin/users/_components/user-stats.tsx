@@ -42,7 +42,7 @@ export function UserStats({ totalUsers, admins, verifiedUsers, newUsers }: Props
               <stat.icon className="h-4 w-4 text-muted-foreground" />
             </CardDescription>
           </CardHeader>
-          <CardTitle className="text-3xl">{stat.value}</CardTitle>
+          <CardTitle className="text-3xl ml-5">{stat.value}</CardTitle>
         </Card>
       ))}
     </div>
