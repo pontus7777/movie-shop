@@ -10,7 +10,7 @@ const DeleteSchema = z.object({
   id: z.string(),
 })
 
-export async function deleteUser(data: unknown) {
+export async function deleteUser(data: z.infer<typeof DeleteSchema>) {
   const session = await auth.api.getSession({
     headers: await headers(),
   })
@@ -27,11 +27,22 @@ export async function deleteUser(data: unknown) {
     return { success: false, error: 'Invalid data' }
   }
 
-  await prisma.user.delete({
-    where: {
-      id: parsed.data.id,
-    },
-  })
+  try {
+    await prisma.user.delete({
+      where: {
+        id: parsed.data.id,
+      },
+    })
 
-  return { success: true }
+    return {
+      success: true,
+    }
+  } catch {
+    return {
+      success: false,
+      error: 'User not found or could not be deleted.',
+    }
+  }
+
+  // return { success: true }
 }
