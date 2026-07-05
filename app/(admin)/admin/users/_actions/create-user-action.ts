@@ -13,7 +13,7 @@ const AddUserSchema = z.object({
 })
 type ActionResult = { success: true; user: any } | { success: false; error: string }
 
-export async function createUser(values: unknown): Promise<ActionResult> {
+export async function createUser(values: z.infer<typeof AddUserSchema>): Promise<ActionResult> {
   const session = await auth.api.getSession({
     headers: await headers(),
   })
