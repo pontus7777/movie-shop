@@ -14,49 +14,55 @@ import {
 import { Button } from '@/components/ui/button'
 import { updateUser } from '../_actions/update-user-action'
 import { useRouter } from 'next/navigation'
+import { z } from 'zod'
+import { useForm } from '@tanstack/react-form'
 
-export function EditUserDialog({
-  open,
-  onOpenChange,
-  user,
-}: {
+const formSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(32, 'Name must be less than 32 characters'),
+})
+type Props = {
   open: boolean
   onOpenChange: (v: boolean) => void
-  user: any
-}) {
-  const [isPending, startTransition] = useTransition()
+  user: {
+    id: string
+    name: string
+  }
+}
+
+export function EditUserDialog({ open, onOpenChange, user }: Props) {
   const router = useRouter()
-  const [form, setForm] = useState({
-    id: '',
-    name: '',
-    // email: '',
-    // role: 'user',
+  const form = useForm({
+    defaultValues: {
+      name: user.name,
+    },
+    validators: {
+      onSubmit: formSchema,
+      onChange: formSchema,
+    },
+
+    onSubmit: async ({ value, formApi }) => {
+      const result = await updateUser({
+        id: user.id,
+        name: value.name,
+      })
+      if (!result.success) {
+        toast.error(result.error)
+        return
+      }
+      formApi.reset({
+        name: value.name,
+      })
+      router.refresh()
+      toast.success('Form edited successfully', {})
+      onOpenChange(false)
+    },
   })
 
   useEffect(() => {
-    if (user) {
-      setForm({
-        id: user.id,
-        name: user.name ?? '',
-        // email: user.email ?? '',
-        // role: user.role,
-      })
-    }
-  }, [user])
-
-  async function handleSubmit() {
-    startTransition(async () => {
-      const res = await updateUser(form)
-      router.refresh()
-      if (!res.success) {
-        toast.error(res.error)
-        return
-      }
-
-      toast.success('User updated')
-      onOpenChange(false)
+    form.reset({
+      name: user.name,
     })
-  }
+  }, [user, form])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -65,38 +71,34 @@ export function EditUserDialog({
           <DialogTitle>Edit User</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-3 py-4">
-          <input
-            className="w-full border p-2 rounded"
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            form.handleSubmit()
+          }}
+          className="space-y-4 py-4"
+        >
+          <form.Field
+            name="name"
+            children={(field) => (
+              <input
+                className="w-full rounded border p-2"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
+            )}
           />
-          {/* 
-          <input
-            className="w-full border p-2 rounded"
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-          /> */}
 
-          {/* <select
-            className="w-full border p-2 rounded"
-            value={form.role}
-            onChange={(e) => setForm({ ...form, role: e.target.value })}
-          >
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select> */}
-        </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
 
-        <DialogFooter>
-          <Button onClick={() => onOpenChange(false)} variant="outline">
-            Cancel
-          </Button>
-
-          <Button onClick={handleSubmit} disabled={isPending}>
-            {isPending ? 'Saving...' : 'Save'}
-          </Button>
-        </DialogFooter>
+            <Button type="submit">Save</Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   )
