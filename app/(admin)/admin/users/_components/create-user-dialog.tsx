@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/select'
 import { createUser } from '../_actions/create-user-action'
 import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
 
 type Props = {
   open: boolean
@@ -30,6 +31,7 @@ type Props = {
 export function CreateUserDialog({ open, onOpenChange }: Props) {
   const [isPending, startTransition] = useTransition()
 
+  const router = useRouter()
   async function handleSubmit(formData: FormData) {
     startTransition(async () => {
       const result = await createUser({
@@ -38,6 +40,7 @@ export function CreateUserDialog({ open, onOpenChange }: Props) {
         password: String(formData.get('password')),
         role: String(formData.get('role')) as 'user' | 'admin',
       })
+      router.refresh()
 
       if (!result.success) {
         toast.error(result.error)
