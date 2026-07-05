@@ -8,6 +8,7 @@ const statement = {
   ...defaultStatements,
 
   project: ['create', 'share', 'update', 'delete'],
+  userManagement: ['create', 'update', 'delete', 'view'],
 } as const
 
 export const ac = createAccessControl(statement)
@@ -18,6 +19,7 @@ export const user = ac.newRole({
 
 export const admin = ac.newRole({
   project: ['create', 'update'],
+  userManagement: ['create', 'update', 'delete', 'view'],
   ...adminAc.statements,
 })
 
