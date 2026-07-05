@@ -46,12 +46,27 @@ export function CreateUserDialog({ open, onOpenChange }: Props) {
     password: '',
     role: 'user',
   }
+  const validate = (values: FormValues) => {
+    const result = formSchema.safeParse(values)
+
+    if (!result.success) {
+      return result.error.format()
+    }
+
+    return undefined
+  }
   const form = useForm({
     defaultValues,
 
     validators: {
-      onChange: formSchema,
-      onSubmit: formSchema,
+      onChange: ({ value }) => validate(value),
+      onSubmit: ({ value }) => {
+        const result = formSchema.safeParse(value)
+        if (!result.success) {
+          return result.error.format()
+        }
+        return undefined
+      },
     },
     onSubmit: async ({ value, formApi }) => {
       const result = await createUser(value)
@@ -62,9 +77,7 @@ export function CreateUserDialog({ open, onOpenChange }: Props) {
       }
 
       toast.success('User created')
-
       formApi.reset()
-
       onOpenChange(false)
       router.refresh()
     },
@@ -102,14 +115,18 @@ export function CreateUserDialog({ open, onOpenChange }: Props) {
           <form.Field
             name="email"
             children={(field) => (
-              <input
-                className="w-full rounded border p-2"
-                placeholder="Email"
-                type="email"
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-              />
+              <div>
+                <input
+                  className="w-full rounded border p-2"
+                  placeholder="email@email.com"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+
+                {field.state.meta.errors?.length > 0 && (
+                  <p className="text-red-500 text-sm">{field.state.meta.errors[0]}</p>
+                )}
+              </div>
             )}
           />
 
