@@ -27,7 +27,15 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
-
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu'
+import { useState } from 'react'
+import { EditUserDialog } from './edit-user-dialog'
+import { DeleteUserDialog } from './delete-user-dialog'
 type UserWithRelations = Prisma.UserGetPayload<{
   include: {
     orders: true
@@ -42,6 +50,9 @@ type Props = {
 }
 
 export function UserTable({ users, totalUsers, currentPage, totalPages }: Props) {
+  const [selectedUser, setSelectedUser] = useState<any>(null)
+  const [editOpen, setEditOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
   return (
     <Card>
       <CardHeader>
@@ -102,9 +113,38 @@ export function UserTable({ users, totalUsers, currentPage, totalPages }: Props)
                   </TableCell>
 
                   <TableCell>
-                    <Button variant="ghost" size="icon">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          ⋮
+                        </Button>
+                      </DropdownMenuTrigger>
+
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          onClick={() => {
+                            setSelectedUser(user)
+                            setEditOpen(true)
+                          }}
+                        >
+                          Edit
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem
+                          className="text-red-600"
+                          onClick={() => {
+                            setSelectedUser(user)
+                            setDeleteOpen(true)
+                          }}
+                        >
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    {/* <Button variant="ghost" size="icon">
                       ⋮
-                    </Button>
+                    </Button> */}
                   </TableCell>
                 </TableRow>
               )
@@ -113,6 +153,16 @@ export function UserTable({ users, totalUsers, currentPage, totalPages }: Props)
             {/* More rows... */}
           </TableBody>
         </Table>
+
+        {selectedUser && (
+          <>
+            {/* EDIT DIALOG */}
+            <EditUserDialog open={editOpen} onOpenChange={setEditOpen} user={selectedUser} />
+
+            {/* DELETE DIALOG */}
+            <DeleteUserDialog open={deleteOpen} onOpenChange={setDeleteOpen} user={selectedUser} />
+          </>
+        )}
       </CardContent>
 
       <CardFooter>
