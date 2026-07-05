@@ -1,6 +1,5 @@
 'use client'
 
-import { useTransition } from 'react'
 import { toast } from 'sonner'
 
 import {
@@ -22,6 +21,17 @@ import {
 import { createUser } from '../_actions/create-user-action'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
+import { z } from 'zod'
+import { useForm } from '@tanstack/react-form'
+
+const formSchema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+  password: z.string().min(8),
+  role: z.enum(['user', 'admin']),
+})
+
+type FormValues = z.infer<typeof formSchema>
 
 type Props = {
   open: boolean
@@ -29,18 +39,22 @@ type Props = {
 }
 
 export function CreateUserDialog({ open, onOpenChange }: Props) {
-  const [isPending, startTransition] = useTransition()
-
   const router = useRouter()
-  async function handleSubmit(formData: FormData) {
-    startTransition(async () => {
-      const result = await createUser({
-        name: String(formData.get('name')),
-        email: String(formData.get('email')),
-        password: String(formData.get('password')),
-        role: String(formData.get('role')) as 'user' | 'admin',
-      })
-      router.refresh()
+  const defaultValues: FormValues = {
+    name: '',
+    email: '',
+    password: '',
+    role: 'user',
+  }
+  const form = useForm({
+    defaultValues,
+
+    validators: {
+      onChange: formSchema,
+      onSubmit: formSchema,
+    },
+    onSubmit: async ({ value, formApi }) => {
+      const result = await createUser(value)
 
       if (!result.success) {
         toast.error(result.error)
@@ -49,47 +63,93 @@ export function CreateUserDialog({ open, onOpenChange }: Props) {
 
       toast.success('User created')
 
+      formApi.reset()
+
       onOpenChange(false)
-    })
-  }
+      router.refresh()
+    },
+  })
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Create User</AlertDialogTitle>
-          <AlertDialogDescription>Add a new user to the system</AlertDialogDescription>
+          <AlertDialogDescription>Add a new user to the system.</AlertDialogDescription>
         </AlertDialogHeader>
 
-        {/* FORM */}
-        <form action={handleSubmit} className="space-y-4 py-4">
-          <input name="name" placeholder="Name" className="w-full rounded border p-2" />
-
-          <input name="email" placeholder="Email" className="w-full rounded border p-2" />
-
-          <input
-            name="password"
-            type="password"
-            placeholder="Password"
-            className="w-full rounded border p-2"
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            form.handleSubmit()
+          }}
+          className="space-y-4"
+        >
+          <form.Field
+            name="name"
+            children={(field) => (
+              <input
+                className="w-full rounded border p-2"
+                placeholder="Name"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
+            )}
           />
 
-          <Select defaultValue="user" name="role">
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select a role" />
-            </SelectTrigger>
+          <form.Field
+            name="email"
+            children={(field) => (
+              <input
+                className="w-full rounded border p-2"
+                placeholder="Email"
+                type="email"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
+            )}
+          />
 
-            <SelectContent>
-              <SelectItem value="user">User</SelectItem>
-              <SelectItem value="admin">Admin</SelectItem>
-            </SelectContent>
-          </Select>
+          <form.Field
+            name="password"
+            children={(field) => (
+              <input
+                className="w-full rounded border p-2"
+                placeholder="Password"
+                type="password"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
+            )}
+          />
+
+          <form.Field
+            name="role"
+            children={(field) => (
+              <Select
+                value={field.state.value}
+                onValueChange={(value) => field.setValue(value as FormValues['role'])}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+
+                <SelectContent>
+                  <SelectItem value="user">User</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          />
 
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <Button type="submit" disabled={isPending} className="">
-              {isPending ? 'Creating...' : 'Create'}
-            </Button>
+            <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+
+            <Button type="submit">Create</Button>
           </AlertDialogFooter>
         </form>
       </AlertDialogContent>
