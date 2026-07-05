@@ -8,31 +8,30 @@ import { z } from 'zod'
 
 const UpdateUserSchema = z.object({
   id: z.string(),
-  name: z.string().min(2),
-  //   email: z.string().email(),
+  name: z.string().min(1).max(32, 'Title must be less than 32 characters'),
   //   role: z.enum(['user', 'admin']),
 })
 
-export async function updateUser(data: unknown) {
+export async function updateUser(values: z.infer<typeof UpdateUserSchema>) {
   const session = await auth.api.getSession({
     headers: await headers(),
   })
 
   if (!session) redirect('/sign-in')
+
   if (session.user.role !== 'admin') {
     return { success: false, error: 'Unauthorized' }
   }
 
-  const parsed = UpdateUserSchema.safeParse(data)
+  const data = UpdateUserSchema.parse(values)
 
-  if (!parsed.success) {
+  if (!data) {
     return { success: false, error: 'Invalid data' }
   }
 
-  const { id, name } = parsed.data
   await prisma.user.update({
-    where: { id },
-    data: { name },
+    where: { id: data.id },
+    data: { name: data.name },
   })
 
   return { success: true }
