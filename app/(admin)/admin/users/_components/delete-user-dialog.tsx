@@ -1,6 +1,6 @@
 'use client'
 
-import { useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 
 import {
@@ -15,48 +15,54 @@ import {
 
 import { deleteUser } from '../_actions/delete-user-action'
 import { useRouter } from 'next/navigation'
-
-export function DeleteUserDialog({
-  open,
-  onOpenChange,
-  user,
-}: {
+type Props = {
   open: boolean
-  onOpenChange: (v: boolean) => void
-  user: any
-}) {
-  const [isPending, startTransition] = useTransition()
+  onOpenChange: (open: boolean) => void
+  user: {
+    id: string
+    name: string
+  }
+}
+export function DeleteUserDialog({ open, onOpenChange, user }: Props) {
   const router = useRouter()
-  function handleDelete() {
-    startTransition(async () => {
-      const res = await deleteUser({ id: user.id })
-      router.refresh()
-      if (!res.success) {
-        toast.error(res.error)
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  async function handleDelete() {
+    setIsDeleting(true)
+    try {
+      const result = await deleteUser({
+        id: user.id,
+      })
+      if (!result.success) {
+        toast.error(result.error)
         return
       }
-
       toast.success('User deleted')
       onOpenChange(false)
-    })
+      router.refresh()
+    } finally {
+      setIsDeleting(false)
+    }
   }
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete {user?.name}?</AlertDialogTitle>
+          <AlertDialogTitle>Delete "{user.name}"?</AlertDialogTitle>
         </AlertDialogHeader>
 
+        <p className="text-sm text-muted-foreground">This action cannot be undone.</p>
+
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
 
           <AlertDialogAction
             onClick={handleDelete}
-            disabled={isPending}
-            className="bg-red-600 text-white"
+            disabled={isDeleting}
+            className="bg-red-600 text-white hover:bg-red-700"
           >
-            {isPending ? 'Deleting...' : 'Delete'}
+            {isDeleting ? 'Deleting...' : 'Delete'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
