@@ -18,7 +18,7 @@ export default async function UserOrderDetailsPage(props: PageProps<'/user/[orde
             <h2 className="text-xl font-semibold">{orderItem.movie.title}</h2>
 
             <p>Quantity: {orderItem.quantity}</p>
-            <p>Price: {orderItem.price.toString()}</p>
+            <p>Price: {orderItem.priceInCents.toString()}</p>
           </div>
         ))}
       </div>
