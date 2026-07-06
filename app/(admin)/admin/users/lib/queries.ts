@@ -13,7 +13,6 @@ export async function getUserStats() {
 
     prisma.user.count({
       where: {
-        // role: 'ADMIN',
         role: {
           equals: 'admin',
           mode: 'insensitive',
@@ -65,7 +64,10 @@ export async function getUsers({ page = 1, search, role, status }: UserFilters) 
   }
 
   if (role) {
-    where.role = role
+    where.role = {
+      equals: role,
+      mode: 'insensitive',
+    }
   }
 
   if (status === 'verified') {
