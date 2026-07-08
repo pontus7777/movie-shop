@@ -82,9 +82,6 @@ export function OrdersTable({
                 <TableCell> {new Date(order.createdAt).toLocaleDateString('SE-sv')}</TableCell>
 
                 <TableCell className="text-right">
-                  {/* <Button variant="outline" size="sm">
-                    View
-                  </Button> */}
                   <OrderActions order={order} />
                 </TableCell>
               </TableRow>
