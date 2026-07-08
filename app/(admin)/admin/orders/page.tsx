@@ -8,14 +8,22 @@ import { getOrders } from './_actions/get-orders-action'
 type Props = {
   searchParams: Promise<{
     page?: string
+    search?: string
+    status?: string
+    payment?: string
   }>
 }
 
 export default async function OrdersPage({ searchParams }: Props) {
   const params = await searchParams
-  const page = Number(params.page ?? 1)
+  // const page = Number(params.page ?? 1)
 
-  const data = await getOrders(page)
+  const data = await getOrders({
+    page: Number(params.page ?? 1),
+    search: params.search,
+    status: params.status,
+    payment: params.payment,
+  })
 
   return (
     <div className="space-y-8">
@@ -42,6 +50,7 @@ export default async function OrdersPage({ searchParams }: Props) {
         totalOrders={data.total}
         currentPage={data.currentPage}
         totalPages={data.totalPages}
+        searchParams={new URLSearchParams(params).toString()}
       />
     </div>
   )
