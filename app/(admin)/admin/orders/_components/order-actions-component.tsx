@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 import { Button } from '@/components/ui/button'
-import { Eye, MoreHorizontal } from 'lucide-react'
+import { Eye, Mail, MoreHorizontal, Printer, XCircle } from 'lucide-react'
 import { useState } from 'react'
 import { OrderDetailsDialog } from './order-details-dialog'
 import { Prisma } from '@/generated/prisma/client'
@@ -45,6 +45,21 @@ export function OrderActions({ order }: Props) {
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Eye className="mr-2 size-4" />
             View Details
+          </DropdownMenuItem>
+          {order.status !== 'CANCELLED' && (
+            <DropdownMenuItem className="text-red-600">
+              <XCircle className="mr-2 size-4" />
+              Cancel Order
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuItem>
+            <Printer className="mr-2 size-4" />
+            Print Invoice
+          </DropdownMenuItem>
+
+          <DropdownMenuItem>
+            <Mail className="mr-2 size-4" />
+            Send Email
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
