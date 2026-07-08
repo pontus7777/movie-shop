@@ -1,0 +1,48 @@
+import { Button } from '@/components/ui/button'
+
+import { StatisticsOrder } from './_components/statistics-orders'
+import { FiltersOrder } from './_components/filters-orders'
+import { OrdersTable } from './_components/orders-table'
+import { getOrders } from './_actions/get-orders-action'
+
+type Props = {
+  searchParams: Promise<{
+    page?: string
+  }>
+}
+
+export default async function OrdersPage({ searchParams }: Props) {
+  const params = await searchParams
+  const page = Number(params.page ?? 1)
+
+  const data = await getOrders(page)
+
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Orders</h1>
+          <p className="text-muted-foreground">Manage customer orders</p>
+        </div>
+
+        {/* <Button>Create Order</Button> */}
+      </div>
+
+      {/* Statistics */}
+      <StatisticsOrder />
+
+      {/* Filters */}
+      <FiltersOrder />
+
+      {/* Orders Table */}
+      <OrdersTable
+        orders={data.orders}
+        totalOrders={data.total}
+        currentPage={data.currentPage}
+        totalPages={data.totalPages}
+      />
+    </div>
+  )
+}
