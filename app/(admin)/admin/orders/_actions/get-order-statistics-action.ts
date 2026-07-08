@@ -1,0 +1,34 @@
+'use server'
+
+import prisma from '@/lib/prisma'
+
+export async function getOrderStatistics() {
+  const [totalOrders, pendingOrders, paidOrders, revenue] = await prisma.$transaction([
+    prisma.order.count(),
+
+    prisma.order.count({
+      where: {
+        status: 'PENDING',
+      },
+    }),
+
+    prisma.order.count({
+      where: {
+        status: 'PAID',
+      },
+    }),
+
+    prisma.order.aggregate({
+      _sum: {
+        total: true,
+      },
+    }),
+  ])
+
+  return {
+    totalOrders,
+    pendingOrders,
+    paidOrders,
+    revenue: revenue._sum.total ?? 0,
+  }
+}
