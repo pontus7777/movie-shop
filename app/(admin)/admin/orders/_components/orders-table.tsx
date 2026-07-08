@@ -36,9 +36,16 @@ type Props = {
   totalOrders: number
   currentPage: number
   totalPages: number
+  searchParams?: string
 }
 
-export function OrdersTable({ orders, totalOrders, currentPage, totalPages }: Props) {
+export function OrdersTable({
+  orders,
+  totalOrders,
+  currentPage,
+  totalPages,
+  searchParams = '',
+}: Props) {
   return (
     <Card>
       <CardContent className="p-0">
@@ -90,12 +97,17 @@ export function OrdersTable({ orders, totalOrders, currentPage, totalPages }: Pr
         <Pagination>
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious href={currentPage > 1 ? `?page=${currentPage - 1}` : '#'} />
+              <PaginationPrevious
+                href={currentPage > 1 ? `?${searchParams}&page=${currentPage - 1}` : '#'}
+              />
             </PaginationItem>
 
             {Array.from({ length: totalPages }).map((_, index) => (
               <PaginationItem key={index}>
-                <PaginationLink href={`?page=${index + 1}`} isActive={currentPage === index + 1}>
+                <PaginationLink
+                  href={`?${searchParams}&page=${index + 1}`}
+                  isActive={currentPage === index + 1}
+                >
                   {index + 1}
                 </PaginationLink>
               </PaginationItem>
