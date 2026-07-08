@@ -4,6 +4,7 @@ import { StatisticsOrder } from './_components/statistics-orders'
 import { FiltersOrder } from './_components/filters-orders'
 import { OrdersTable } from './_components/orders-table'
 import { getOrders } from './_actions/get-orders-action'
+import { getOrderStatistics } from './_actions/get-order-statistics-action'
 
 type Props = {
   searchParams: Promise<{
@@ -18,12 +19,15 @@ export default async function OrdersPage({ searchParams }: Props) {
   const params = await searchParams
   // const page = Number(params.page ?? 1)
 
-  const data = await getOrders({
-    page: Number(params.page ?? 1),
-    search: params.search,
-    status: params.status,
-    payment: params.payment,
-  })
+  const [data, statistics] = await Promise.all([
+    getOrders({
+      page: Number(params.page ?? 1),
+      search: params.search,
+      status: params.status,
+      payment: params.payment,
+    }),
+    getOrderStatistics(),
+  ])
 
   return (
     <div className="space-y-8">
@@ -39,7 +43,12 @@ export default async function OrdersPage({ searchParams }: Props) {
       </div>
 
       {/* Statistics */}
-      <StatisticsOrder />
+      <StatisticsOrder
+        totalOrders={statistics.totalOrders}
+        pendingOrders={statistics.pendingOrders}
+        paidOrders={statistics.paidOrders}
+        revenue={statistics.revenue}
+      />
 
       {/* Filters */}
       <FiltersOrder />
