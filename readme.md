@@ -43,6 +43,18 @@ drag the tmdb-data.json into prisma/
 npm run seed
 ```
 
+```bash
+npm install nodemailer
+```
+
+```bash
+npm install @types/nodemailer
+```
+
+```bash
+ npm install @react-email/ui react-email
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Deploy on Vercel
