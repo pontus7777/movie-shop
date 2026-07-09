@@ -48,8 +48,16 @@ function RegisterForm() {
       }
       await mergeCurrentUserCart()
 
+      const session = await authClient.getSession()
+      const role = session?.data?.user?.role
+
       toast.success('Registered account!')
-      router.push('/')
+      if (role === 'admin') {
+        router.push('/admin')
+      } else {
+        router.push('/')
+      }
+
       router.refresh()
     },
   })
