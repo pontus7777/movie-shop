@@ -8,6 +8,8 @@ import 'dotenv/config'
 import prisma from './prisma'
 import { nextCookies } from 'better-auth/next-js'
 import { sendEmail } from './email'
+import { render, toPlainText } from 'react-email'
+import EmailVerfication from '@/components/email/templates/email-verification'
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: 'postgresql' }),
@@ -43,25 +45,10 @@ export const auth = betterAuth({
       console.log('Email  Verification:', data.url)
 
       // react email
-      // const html = await render(<EmailVerfication url={data.url} />)
-      // const text = toPlainText(html)
-      /**
-       * =================================================
-       *    Verify your email: nodeMailer
-       * =================================================
-       */
-      //await sendEmail(data.user.email, "Verify tour email", text, html)
+      const html = await render(<EmailVerfication url={data.url} />)
+      const text = toPlainText(html)
 
-      await sendEmail(
-        data.user.email,
-        'Verify your email',
-        `Email verfication
-      Click the link below to verify your email.
-      ${data.url}`,
-        `<h1> Email verification</h1>
-        <p>Click the link below to verify your email. </p>
-        <a href="${data.url}"> Verify email </a>`,
-      )
+      await sendEmail(data.user.email, 'Verify your email', text, html)
     },
   },
   user: {

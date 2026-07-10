@@ -45,8 +45,16 @@ function SignInForm() {
       await mergeCurrentUserCart()
 
       toast.success('Sign in successeded ')
+      const session = await authClient.getSession()
+      const role = session?.data?.user?.role
 
-      window.location.href = '/movies'
+      toast.success('Registered account!')
+      if (role === 'admin') {
+        router.push('/admin')
+      } else {
+        router.push('/movies')
+      }
+      //window.location.href = '/movies'
       router.refresh()
     },
   })
