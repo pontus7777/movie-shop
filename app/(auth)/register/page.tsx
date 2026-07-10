@@ -15,9 +15,10 @@ export default async function RegisterPage() {
   }
 
   return (
-    <div className="mx-auto max-w-prose min-w-3xs p-4">
-      <h1 className="mb-4 text-2xl font-bold">Register Page</h1>
-      <RegisterForm />
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-full max-w-xl p-4">
+        <RegisterForm />
+      </div>
     </div>
   )
 }
