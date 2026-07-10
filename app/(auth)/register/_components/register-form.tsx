@@ -68,7 +68,7 @@ function RegisterForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Register Page</CardTitle>
+        <CardTitle>Registeration</CardTitle>
         <CardDescription> Sign up for first time.</CardDescription>
       </CardHeader>
       <CardContent>
