@@ -45,7 +45,7 @@ export function UserOrderList({ orders }: Props) {
         <Card key={order.id}>
           <CardHeader className="flex flex-row items-start justify-between space-y-0">
             <div>
-              <CardTitle className="text-base">Order #{order.id.slice(0, 8)}</CardTitle>
+              <CardTitle className="text-base">Order #{order.id}</CardTitle>
               <CardDescription>{order.createdAt.toLocaleDateString()}</CardDescription>
             </div>
             <Badge variant={statusVariant[order.status]}>{order.status}</Badge>
