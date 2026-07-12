@@ -1,4 +1,14 @@
 import { Order, Prisma } from '@/generated/prisma/client'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
 
 type OrderWithItems = Prisma.OrderGetPayload<{
   include: {
@@ -7,12 +17,18 @@ type OrderWithItems = Prisma.OrderGetPayload<{
         movie: true
       }
     }
+    shippingAddress: true
   }
 }>
 
 type Props = {
   orders: OrderWithItems[]
 }
+const statusVariant = {
+  PENDING: 'secondary',
+  PAID: 'default',
+  CANCELLED: 'destructive',
+} as const
 
 export function UserOrderList({ orders }: Props) {
   if (orders.length === 0) {
@@ -24,29 +40,53 @@ export function UserOrderList({ orders }: Props) {
   }
 
   return (
-    <div>
-      <h1>Order List</h1>
+    <div className="space-y-4">
       {orders.map((order) => (
-        <div key={order.id} className="border rounded p-4 space-y-2">
-          <div className="flex justify-between">
-            <p className="font-medium">Order #{order.id.slice(0, 8)}</p>
-            <p className="text-sm text-muted-foreground">{order.status}</p>
-          </div>
-          <p className="text-sm text-muted-foreground">{order.createdAt.toLocaleDateString()}</p>
+        <Card key={order.id}>
+          <CardHeader className="flex flex-row items-start justify-between space-y-0">
+            <div>
+              <CardTitle className="text-base">Order #{order.id.slice(0, 8)}</CardTitle>
+              <CardDescription>{order.createdAt.toLocaleDateString()}</CardDescription>
+            </div>
+            <Badge variant={statusVariant[order.status]}>{order.status}</Badge>
+          </CardHeader>
 
-          <div className="space-y-1">
-            {order.items.map((item) => (
-              <div key={item.id} className="flex justify-between text-sm">
-                <span>
-                  {item.movie.title} × {item.quantity}
-                </span>
-                <span>{(item.priceInCents / 100).toFixed(2)}</span>
-              </div>
-            ))}
-          </div>
+          <CardContent className="space-y-4">
+            {/* Items */}
+            <div className="space-y-1">
+              {order.items.map((item) => (
+                <div key={item.id} className="flex justify-between text-sm">
+                  <span>
+                    {item.movie.title} × {item.quantity}
+                  </span>
+                  <span>{(item.priceInCents / 100).toFixed(2)}</span>
+                </div>
+              ))}
+            </div>
 
-          <p className="font-semibold">Total: {(order.total / 100).toFixed(2)}</p>
-        </div>
+            {/* Shipping address */}
+            {order.shippingAddress && (
+              <>
+                <Separator />
+                <div className="text-sm text-muted-foreground">
+                  <p className="mb-1 font-medium text-foreground">Shipping Address</p>
+                  <p>
+                    {order.shippingAddress.firstName} {order.shippingAddress.lastName}
+                  </p>
+                  <p>{order.shippingAddress.street}</p>
+                  <p>
+                    {order.shippingAddress.postalCode} {order.shippingAddress.city}
+                  </p>
+                  <p>{order.shippingAddress.country}</p>
+                </div>
+              </>
+            )}
+          </CardContent>
+
+          <CardFooter className="justify-end border-t pt-4">
+            <p className="font-semibold">Total: {(order.total / 100).toFixed(2)}</p>
+          </CardFooter>
+        </Card>
       ))}
     </div>
   )
