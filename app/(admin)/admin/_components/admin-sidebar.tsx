@@ -2,7 +2,7 @@
 
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 import { ThemeModeToggle } from '@/components/theme-mode-toggle'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -24,9 +24,21 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
+import { useState } from 'react'
+import { authClient } from '@/lib/auth-client'
 
 export function AdminSidebar() {
   const pathname = usePathname()
+  const router = useRouter()
+  const [signingOut, setSigningOut] = useState(false)
+
+  async function handleSignOut() {
+    setSigningOut(true)
+    await authClient.signOut()
+    setSigningOut(false)
+    router.push('/')
+    router.refresh()
+  }
 
   return (
     <Sidebar>
@@ -113,7 +125,13 @@ export function AdminSidebar() {
             <DropdownMenuContent align="end">
               <DropdownMenuItem>Profile</DropdownMenuItem>
               <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={handleSignOut}
+                disabled={signingOut}
+                className="text-destructive focus:text-destructive"
+              >
+                {signingOut ? 'Signing out...' : 'Sign out'}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </SidebarGroup>
