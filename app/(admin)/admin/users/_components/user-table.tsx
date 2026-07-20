@@ -50,7 +50,7 @@ type Props = {
 }
 
 export function UserTable({ users, totalUsers, currentPage, totalPages }: Props) {
-  const [selectedUser, setSelectedUser] = useState<any>(null)
+  const [selectedUser, setSelectedUser] = useState<UserWithRelations | null>(null)
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   return (
