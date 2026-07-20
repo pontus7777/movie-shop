@@ -8,8 +8,10 @@ import prisma from '@/lib/prisma'
 import { DeleteMovieBtn } from './_components/delete-movie-btn'
 import { getMovieImageSrc } from '@/lib/image-utils'
 import { convertToEuro } from '@/lib/priceUtils'
+import { requireAdmin } from '@/lib/session-validation'
 
 export default async function MovieDetailsPage(props: PageProps<'/admin/movies/[id]'>) {
+  await requireAdmin()
   const params = await props.params
 
   if (!params.id) {

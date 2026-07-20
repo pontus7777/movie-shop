@@ -1,8 +1,10 @@
 'use server'
 
 import prisma from '@/lib/prisma'
+import { requireAdmin } from '@/lib/session-validation'
 
 export async function getOrderStatistics() {
+  await requireAdmin()
   const [totalOrders, pendingOrders, paidOrders, revenue] = await prisma.$transaction([
     prisma.order.count(),
 

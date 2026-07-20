@@ -1,26 +1,17 @@
-import { headers } from 'next/headers'
-
-import { auth } from '@/lib/auth'
 import prisma from '@/lib/prisma'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { convertToEuro } from '@/lib/priceUtils'
 import { getMovieImageSrc } from '@/lib/image-utils'
-import Image from 'next/image'
 import { Separator } from '@/components/ui/separator'
 import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { requireAuth } from '@/lib/session-validation'
 
 export async function OrderSummary() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
-
-  if (!session) {
-    return null
-  }
+  const session = await requireAuth()
 
   const cart = await prisma.cart.findUnique({
     where: {
