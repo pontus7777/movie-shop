@@ -1,12 +1,12 @@
-import { requireSignedIn } from '@/lib/require-signed-in'
 import prisma from '@/lib/prisma'
 
 import { UserProfile } from './_components/user-profile'
 import { UserOrderList } from './_components/user-order-list'
 import { DeleteUserAccountButton } from './_components/delete-account-button'
+import { requireAuth } from '@/lib/session-validation'
 
 export default async function UserPage() {
-  const session = await requireSignedIn()
+  const session = await requireAuth()
 
   const orders = await prisma.order.findMany({
     where: { userId: session.user.id },

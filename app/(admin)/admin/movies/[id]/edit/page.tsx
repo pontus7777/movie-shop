@@ -1,8 +1,10 @@
 import prisma from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import { EditMovieForm } from './_components/movie-edit-form'
+import { requireAdmin } from '@/lib/session-validation'
 
 export default async function EditMoviePage(props: PageProps<'/admin/movies/[id]'>) {
+  await requireAdmin()
   const params = await props.params
 
   const [movie, crewMembers, genres] = await Promise.all([

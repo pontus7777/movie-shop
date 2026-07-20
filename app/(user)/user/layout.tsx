@@ -1,10 +1,10 @@
 import '@/app/globals.css'
-import { requireSignedIn } from '@/lib/require-signed-in'
 import { Toaster } from 'sonner'
 import { UserPageHeader } from './_components/user-header'
+import { requireAuth } from '@/lib/session-validation'
 
 export default async function UserPagesLayout({ children }: { children: React.ReactNode }) {
-  await requireSignedIn()
+  await requireAuth()
 
   return (
     <div className="bg-background flex min-h-screen w-full">

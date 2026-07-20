@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
 import Link from 'next/link'
 import { MovieTable } from './_components/movie-table'
+import { requireAdmin } from '@/lib/session-validation'
 
 const PAGE_SIZE = 10
 
@@ -37,6 +38,14 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
       },
       orderBy: {
         title: 'asc',
+export default async function Page() {
+  await requireAdmin()
+  const movies = (await prisma.movie.findMany({
+    include: {
+      genres: true,
+      keywords: true,
+      credits: {
+        include: { crew: true },
       },
       skip: (currentPage - 1) * PAGE_SIZE,
       take: PAGE_SIZE,

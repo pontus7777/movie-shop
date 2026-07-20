@@ -1,6 +1,7 @@
 'use server'
 
 import prisma from '@/lib/prisma'
+import { requireAdmin } from '@/lib/session-validation'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
@@ -10,6 +11,7 @@ const createGenreSchema = z.object({
 })
 
 export async function createGenre(values: z.infer<typeof createGenreSchema>) {
+  await requireAdmin()
   const data = createGenreSchema.parse(values)
 
   try {

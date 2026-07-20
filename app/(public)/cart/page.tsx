@@ -9,8 +9,10 @@ import { getMovieImageSrc } from '@/lib/image-utils'
 import Image from 'next/image'
 import { Minus, Plus, Trash } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
+// import { requireAuth } from '@/lib/session-validation'
 
 export default async function CartPage() {
+  // await requireAuth()
   const cart = await getCart()
 
   // const ids = Object.keys(cart)

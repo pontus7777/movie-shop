@@ -2,6 +2,7 @@
 
 import { Prisma, OrderStatus, PaymentMethod } from '@/generated/prisma/client'
 import prisma from '@/lib/prisma'
+import { requireAdmin } from '@/lib/session-validation'
 
 const PAGE_SIZE = 10
 
@@ -13,6 +14,7 @@ type GetOrdersParams = {
 }
 
 export async function getOrders({ page = 1, search, status, payment }: GetOrdersParams) {
+  await requireAdmin()
   const skip = (page - 1) * PAGE_SIZE
 
   const where: Prisma.OrderWhereInput = {

@@ -4,7 +4,7 @@ import { Toaster } from 'sonner'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 
 import { AdminSidebar } from './_components/admin-sidebar'
-import { requireAdmin } from '@/lib/require-admin'
+import { requireAdmin } from '@/lib/session-validation'
 
 export default async function AdminLayout({
   children,
