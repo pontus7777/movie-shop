@@ -6,6 +6,38 @@ import Link from 'next/link'
 import { MovieTable } from './_components/movie-table'
 import { requireAdmin } from '@/lib/session-validation'
 
+const PAGE_SIZE = 10
+
+export default async function Page({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+  const { page } = await searchParams
+  const currentPage = Math.max(1, Number(page) || 1)
+
+  // const { movies, totalMovies } = (
+
+  //   await prisma.movie.findMany({
+  //   include: {
+  //     genres: true,
+  //     keywords: true,
+  //     credits: {
+  //       include: { crew: true },
+  //     },
+  //   },
+  //   orderBy: {
+  //     title: 'asc',
+  //   },
+  // })) as MovieWithRelations[]
+
+  const [movies, totalMovies] = await prisma.$transaction([
+    prisma.movie.findMany({
+      include: {
+        genres: true,
+        keywords: true,
+        credits: {
+          include: { crew: true },
+        },
+      },
+      orderBy: {
+        title: 'asc',
 export default async function Page() {
   await requireAdmin()
   const movies = (await prisma.movie.findMany({
@@ -15,11 +47,13 @@ export default async function Page() {
       credits: {
         include: { crew: true },
       },
-    },
-    orderBy: {
-      title: 'asc',
-    },
-  })) as MovieWithRelations[]
+      skip: (currentPage - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
+    }),
+    prisma.movie.count(),
+  ])
+
+  const totalPages = Math.max(1, Math.ceil(totalMovies / PAGE_SIZE))
 
   return (
     <div className="bg-card rounded-xl border p-6 shadow-sm">
@@ -40,7 +74,11 @@ export default async function Page() {
         ))}
       </div>
       <div className="hidden md:block">
-        <MovieTable movies={movies} />
+        <MovieTable
+          movies={movies as unknown as MovieWithRelations[]}
+          currentPage={currentPage}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   )

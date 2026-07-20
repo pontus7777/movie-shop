@@ -16,7 +16,16 @@ import {
   TableBody,
   TableCell,
   Table,
+  TableFooter,
 } from '@/components/ui/table'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination'
 
 type MovieWithRelations = Prisma.MovieGetPayload<{
   include: {
@@ -29,8 +38,10 @@ type MovieWithRelations = Prisma.MovieGetPayload<{
 
 type Props = {
   movies: MovieWithRelations[]
+  currentPage: number
+  totalPages: number
 }
-function MovieTable({ movies }: Props) {
+function MovieTable({ movies, currentPage, totalPages }: Props) {
   return (
     <div className="bg-card rounded-xl p-6 shadow-sm">
       <div className="mb-6 flex items-center justify-between">
@@ -94,6 +105,26 @@ function MovieTable({ movies }: Props) {
           })}
         </TableBody>
       </Table>
+
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href={currentPage > 1 ? `?page=${currentPage - 1}` : '#'} />
+          </PaginationItem>
+
+          {Array.from({ length: totalPages }).map((_, index) => (
+            <PaginationItem key={index}>
+              <PaginationLink href={`?page=${index + 1}`} isActive={currentPage === index + 1}>
+                {index + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+
+          <PaginationItem>
+            <PaginationNext href={currentPage < totalPages ? `?page=${currentPage + 1}` : '#'} />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   )
 }
