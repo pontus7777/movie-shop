@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
 import Link from 'next/link'
 import { MovieTable } from './_components/movie-table'
+import { requireAdmin } from '@/lib/session-validation'
 
 export default async function Page() {
+  await requireAdmin()
   const movies = (await prisma.movie.findMany({
     include: {
       genres: true,

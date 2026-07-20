@@ -5,6 +5,7 @@ import { z } from 'zod'
 
 import prisma from '@/lib/prisma'
 import { convertFromEuro } from '@/lib/priceUtils'
+import { requireAdmin } from '@/lib/session-validation'
 
 const editMovieSchema = z.object({
   id: z.string().min(1),
@@ -30,6 +31,7 @@ const editMovieSchema = z.object({
 })
 
 export async function editMovie(values: z.infer<typeof editMovieSchema>) {
+  await requireAdmin()
   const data = editMovieSchema.parse(values)
 
   const updatedMovie = await prisma.movie.update({

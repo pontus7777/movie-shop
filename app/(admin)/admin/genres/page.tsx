@@ -2,8 +2,10 @@ import prisma from '@/lib/prisma'
 import { GenresDataTable } from './_components/genres-data-table'
 import { columns } from './_components/columns'
 import AddGenreButton from './_components/add-genre-button'
+import { requireAdmin } from '@/lib/session-validation'
 
 export default async function AdminGenresPage() {
+  await requireAdmin()
   const genres = await prisma.genre.findMany()
 
   return (

@@ -1,6 +1,7 @@
 'use server'
 
 import prisma from '@/lib/prisma'
+import { requireAdmin } from '@/lib/session-validation'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
@@ -11,6 +12,7 @@ const editGenreSchema = z.object({
 })
 
 export async function editGenre(values: z.infer<typeof editGenreSchema>) {
+  await requireAdmin()
   const data = editGenreSchema.parse(values)
 
   const updatedGenre = await prisma.genre.update({

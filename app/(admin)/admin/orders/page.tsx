@@ -1,10 +1,9 @@
-import { Button } from '@/components/ui/button'
-
 import { StatisticsOrder } from './_components/statistics-orders'
 import { FiltersOrder } from './_components/filters-orders'
 import { OrdersTable } from './_components/orders-table'
 import { getOrders } from './_actions/get-orders-action'
 import { getOrderStatistics } from './_actions/get-order-statistics-action'
+import { requireAdmin } from '@/lib/session-validation'
 
 type Props = {
   searchParams: Promise<{
@@ -16,6 +15,7 @@ type Props = {
 }
 
 export default async function OrdersPage({ searchParams }: Props) {
+  await requireAdmin()
   const params = await searchParams
   // const page = Number(params.page ?? 1)
 

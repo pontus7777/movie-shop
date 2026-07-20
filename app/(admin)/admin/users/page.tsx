@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/session-validation'
 import { UsersPageClient } from './_components/users-page-client'
 import { getUserStats, getUsers } from './lib/queries'
 
@@ -11,6 +12,7 @@ type Props = {
 }
 
 export default async function UsersPage({ searchParams }: Props) {
+  await requireAdmin()
   const { page, search, role, status } = await searchParams
 
   const currentPage = Number(page) || 1

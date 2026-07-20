@@ -1,6 +1,7 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { requireAuth } from '@/lib/session-validation'
 import { CheckCircle2 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -11,6 +12,8 @@ interface Props {
 }
 
 export default async function SuccessPage({ searchParams }: Props) {
+  await requireAuth()
+
   const { orderId } = await searchParams
 
   return (
