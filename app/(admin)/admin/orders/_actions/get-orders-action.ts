@@ -61,28 +61,6 @@ export async function getOrders({ page = 1, search, status, payment }: GetOrders
     ],
   }
 
-  // const [orders, total] = await prisma.$transaction([
-  //   prisma.order.findMany({
-  //     skip,
-  //     take: PAGE_SIZE,
-  //     where,
-  //     orderBy: {
-  //       createdAt: 'desc',
-  //     },
-  //     include: {
-  //       user: true,
-  //       items: {
-  //         include: {
-  //           movie: true,
-  //         },
-  //       },
-  //       shippingAddress: true,
-  //     },
-  //   }),
-
-  //   prisma.order.count(),
-  // ])
-
   const orders = await prisma.order.findMany({
     skip,
     take: PAGE_SIZE,
