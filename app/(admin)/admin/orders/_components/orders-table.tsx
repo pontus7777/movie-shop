@@ -1,5 +1,12 @@
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import {
   Pagination,
   PaginationContent,
@@ -48,6 +55,12 @@ export function OrdersTable({
 }: Props) {
   return (
     <Card>
+      <CardHeader>
+        <CardTitle>All Orders</CardTitle>
+        <CardDescription>
+          Showing {orders.length} of {totalOrders} orders
+        </CardDescription>
+      </CardHeader>
       <CardContent className="p-0">
         <Table>
           <TableHeader>
