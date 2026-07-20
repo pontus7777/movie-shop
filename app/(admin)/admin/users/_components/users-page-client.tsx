@@ -2,12 +2,17 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { UserTable } from './user-table'
-import { UserStats } from './user-stats'
+import { UserTable, UserTableProps } from './user-table'
+import { UserStats, UserStatsProps } from './user-stats'
 import { FilterUsers } from './user-filter'
 import { CreateUserDialog } from './create-user-dialog'
 
-export function UsersPageClient({ stats, usersData }: { stats: any; usersData: any }) {
+type Props = {
+  stats: UserStatsProps
+  usersData: UserTableProps
+}
+
+export function UsersPageClient({ stats, usersData }: Props) {
   const [open, setOpen] = useState(false)
 
   return (

@@ -49,7 +49,7 @@ export function DeleteUserDialog({ open, onOpenChange, user }: Props) {
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete "{user.name}"?</AlertDialogTitle>
+          <AlertDialogTitle>Delete &quot;{user.name}&quot;?</AlertDialogTitle>
         </AlertDialogHeader>
 
         <p className="text-sm text-muted-foreground">This action cannot be undone.</p>

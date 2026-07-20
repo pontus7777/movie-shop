@@ -79,9 +79,8 @@ export function EditUserDialog({ open, onOpenChange, user }: Props) {
           }}
           className="space-y-4 py-4"
         >
-          <form.Field
-            name="name"
-            children={(field) => (
+          <form.Field name="name">
+            {(field) => (
               <input
                 className="w-full rounded border p-2"
                 value={field.state.value}
@@ -89,7 +88,7 @@ export function EditUserDialog({ open, onOpenChange, user }: Props) {
                 onChange={(e) => field.handleChange(e.target.value)}
               />
             )}
-          />
+          </form.Field>
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>

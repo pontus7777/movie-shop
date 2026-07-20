@@ -1,14 +1,14 @@
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { LayersPlus, ShieldUser, UserCheck, Users } from 'lucide-react'
 
-type Props = {
+export type UserStatsProps = {
   totalUsers: number
   newUsers: number
   admins: number
   verifiedUsers: number
 }
 
-export function UserStats({ totalUsers, admins, verifiedUsers, newUsers }: Props) {
+export function UserStats({ totalUsers, admins, verifiedUsers, newUsers }: UserStatsProps) {
   const stats = [
     {
       title: 'Total Users',

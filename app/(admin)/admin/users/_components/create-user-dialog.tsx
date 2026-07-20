@@ -99,9 +99,8 @@ export function CreateUserDialog({ open, onOpenChange }: Props) {
           }}
           className="space-y-4"
         >
-          <form.Field
-            name="name"
-            children={(field) => (
+          <form.Field name="name">
+            {(field) => (
               <input
                 className="w-full rounded border p-2"
                 placeholder="Name"
@@ -110,11 +109,10 @@ export function CreateUserDialog({ open, onOpenChange }: Props) {
                 onChange={(e) => field.handleChange(e.target.value)}
               />
             )}
-          />
+          </form.Field>
 
-          <form.Field
-            name="email"
-            children={(field) => (
+          <form.Field name="email">
+            {(field) => (
               <div>
                 <input
                   className="w-full rounded border p-2"
@@ -128,11 +126,10 @@ export function CreateUserDialog({ open, onOpenChange }: Props) {
                 )}
               </div>
             )}
-          />
+          </form.Field>
 
-          <form.Field
-            name="password"
-            children={(field) => (
+          <form.Field name="password">
+            {(field) => (
               <input
                 className="w-full rounded border p-2"
                 placeholder="Password"
@@ -142,11 +139,10 @@ export function CreateUserDialog({ open, onOpenChange }: Props) {
                 onChange={(e) => field.handleChange(e.target.value)}
               />
             )}
-          />
+          </form.Field>
 
-          <form.Field
-            name="role"
-            children={(field) => (
+          <form.Field name="role">
+            {(field) => (
               <Select
                 value={field.state.value}
                 onValueChange={(value) => field.setValue(value as FormValues['role'])}
@@ -161,7 +157,7 @@ export function CreateUserDialog({ open, onOpenChange }: Props) {
                 </SelectContent>
               </Select>
             )}
-          />
+          </form.Field>
 
           <AlertDialogFooter>
             <AlertDialogCancel type="button">Cancel</AlertDialogCancel>

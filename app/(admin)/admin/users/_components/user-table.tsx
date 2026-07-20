@@ -42,14 +42,14 @@ type UserWithRelations = Prisma.UserGetPayload<{
   }
 }>
 
-type Props = {
+export type UserTableProps = {
   users: UserWithRelations[]
   totalUsers: number
   currentPage: number
   totalPages: number
 }
 
-export function UserTable({ users, totalUsers, currentPage, totalPages }: Props) {
+export function UserTable({ users, totalUsers, currentPage, totalPages }: UserTableProps) {
   const [selectedUser, setSelectedUser] = useState<UserWithRelations | null>(null)
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
