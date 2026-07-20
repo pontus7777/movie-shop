@@ -4,30 +4,7 @@ import prisma from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session-validation'
 
 export async function getOrderStatistics() {
-  // const [totalOrders, pendingOrders, paidOrders, revenue] = await prisma.$transaction([
-  //   prisma.order.count(),
   await requireAdmin()
-  // const [totalOrders, pendingOrders, paidOrders, revenue] = await prisma.$transaction([
-  // prisma.order.count(),
-
-  //   prisma.order.count({
-  //     where: {
-  //       status: 'PENDING',
-  //     },
-  //   }),
-
-  //   prisma.order.count({
-  //     where: {
-  //       status: 'PAID',
-  //     },
-  //   }),
-
-  //   prisma.order.aggregate({
-  //     _sum: {
-  //       total: true,
-  //     },
-  //   }),
-  // ])
 
   const totalOrders = await prisma.order.count()
   const pendingOrders = await prisma.order.count({
