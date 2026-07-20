@@ -12,35 +12,6 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
   const { page } = await searchParams
   const currentPage = Math.max(1, Number(page) || 1)
 
-  // const { movies, totalMovies } = (
-
-  //   await prisma.movie.findMany({
-  //   include: {
-  //     genres: true,
-  //     keywords: true,
-  //     credits: {
-  //       include: { crew: true },
-  //     },
-  //   },
-  //   orderBy: {
-  //     title: 'asc',
-  //   },
-  // })) as MovieWithRelations[]
-
-  // const [movies, totalMovies] = await prisma.$transaction([
-  //   prisma.movie.findMany({
-  //     include: {
-  //       genres: true,
-  //       keywords: true,
-  //       credits: {
-  //         include: { crew: true },
-  //       },
-  //     },
-  //     orderBy: {
-  //       title: 'asc',
-  //   prisma.movie.count(),
-  // ])
-
   await requireAdmin()
   const movies = await prisma.movie.findMany({
     include: {
