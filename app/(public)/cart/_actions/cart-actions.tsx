@@ -12,17 +12,29 @@ import {
   clearCookieCart,
   clearDatabaseCart,
 } from '@/lib/cart'
+import { revalidatePath } from 'next/cache'
 
 export async function addToCart(movieId: string) {
   const session = await auth.api.getSession({
     headers: await headers(),
   })
 
-  if (session) {
-    return addToDatabaseCart(session.user.id, movieId)
-  }
+  // if (session) {
+  //   return addToDatabaseCart(session.user.id, movieId)
+  // }
 
-  return addToCookieCart(movieId)
+  // return addToCookieCart(movieId)
+
+  const result = session
+    ? await addToDatabaseCart(session.user.id, movieId)
+    : await addToCookieCart(movieId)
+
+  revalidatePath('/cart')
+  revalidatePath('/movies')
+  // If you have a cart icon/badge in a shared layout (e.g. header), also revalidate that:
+  revalidatePath('/', 'layout')
+
+  return result
 }
 
 export async function removeFromCart(movieId: string, decrement = false) {
@@ -30,11 +42,21 @@ export async function removeFromCart(movieId: string, decrement = false) {
     headers: await headers(),
   })
 
-  if (session) {
-    return removeFromDatabaseCart(session.user.id, movieId, decrement)
-  }
+  // if (session) {
+  //   return removeFromDatabaseCart(session.user.id, movieId, decrement)
+  // }
 
-  return removeFromCookieCart(movieId, decrement)
+  // return removeFromCookieCart(movieId, decrement)
+
+  const result = session
+    ? await removeFromDatabaseCart(session.user.id, movieId, decrement)
+    : await removeFromCookieCart(movieId, decrement)
+
+  revalidatePath('/cart')
+  revalidatePath('/movies')
+  revalidatePath('/', 'layout')
+
+  return result
 }
 
 export async function clearCart() {
@@ -42,9 +64,17 @@ export async function clearCart() {
     headers: await headers(),
   })
 
-  if (session) {
-    return clearDatabaseCart(session.user.id)
-  }
+  // if (session) {
+  //   return clearDatabaseCart(session.user.id)
+  // }
 
-  return clearCookieCart()
+  // return clearCookieCart()
+
+  const result = session ? await clearDatabaseCart(session.user.id) : await clearCookieCart()
+
+  revalidatePath('/cart')
+  revalidatePath('/movies')
+  revalidatePath('/', 'layout')
+
+  return result
 }
