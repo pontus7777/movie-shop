@@ -31,6 +31,7 @@ model User {
   orders   Order[]
   // cartId        String
   cart     Cart?
+  wishlist Wishlist?
 
   @@unique([email])
   @@map("user")
@@ -114,8 +115,9 @@ model Movie {
   orderItems OrderItem[]
   cartItems  CartItem[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now()) @updatedAt
+  wishlistItems WishlistItem[]
 
   @@map("movies")
 }
@@ -242,4 +244,26 @@ model CartItem {
 
   @@unique([cartId, movieId])
   @@map("cart_items")
+}
+
+model Wishlist {
+  id        String         @id @default(cuid())
+  userId    String         @unique
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     WishlistItem[]
+  createdAt DateTime       @default(now())
+
+  @@map("wishList")
+}
+
+model WishlistItem {
+  id         String   @id @default(cuid())
+  wishlistId String
+  wishlist   Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+  movieId    String
+  movie      Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([wishlistId, movieId])
+  @@map("wishlistItem")
 }
