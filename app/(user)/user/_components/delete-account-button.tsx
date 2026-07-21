@@ -3,13 +3,11 @@
 import { Button } from '@/components/ui/button'
 import { Trash2 } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
-import { requireAuth } from '@/lib/session-validation'
 
 type Props = React.ComponentProps<typeof Button>
 
 export function DeleteUserAccountButton({ ...buttonProps }: Props) {
   async function handleClick() {
-    await requireAuth() //
     const confirmed = confirm(
       'Are you sure you want to delete your account? This action cannot be undone.',
     )
