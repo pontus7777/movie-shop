@@ -16,7 +16,6 @@ import {
   TableBody,
   TableCell,
   Table,
-  TableFooter,
 } from '@/components/ui/table'
 import {
   Pagination,
@@ -26,6 +25,16 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Field, FieldLabel } from '@/components/ui/field'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 type MovieWithRelations = Prisma.MovieGetPayload<{
   include: {
@@ -40,8 +49,24 @@ type Props = {
   movies: MovieWithRelations[]
   currentPage: number
   totalPages: number
+  currentPageSize: number
 }
-function MovieTable({ movies, currentPage, totalPages }: Props) {
+
+function MovieTable({ movies, currentPage, totalPages, currentPageSize }: Props) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  function buildHref(page: number, pageSize: number = currentPageSize) {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('page', String(page))
+    params.set('pageSize', String(pageSize))
+    return `?${params.toString()}`
+  }
+
+  function handlePageSizeChange(value: string) {
+    // Reset to page 1 whenever page size changes, so we don't land on an out-of-range page
+    router.push(buildHref(1, Number(value)))
+  }
   return (
     <div className="bg-card rounded-xl p-6 shadow-sm">
       <div className="mb-6 flex items-center justify-between">
@@ -106,25 +131,68 @@ function MovieTable({ movies, currentPage, totalPages }: Props) {
         </TableBody>
       </Table>
 
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href={currentPage > 1 ? `?page=${currentPage - 1}` : '#'} />
-          </PaginationItem>
+      <div className="mt-4 flex items-center justify-between gap-4">
+        <Field orientation="horizontal" className="w-fit">
+          <FieldLabel htmlFor="select-rows-per-page">Rows per page</FieldLabel>
+          <Select value={String(currentPageSize)} onValueChange={handlePageSizeChange}>
+            <SelectTrigger className="w-20" id="select-rows-per-page">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent align="start">
+              <SelectGroup>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="25">25</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+                <SelectItem value="100">100</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </Field>
 
-          {Array.from({ length: totalPages }).map((_, index) => (
-            <PaginationItem key={index}>
-              <PaginationLink href={`?page=${index + 1}`} isActive={currentPage === index + 1}>
-                {index + 1}
-              </PaginationLink>
+        <Pagination className="mx-0 w-auto">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href={currentPage > 1 ? buildHref(currentPage - 1) : '#'}
+                aria-disabled={currentPage <= 1}
+                className={currentPage <= 1 ? 'pointer-events-none opacity-50' : ''}
+                onClick={(e) => {
+                  e.preventDefault()
+                  if (currentPage > 1) router.push(buildHref(currentPage - 1), { scroll: false })
+                }}
+              />
             </PaginationItem>
-          ))}
 
-          <PaginationItem>
-            <PaginationNext href={currentPage < totalPages ? `?page=${currentPage + 1}` : '#'} />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+            {Array.from({ length: totalPages }).map((_, index) => (
+              <PaginationItem key={index}>
+                <PaginationLink
+                  href={buildHref(index + 1)}
+                  isActive={currentPage === index + 1}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    router.push(buildHref(index + 1), { scroll: false })
+                  }}
+                >
+                  {index + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+
+            <PaginationItem>
+              <PaginationNext
+                href={currentPage < totalPages ? buildHref(currentPage + 1) : '#'}
+                aria-disabled={currentPage >= totalPages}
+                className={currentPage >= totalPages ? 'pointer-events-none opacity-50' : ''}
+                onClick={(e) => {
+                  e.preventDefault()
+                  if (currentPage < totalPages)
+                    router.push(buildHref(currentPage + 1), { scroll: false })
+                }}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
     </div>
   )
 }
