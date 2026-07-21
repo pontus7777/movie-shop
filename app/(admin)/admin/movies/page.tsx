@@ -6,11 +6,20 @@ import Link from 'next/link'
 import { MovieTable } from './_components/movie-table'
 import { requireAdmin } from '@/lib/session-validation'
 
-const PAGE_SIZE = 10
+const DEFAULT_PAGE_SIZE = 10
+const ALLOWED_PAGE_SIZES = [10, 25, 50, 100]
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
-  const { page } = await searchParams
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string; pageSize?: string }>
+}) {
+  const { page, pageSize } = await searchParams
   const currentPage = Math.max(1, Number(page) || 1)
+  const parsedPageSize = Number(pageSize)
+  const currentPageSize = ALLOWED_PAGE_SIZES.includes(parsedPageSize)
+    ? parsedPageSize
+    : DEFAULT_PAGE_SIZE
 
   await requireAdmin()
   const movies = await prisma.movie.findMany({
@@ -24,13 +33,13 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
     orderBy: {
       title: 'asc',
     },
-    skip: (currentPage - 1) * PAGE_SIZE,
-    take: PAGE_SIZE,
+    skip: (currentPage - 1) * currentPageSize,
+    take: currentPageSize,
   })
 
   const totalMovies = await prisma.movie.count()
 
-  const totalPages = Math.max(1, Math.ceil(totalMovies / PAGE_SIZE))
+  const totalPages = Math.max(1, Math.ceil(totalMovies / currentPageSize))
 
   return (
     <div className="bg-card rounded-xl border p-6 shadow-sm">
@@ -55,6 +64,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
           movies={movies as unknown as MovieWithRelations[]}
           currentPage={currentPage}
           totalPages={totalPages}
+          currentPageSize={currentPageSize}
         />
       </div>
     </div>
