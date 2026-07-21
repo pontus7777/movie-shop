@@ -15,10 +15,6 @@ export default async function CartPage() {
   // await requireAuth()
   const cart = await getCart()
 
-  // const ids = Object.keys(cart)
-  // const movies = await getMovies()
-  // const cartMovies = await getMoviesByIds(ids)
-
   const isCartEmpty = cart.items.length === 0
 
   const total = cart.items.reduce(
