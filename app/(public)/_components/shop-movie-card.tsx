@@ -9,6 +9,7 @@ import { CartActionButton } from '@/components/cart-action-button'
 import { addToCart, removeFromCart } from '../cart/_actions/cart-actions'
 import { convertToEuro } from '@/lib/priceUtils'
 import { Minus, Plus } from 'lucide-react'
+import { WishlistButton } from '../wishlist/components/wishlist-button'
 
 export type MovieWithRelations = Movie & {
   genres: Genre[]
@@ -19,21 +20,33 @@ export type MovieWithRelations = Movie & {
 type Props = {
   movie: MovieWithRelations
   quantity: number
+  isWishlisted: boolean
 }
 
-export default function ShopMovieCard({ movie, quantity }: Props) {
+export default function ShopMovieCard({ movie, quantity, isWishlisted }: Props) {
   const imageSrc = getMovieImageSrc(movie.imageUrl)
 
   return (
     <Card className="flex w-56 flex-col overflow-hidden rounded-md">
       {/* Movie Poster */}
-      <Image
-        src={imageSrc}
-        alt={movie.title}
-        width={300}
-        height={450}
-        className="aspect-2/3 w-full rounded-t-md object-cover"
-      />
+      <div className="relative">
+        <Image
+          src={imageSrc}
+          alt={movie.title}
+          width={300}
+          height={450}
+          className="aspect-2/3 w-full rounded-t-md object-cover"
+        />
+
+        <div className="absolute top-2 right-2">
+          <WishlistButton
+            movieId={movie.id}
+            initialIsWishlisted={isWishlisted}
+            size="icon"
+            variant="secondary"
+          />
+        </div>
+      </div>
 
       {/* Header */}
       <CardHeader className="py-2">
