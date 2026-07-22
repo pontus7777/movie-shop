@@ -8,6 +8,10 @@ import { CartActionButton } from '@/components/cart-action-button'
 import { getYoutubeEmbedUrl } from '@/lib/youtube-utils'
 import { addToCart } from '../../cart/_actions/cart-actions'
 import { convertToEuro } from '@/lib/priceUtils'
+import { WishlistButton } from '../../wishlist/components/wishlist-button'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { isMovieInWishlist } from '@/lib/wishlist'
 
 export default async function MovieDetailsPage(props: PageProps<'/movies/[movieId]'>) {
   const params = await props.params
@@ -40,6 +44,8 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
   const posterSrc = getMovieImageSrc(movie.imageUrl)
   const trailerEmbedUrl = getYoutubeEmbedUrl(movie.trailerUrl)
 
+  const session = await auth.api.getSession({ headers: await headers() })
+  const alreadyWishlisted = session ? await isMovieInWishlist(session.user.id, movie.id) : false
   console.log('Trailer URL: ', trailerEmbedUrl)
 
   return (
@@ -150,6 +156,13 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
             >
               {movie.stock ? 'Add to cart' : 'Out of stock'}
             </CartActionButton>
+
+            <WishlistButton
+              movieId={movie.id}
+              initialIsWishlisted={alreadyWishlisted}
+              size="lg"
+              variant="outline"
+            />
           </div>
         </div>
       </div>
