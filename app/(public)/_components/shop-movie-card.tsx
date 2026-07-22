@@ -9,7 +9,7 @@ import { CartActionButton } from '@/components/cart-action-button'
 import { addToCart, removeFromCart } from '../cart/_actions/cart-actions'
 import { convertToEuro } from '@/lib/priceUtils'
 import { Minus, Plus } from 'lucide-react'
-import { WishlistButton } from '../wishlist/components/wishlist-button'
+import { WishlistButton } from '../wishlist/_components/wishlist-button'
 
 export type MovieWithRelations = Movie & {
   genres: Genre[]
