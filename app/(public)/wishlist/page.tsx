@@ -10,6 +10,7 @@ import { Trash, ShoppingCart } from 'lucide-react'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { ShareWishlistButton } from './_components/share-wishlist-button'
 
 export default async function WishlistPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -29,52 +30,59 @@ export default async function WishlistPage() {
   }
 
   return (
-    <div className="m-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {items.map((item) => (
-        <Card key={item.movie.id}>
-          <CardContent className="flex gap-4 p-4">
-            <Image
-              src={getMovieImageSrc(item.movie.imageUrl)}
-              alt={item.movie.title}
-              width={90}
-              height={130}
-              className="rounded-md object-cover"
-            />
+    <>
+      <ShareWishlistButton
+        initialIsPublic={wishlist?.isPublic ?? false}
+        initialShareId={wishlist?.shareId ?? null}
+      />
 
-            <div className="flex flex-1 flex-col">
-              <h3 className="text-lg font-semibold">{item.movie.title}</h3>
-              <p className="text-muted-foreground mb-4 text-sm">
-                €{convertToEuro(item.movie.priceInCents)}
-              </p>
+      <div className="m-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {items.map((item) => (
+          <Card key={item.movie.id}>
+            <CardContent className="flex gap-4 p-4">
+              <Image
+                src={getMovieImageSrc(item.movie.imageUrl)}
+                alt={item.movie.title}
+                width={90}
+                height={130}
+                className="rounded-md object-cover"
+              />
 
-              <div className="mt-auto flex items-center gap-2">
-                <form
-                  action={async () => {
-                    'use server'
-                    await addToCart(item.movie.id)
-                  }}
-                >
-                  <Button size="sm" type="submit">
-                    <ShoppingCart className="mr-1 h-4 w-4" />
-                    Add to cart
-                  </Button>
-                </form>
+              <div className="flex flex-1 flex-col">
+                <h3 className="text-lg font-semibold">{item.movie.title}</h3>
+                <p className="text-muted-foreground mb-4 text-sm">
+                  €{convertToEuro(item.movie.priceInCents)}
+                </p>
 
-                <form
-                  action={async () => {
-                    'use server'
-                    await removeFromWishlist(item.movie.id)
-                  }}
-                >
-                  <Button size="icon" variant="ghost" type="submit">
-                    <Trash className="h-4 w-4" />
-                  </Button>
-                </form>
+                <div className="mt-auto flex items-center gap-2">
+                  <form
+                    action={async () => {
+                      'use server'
+                      await addToCart(item.movie.id)
+                    }}
+                  >
+                    <Button size="sm" type="submit">
+                      <ShoppingCart className="mr-1 h-4 w-4" />
+                      Add to cart
+                    </Button>
+                  </form>
+
+                  <form
+                    action={async () => {
+                      'use server'
+                      await removeFromWishlist(item.movie.id)
+                    }}
+                  >
+                    <Button size="icon" variant="ghost" type="submit">
+                      <Trash className="h-4 w-4" />
+                    </Button>
+                  </form>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </>
   )
 }
