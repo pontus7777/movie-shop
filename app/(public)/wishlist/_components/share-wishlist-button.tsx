@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import { Share2, Copy, Check, Globe, Lock } from 'lucide-react'
 import { toast } from 'sonner'
@@ -18,7 +18,7 @@ export function ShareWishlistButton({ initialIsPublic, initialShareId }: Props) 
   const [copied, setCopied] = useState(false)
   const [isPending, startTransition] = useTransition()
 
-  const shareUrl = shareId ? `${window.location.origin}/wishlist/share/${shareId}` : null
+  const shareUrl = shareId ? `${process.env.BETTER_AUTH_URL}/wishlist/share/${shareId}` : null
 
   function handleToggle() {
     startTransition(async () => {
