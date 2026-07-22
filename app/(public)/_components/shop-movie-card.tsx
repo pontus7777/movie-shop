@@ -3,13 +3,13 @@ import Link from 'next/link'
 import { Minus, Plus, ShoppingCart, Star } from 'lucide-react'
 
 import { CartActionButton } from '@/components/cart-action-button'
-import { WishlistButton } from '../wishlist/components/wishlist-button'
 
 import { getMovieImageSrc } from '@/lib/image-utils'
 import { convertToEuro } from '@/lib/priceUtils'
 import { addToCart, removeFromCart } from '../cart/_actions/cart-actions'
 
 import type { Crew, CrewOnMovie, Genre, Movie, MovieKeyword } from '@/generated/prisma/client'
+import { WishlistButton } from '@/app/(public)/wishlist/_components/wishlist-button'
 
 export type MovieWithRelations = Movie & {
   genres: Genre[]
