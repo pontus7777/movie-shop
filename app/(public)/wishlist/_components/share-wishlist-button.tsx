@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import { Share2, Copy, Check, Globe, Lock } from 'lucide-react'
 import { toast } from 'sonner'
