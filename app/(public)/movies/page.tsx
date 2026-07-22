@@ -6,6 +6,10 @@ import { MoviesSidebar } from './_components/movies-sidebar'
 import { getCart } from '@/lib/cart'
 import { Suspense } from 'react'
 
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { getWishlistedMovieIds } from '@/lib/wishlist'
+
 export default async function MoviesPage(props: PageProps<'/movies'>) {
   const params = await props.searchParams
   const pageSize = 12
@@ -45,8 +49,10 @@ export default async function MoviesPage(props: PageProps<'/movies'>) {
     }),
   }
 
+  const session = await auth.api.getSession({ headers: await headers() })
+
   // ★ NEW — run all queries in parallel for speed
-  const [movies, total, genres, directors, actors, cart] = await Promise.all([
+  const [movies, total, genres, directors, actors, cart, wishlistedIds] = await Promise.all([
     prisma.movie.findMany({
       where,
       orderBy: { popularity: 'desc' },
@@ -74,6 +80,9 @@ export default async function MoviesPage(props: PageProps<'/movies'>) {
     }),
 
     getCart(),
+
+    // ★ NEW — empty set for guests, actual wishlist IDs for signed-in users
+    session ? getWishlistedMovieIds(session.user.id) : Promise.resolve(new Set<string>()),
   ])
 
   const totalPages = Math.ceil(total / pageSize)
@@ -115,7 +124,14 @@ export default async function MoviesPage(props: PageProps<'/movies'>) {
               movies.map((movie) => {
                 const cartItem = cart.items.find((item) => item.movie.id === movie.id)
                 const quantity = cartItem?.quantity ?? 0
-                return <ShopMovieCard key={movie.id} movie={movie} quantity={quantity} />
+                return (
+                  <ShopMovieCard
+                    key={movie.id}
+                    movie={movie}
+                    quantity={quantity}
+                    isWishlisted={wishlistedIds.has(movie.id)}
+                  />
+                )
               })
             ) : (
               <p className="col-span-full py-12 text-center text-muted-foreground">
