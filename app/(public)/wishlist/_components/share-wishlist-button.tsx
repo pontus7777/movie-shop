@@ -18,7 +18,7 @@ export function ShareWishlistButton({ initialIsPublic, initialShareId }: Props) 
   const [copied, setCopied] = useState(false)
   const [isPending, startTransition] = useTransition()
 
-  const shareUrl = shareId ? `${process.env.BETTER_AUTH_URL}/wishlist/share/${shareId}` : null
+  const shareUrl = shareId ? `${process.env.NEXT_PUBLIC_APP_URL}/wishlist/share/${shareId}` : null
 
   function handleToggle() {
     startTransition(async () => {
