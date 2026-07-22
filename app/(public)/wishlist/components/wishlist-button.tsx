@@ -30,13 +30,6 @@ export function WishlistButton({
     setIsWishlisted(next) // optimistic update
 
     startTransition(async () => {
-      // const result = await toggleWishlist(movieId)
-      // setIsWishlisted(result.wishlisted)
-      // toast.success(result.wishlisted ? 'Added to wishlist' : 'Removed from wishlist')
-
-      // setIsWishlisted(!next) // revert on failure
-      // toast.error('Please sign in to use your wishlist.')
-
       const result = await toggleWishlist(movieId)
 
       if (!result.success) {
