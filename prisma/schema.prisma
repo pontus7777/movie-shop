@@ -253,6 +253,9 @@ model Wishlist {
   items     WishlistItem[]
   createdAt DateTime       @default(now())
 
+  isPublic Boolean @default(false)
+  shareId  String? @unique // random public-facing slug, only set when shared
+
   @@map("wishList")
 }
 

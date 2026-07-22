@@ -49,3 +49,31 @@ export async function toggleWishlist(movieId: string): Promise<WishlistResult> {
   revalidatePath('/movies')
   return { success: true, wishlisted: result.wishlisted }
 }
+
+/***************** SHARING ************************ */
+
+import { enablePublicSharing, disablePublicSharing } from '@/lib/wishlist'
+
+export async function shareWishlist(): Promise<
+  { success: true; shareId: string } | { success: false; reason: 'unauthenticated' }
+> {
+  const userId = await getUserId()
+  if (!userId) {
+    return { success: false, reason: 'unauthenticated' }
+  }
+  const wishlist = await enablePublicSharing(userId)
+  revalidatePath('/wishlist')
+  return { success: true, shareId: wishlist.shareId! }
+}
+
+export async function unshareWishlist(): Promise<
+  { success: true } | { success: false; reason: 'unauthenticated' }
+> {
+  const userId = await getUserId()
+  if (!userId) {
+    return { success: false, reason: 'unauthenticated' }
+  }
+  await disablePublicSharing(userId)
+  revalidatePath('/wishlist')
+  return { success: true }
+}

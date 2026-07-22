@@ -1,4 +1,5 @@
 import prisma from './prisma'
+import { customAlphabet } from 'nanoid'
 
 export async function getDatabaseWishlist(userId: string) {
   const wishlist = await prisma.wishlist.upsert({
@@ -67,4 +68,52 @@ export async function getWishlistedMovieIds(userId: string): Promise<Set<string>
     select: { movieId: true },
   })
   return new Set(items.map((item) => item.movieId))
+}
+
+/******************* SHARING *******************************/
+
+const generateShareId = customAlphabet('abcdefghijklmnopqrstuvwxyz0123456789', 12)
+
+export async function enablePublicSharing(userId: string) {
+  const wishlist = await prisma.wishlist.upsert({
+    where: { userId },
+    update: {},
+    create: { userId },
+  })
+
+  if (wishlist.shareId) {
+    // already has a link — just make sure it's public
+    return prisma.wishlist.update({
+      where: { id: wishlist.id },
+      data: { isPublic: true },
+    })
+  }
+
+  return prisma.wishlist.update({
+    where: { id: wishlist.id },
+    data: { isPublic: true, shareId: generateShareId() },
+  })
+}
+
+export async function disablePublicSharing(userId: string) {
+  const wishlist = await prisma.wishlist.findUnique({ where: { userId } })
+  if (!wishlist) return
+
+  return prisma.wishlist.update({
+    where: { id: wishlist.id },
+    data: { isPublic: false },
+  })
+}
+
+export async function getPublicWishlistByShareId(shareId: string) {
+  return prisma.wishlist.findFirst({
+    where: { shareId, isPublic: true },
+    include: {
+      items: {
+        include: { movie: true },
+        orderBy: { id: 'asc' },
+      },
+      user: { select: { name: true } }, // only expose what's safe to show publicly
+    },
+  })
 }
