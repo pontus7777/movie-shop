@@ -9,7 +9,6 @@ export default async function Home() {
     take: 10,
   })
 
-  // Convert Decimal -> plain number so it can be passed to a Client Component
   const cheapestMovies = cheapestMoviesRaw.map((movie) => ({
     ...movie,
     price: movie.priceInCents,
@@ -18,23 +17,21 @@ export default async function Home() {
   const recentMovies = await prisma.movie.findMany({
     include: { genres: true },
     orderBy: { releaseYear: 'desc' },
-    take: 5,
+    take: 15,
   })
 
   const popularMovies = await prisma.movie.findMany({
     include: { genres: true },
     orderBy: { rating: 'desc' },
-    take: 5,
+    take: 15,
   })
 
   const oldestMovies = await prisma.movie.findMany({
     include: { genres: true },
     orderBy: { releaseYear: 'asc' },
-    take: 5,
+    take: 15,
   })
 
-
-  
   return (
     <main className="bg-background text-foreground">
       {/* ===== HERO ===== */}

@@ -97,12 +97,7 @@
       "popularity": 597.0277,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        28,
-        35,
-        12,
-        80
-      ],
+      "genres": [28, 35, 12, 80],
       "credits": [
         {
           "id": "35070",
@@ -156,10 +151,7 @@
       "popularity": 634.6553,
       "budget": 115000000,
       "revenue": 197401986,
-      "genres": [
-        878,
-        53
-      ],
+      "genres": [878, 53],
       "credits": [
         {
           "id": "5081",
@@ -254,12 +246,7 @@
       "popularity": 555.254,
       "budget": 250000000,
       "revenue": 597473067,
-      "genres": [
-        16,
-        10751,
-        35,
-        12
-      ],
+      "genres": [16, 10751, 35, 12],
       "credits": [
         {
           "id": "31",
@@ -422,11 +409,7 @@
       "popularity": 489.1657,
       "budget": 10000000,
       "revenue": 330842064,
-      "genres": [
-        27,
-        9648,
-        878
-      ],
+      "genres": [27, 9648, 878],
       "credits": [
         {
           "id": "5294",
@@ -561,10 +544,7 @@
       "popularity": 537.8965,
       "budget": 750000,
       "revenue": 372671305,
-      "genres": [
-        27,
-        53
-      ],
+      "genres": [27, 53],
       "credits": [
         {
           "id": "1561370",
@@ -671,10 +651,7 @@
       "popularity": 411.8607,
       "budget": 30000000,
       "revenue": 208381590,
-      "genres": [
-        35,
-        27
-      ],
+      "genres": [35, 27],
       "credits": [
         {
           "id": "9562",
@@ -825,10 +802,7 @@
       "popularity": 326.3701,
       "budget": 0,
       "revenue": 2286163,
-      "genres": [
-        27,
-        53
-      ],
+      "genres": [27, 53],
       "credits": [
         {
           "id": "6383",
@@ -887,10 +861,7 @@
       "popularity": 289.8043,
       "budget": 250000000,
       "revenue": 977636197,
-      "genres": [
-        10402,
-        18
-      ],
+      "genres": [10402, 18],
       "credits": [
         {
           "id": "3898497",
@@ -1017,11 +988,7 @@
       "popularity": 293.663,
       "budget": 175000000,
       "revenue": 62600000,
-      "genres": [
-        28,
-        12,
-        878
-      ],
+      "genres": [28, 12, 878],
       "credits": [
         {
           "id": "2046128",
@@ -1132,12 +1099,7 @@
       "popularity": 262.8757,
       "budget": 75000000,
       "revenue": 128377903,
-      "genres": [
-        12,
-        9648,
-        35,
-        10751
-      ],
+      "genres": [12, 9648, 35, 10751],
       "credits": [
         {
           "id": "6968",
@@ -1232,10 +1194,7 @@
       "popularity": 186.7706,
       "budget": 15872640,
       "revenue": 12947333,
-      "genres": [
-        10749,
-        35
-      ],
+      "genres": [10749, 35],
       "credits": [
         {
           "id": "1285028",
@@ -1298,11 +1257,7 @@
       "popularity": 219.0039,
       "budget": 80000000,
       "revenue": 129312366,
-      "genres": [
-        28,
-        14,
-        12
-      ],
+      "genres": [28, 14, 12],
       "credits": [
         {
           "id": "1372",
@@ -1417,9 +1372,7 @@
       "popularity": 208.3014,
       "budget": 3716000,
       "revenue": 7578000,
-      "genres": [
-        10749
-      ],
+      "genres": [10749],
       "credits": [
         {
           "id": "5598110",
@@ -1478,11 +1431,7 @@
       "popularity": 120.5499,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        53,
-        28,
-        80
-      ],
+      "genres": [53, 28, 80],
       "credits": [
         {
           "id": "53807",
@@ -1597,10 +1546,7 @@
       "popularity": 205.5975,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        18,
-        10749
-      ],
+      "genres": [18, 10749],
       "credits": [
         {
           "id": "4095689",
@@ -1659,10 +1605,7 @@
       "popularity": 173.5718,
       "budget": 11000000,
       "revenue": 31000000,
-      "genres": [
-        18,
-        10749
-      ],
+      "genres": [18, 10749],
       "credits": [
         {
           "id": "16940",
@@ -1765,13 +1708,7 @@
       "popularity": 167.3527,
       "budget": 110000000,
       "revenue": 1009214136,
-      "genres": [
-        10751,
-        35,
-        12,
-        14,
-        16
-      ],
+      "genres": [10751, 35, 12, 14, 16],
       "credits": [
         {
           "id": "73457",
@@ -1898,11 +1835,7 @@
       "popularity": 151.4842,
       "budget": 165000000,
       "revenue": 336000909,
-      "genres": [
-        28,
-        12,
-        878
-      ],
+      "genres": [28, 12, 878],
       "credits": [
         {
           "id": "1253360",
@@ -1993,10 +1926,7 @@
       "popularity": 142.7816,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        10749,
-        35
-      ],
+      "genres": [10749, 35],
       "credits": [
         {
           "id": "1059597",
@@ -2075,10 +2005,7 @@
       "popularity": 150.6479,
       "budget": 14000000,
       "revenue": 20000000,
-      "genres": [
-        27,
-        35
-      ],
+      "genres": [27, 35],
       "credits": [
         {
           "id": "35070",
@@ -2161,12 +2088,7 @@
       "popularity": 133.2064,
       "budget": 175000000,
       "revenue": 1073841394,
-      "genres": [
-        10751,
-        35,
-        16,
-        12
-      ],
+      "genres": [10751, 35, 16, 12],
       "credits": [
         {
           "id": "31",
@@ -2281,9 +2203,7 @@
       "popularity": 142.1124,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        35
-      ],
+      "genres": [35],
       "credits": [
         {
           "id": "56446",
@@ -2354,12 +2274,7 @@
       "popularity": 141.0984,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        18,
-        28,
-        10751,
-        53
-      ],
+      "genres": [18, 28, 10751, 53],
       "credits": [
         {
           "id": "544977",
@@ -2422,10 +2337,7 @@
       "popularity": 127.9758,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        53,
-        80
-      ],
+      "genres": [53, 80],
       "credits": [
         {
           "id": "1085939",
@@ -2508,10 +2420,7 @@
       "popularity": 129.8094,
       "budget": 20000000,
       "revenue": 30832853,
-      "genres": [
-        28,
-        80
-      ],
+      "genres": [28, 80],
       "credits": [
         {
           "id": "83487",
@@ -2610,10 +2519,7 @@
       "popularity": 121.3365,
       "budget": 22000000,
       "revenue": 90552113,
-      "genres": [
-        27,
-        9648
-      ],
+      "genres": [27, 9648],
       "credits": [
         {
           "id": "1007683",
@@ -2744,10 +2650,7 @@
       "popularity": 126.0115,
       "budget": 200000000,
       "revenue": 683349773,
-      "genres": [
-        878,
-        12
-      ],
+      "genres": [878, 12],
       "credits": [
         {
           "id": "30614",
@@ -2890,12 +2793,7 @@
       "popularity": 120.1247,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        12,
-        16,
-        10751,
-        14
-      ],
+      "genres": [12, 16, 10751, 14],
       "credits": [
         {
           "id": "135651",
@@ -2986,10 +2884,7 @@
       "popularity": 126.4997,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        10749,
-        18
-      ],
+      "genres": [10749, 18],
       "credits": [
         {
           "id": "3499290",
@@ -3056,12 +2951,7 @@
       "popularity": 125.9215,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        28,
-        12,
-        16,
-        14
-      ],
+      "genres": [28, 12, 16, 14],
       "credits": [
         {
           "id": "1610783",
@@ -3136,11 +3026,7 @@
       "popularity": 120.5499,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        53,
-        28,
-        80
-      ],
+      "genres": [53, 28, 80],
       "credits": [
         {
           "id": "53807",
@@ -3255,11 +3141,7 @@
       "popularity": 106.4419,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        28,
-        18,
-        80
-      ],
+      "genres": [28, 18, 80],
       "credits": [
         {
           "id": "19498",
@@ -3370,12 +3252,7 @@
       "popularity": 106.5319,
       "budget": 30000000,
       "revenue": 401157969,
-      "genres": [
-        10751,
-        35,
-        16,
-        12
-      ],
+      "genres": [10751, 35, 16, 12],
       "credits": [
         {
           "id": "31",
@@ -3534,11 +3411,7 @@
       "popularity": 116.3093,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        53,
-        28,
-        80
-      ],
+      "genres": [53, 28, 80],
       "credits": [
         {
           "id": "29915",
@@ -3609,10 +3482,7 @@
       "popularity": 107.1881,
       "budget": 25000000,
       "revenue": 28341469,
-      "genres": [
-        18,
-        80
-      ],
+      "genres": [18, 80],
       "credits": [
         {
           "id": "504",
@@ -3739,11 +3609,7 @@
       "popularity": 104.1904,
       "budget": 20000000,
       "revenue": 19426,
-      "genres": [
-        28,
-        53,
-        878
-      ],
+      "genres": [28, 53, 878],
       "credits": [
         {
           "id": "3465743",
@@ -3797,10 +3663,7 @@
       "popularity": 97.7195,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        28,
-        53
-      ],
+      "genres": [28, 53],
       "credits": [
         {
           "id": "8329",
@@ -3863,13 +3726,7 @@
       "popularity": 121.1199,
       "budget": 85000000,
       "revenue": 9967000,
-      "genres": [
-        12,
-        16,
-        35,
-        10751,
-        14
-      ],
+      "genres": [12, 16, 35, 10751, 14],
       "credits": [
         {
           "id": "124747",
@@ -3960,10 +3817,7 @@
       "popularity": 88.175,
       "budget": 70000000,
       "revenue": 26118313,
-      "genres": [
-        28,
-        53
-      ],
+      "genres": [28, 53],
       "credits": [
         {
           "id": "73968",
@@ -4054,10 +3908,7 @@
       "popularity": 101.2807,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        53,
-        27
-      ],
+      "genres": [53, 27],
       "credits": [
         {
           "id": "3300",
@@ -4111,11 +3962,7 @@
       "popularity": 103.0406,
       "budget": 20000000,
       "revenue": 733030221,
-      "genres": [
-        16,
-        28,
-        14
-      ],
+      "genres": [16, 28, 14],
       "credits": [
         {
           "id": "1256603",
@@ -4202,11 +4049,7 @@
       "popularity": 92.5579,
       "budget": 200000000,
       "revenue": 109680646,
-      "genres": [
-        28,
-        14,
-        878
-      ],
+      "genres": [28, 14, 878],
       "credits": [
         {
           "id": "1425934",
@@ -4313,9 +4156,7 @@
       "popularity": 87.0239,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        35
-      ],
+      "genres": [35],
       "credits": [
         {
           "id": "6972",
@@ -4386,13 +4227,7 @@
       "popularity": 100.0456,
       "budget": 150000000,
       "revenue": 372010783,
-      "genres": [
-        12,
-        16,
-        35,
-        10751,
-        878
-      ],
+      "genres": [12, 16, 35, 10751, 878],
       "credits": [
         {
           "id": "1308818",
@@ -4491,10 +4326,7 @@
       "popularity": 88.6273,
       "budget": 16000000,
       "revenue": 3345079,
-      "genres": [
-        28,
-        14
-      ],
+      "genres": [28, 14],
       "credits": [
         {
           "id": "85720",
@@ -4581,10 +4413,7 @@
       "popularity": 80.6361,
       "budget": 36500000,
       "revenue": 42000000,
-      "genres": [
-        28,
-        18
-      ],
+      "genres": [28, 18],
       "credits": [
         {
           "id": "147023",
@@ -4659,10 +4488,7 @@
       "popularity": 73.2,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        28,
-        53
-      ],
+      "genres": [28, 53],
       "credits": [
         {
           "id": "17697",
@@ -4737,9 +4563,7 @@
       "popularity": 74.6548,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        27
-      ],
+      "genres": [27],
       "credits": [
         {
           "id": "59860",
@@ -4810,12 +4634,7 @@
       "popularity": 79.5151,
       "budget": 0,
       "revenue": 174400000,
-      "genres": [
-        28,
-        80,
-        18,
-        53
-      ],
+      "genres": [28, 80, 18, 53],
       "credits": [
         {
           "id": "18897",
@@ -4934,9 +4753,7 @@
       "popularity": 71.4465,
       "budget": 5000000,
       "revenue": 23563104,
-      "genres": [
-        27
-      ],
+      "genres": [27],
       "credits": [
         {
           "id": "36801",
@@ -5027,9 +4844,7 @@
       "popularity": 79.8988,
       "budget": 1,
       "revenue": 2,
-      "genres": [
-        18
-      ],
+      "genres": [18],
       "credits": [
         {
           "id": "3371804",
@@ -5100,12 +4915,7 @@
       "popularity": 69.0746,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        36,
-        80,
-        28,
-        14
-      ],
+      "genres": [36, 80, 28, 14],
       "credits": [
         {
           "id": "1474037",
@@ -5164,10 +4974,7 @@
       "popularity": 75.2405,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        18,
-        10749
-      ],
+      "genres": [18, 10749],
       "credits": [
         {
           "id": "11545",
@@ -5221,11 +5028,7 @@
       "popularity": 77.2401,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        878,
-        28,
-        12
-      ],
+      "genres": [878, 28, 12],
       "credits": [
         {
           "id": "1136406",
@@ -5328,13 +5131,7 @@
       "popularity": 72.1824,
       "budget": 150000000,
       "revenue": 1868208796,
-      "genres": [
-        16,
-        12,
-        35,
-        9648,
-        10751
-      ],
+      "genres": [16, 12, 35, 9648, 10751],
       "credits": [
         {
           "id": "417",
@@ -5453,11 +5250,7 @@
       "popularity": 60.4453,
       "budget": 14330000,
       "revenue": 152900759,
-      "genres": [
-        28,
-        80,
-        53
-      ],
+      "genres": [28, 80, 53],
       "credits": [
         {
           "id": "224223",
@@ -5600,10 +5393,7 @@
       "popularity": 60.6513,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        28,
-        53
-      ],
+      "genres": [28, 53],
       "credits": [
         {
           "id": "6885",
@@ -5702,9 +5492,7 @@
       "popularity": 69.0412,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        10749
-      ],
+      "genres": [10749],
       "credits": [
         {
           "id": "1075830",
@@ -5743,10 +5531,7 @@
       "popularity": 184.78,
       "budget": 100000000,
       "revenue": 678081840,
-      "genres": [
-        35,
-        18
-      ],
+      "genres": [35, 18],
       "credits": [
         {
           "id": "5064",
@@ -5837,12 +5622,7 @@
       "popularity": 67.6641,
       "budget": 7000000,
       "revenue": 1896557,
-      "genres": [
-        80,
-        18,
-        10402,
-        53
-      ],
+      "genres": [80, 18, 10402, 53],
       "credits": [
         {
           "id": "3477880",
@@ -5977,11 +5757,7 @@
       "popularity": 65.7898,
       "budget": 165000000,
       "revenue": 746606706,
-      "genres": [
-        12,
-        18,
-        878
-      ],
+      "genres": [12, 18, 878],
       "credits": [
         {
           "id": "10297",
@@ -6152,9 +5928,7 @@
       "popularity": 83.6842,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        35
-      ],
+      "genres": [35],
       "credits": [
         {
           "id": "37792",
@@ -6217,12 +5991,7 @@
       "popularity": 64.735,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        27,
-        9648,
-        53,
-        10770
-      ],
+      "genres": [27, 9648, 53, 10770],
       "credits": [
         {
           "id": "1242148",
@@ -6276,9 +6045,7 @@
       "popularity": 64.442,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        35
-      ],
+      "genres": [35],
       "credits": [
         {
           "id": "10847",
@@ -6357,9 +6124,7 @@
       "popularity": 63.6008,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        27
-      ],
+      "genres": [27],
       "credits": [
         {
           "id": "2555254",
@@ -6413,10 +6178,7 @@
       "popularity": 57.078,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        18,
-        10749
-      ],
+      "genres": [18, 10749],
       "credits": [
         {
           "id": "1017250",
@@ -6499,10 +6261,7 @@
       "popularity": 57.631,
       "budget": 10000000,
       "revenue": 0,
-      "genres": [
-        878,
-        53
-      ],
+      "genres": [878, 53],
       "credits": [
         {
           "id": "9778",
@@ -6597,9 +6356,7 @@
       "popularity": 47.2412,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        10749
-      ],
+      "genres": [10749],
       "credits": [
         {
           "id": "2331879",
@@ -6643,11 +6400,7 @@
       "popularity": 55.714,
       "budget": 90000000,
       "revenue": 193566330,
-      "genres": [
-        16,
-        35,
-        10751
-      ],
+      "genres": [16, 35, 10751],
       "credits": [
         {
           "id": "1474123",
@@ -6842,11 +6595,7 @@
       "popularity": 58.7221,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        28,
-        10402,
-        53
-      ],
+      "genres": [28, 10402, 53],
       "credits": [
         {
           "id": "1483976",
@@ -6933,11 +6682,7 @@
       "popularity": 58.1492,
       "budget": 200000000,
       "revenue": 1067316101,
-      "genres": [
-        16,
-        10751,
-        35
-      ],
+      "genres": [16, 10751, 35],
       "credits": [
         {
           "id": "31",
@@ -7052,11 +6797,7 @@
       "popularity": 53.5406,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        27,
-        80,
-        18
-      ],
+      "genres": [27, 80, 18],
       "credits": [
         {
           "id": "545200",
@@ -7110,9 +6851,7 @@
       "popularity": 56.9144,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        18
-      ],
+      "genres": [18],
       "credits": [
         {
           "id": "1306631",
@@ -7175,10 +6914,7 @@
       "popularity": 58.2797,
       "budget": 35000000,
       "revenue": 326588371,
-      "genres": [
-        18,
-        35
-      ],
+      "genres": [18, 35],
       "credits": [
         {
           "id": "5064",
@@ -7313,11 +7049,7 @@
       "popularity": 56.8732,
       "budget": 90000000,
       "revenue": 44856736,
-      "genres": [
-        12,
-        53,
-        878
-      ],
+      "genres": [12, 53, 878],
       "credits": [
         {
           "id": "17276",
@@ -7444,11 +7176,7 @@
       "popularity": 50.2546,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        28,
-        53,
-        18
-      ],
+      "genres": [28, 53, 18],
       "credits": [
         {
           "id": "225312",
@@ -7502,11 +7230,7 @@
       "popularity": 47.5649,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        18,
-        27,
-        9648
-      ],
+      "genres": [18, 27, 9648],
       "credits": [
         {
           "id": "2079946",
@@ -7573,9 +7297,7 @@
       "popularity": 55.2546,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        27
-      ],
+      "genres": [27],
       "credits": [
         {
           "id": "4565989",
@@ -7629,9 +7351,7 @@
       "popularity": 55.2483,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        35
-      ],
+      "genres": [35],
       "credits": [
         {
           "id": "3153829",
@@ -7685,11 +7405,7 @@
       "popularity": 52.751,
       "budget": 300000000,
       "revenue": 2052415039,
-      "genres": [
-        12,
-        28,
-        878
-      ],
+      "genres": [12, 28, 878],
       "credits": [
         {
           "id": "3223",
@@ -7796,10 +7512,7 @@
       "popularity": 43.0671,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        10749,
-        18
-      ],
+      "genres": [10749, 18],
       "credits": [
         {
           "id": "6497",
@@ -7858,11 +7571,7 @@
       "popularity": 49.2051,
       "budget": 90000000,
       "revenue": 497375404,
-      "genres": [
-        16,
-        35,
-        10751
-      ],
+      "genres": [16, 35, 10751],
       "credits": [
         {
           "id": "31",
@@ -7997,11 +7706,7 @@
       "popularity": 48.9093,
       "budget": 50000000,
       "revenue": 53933639,
-      "genres": [
-        28,
-        80,
-        53
-      ],
+      "genres": [28, 80, 53],
       "credits": [
         {
           "id": "976",
@@ -8120,10 +7825,7 @@
       "popularity": 51.0855,
       "budget": 35000000,
       "revenue": 399644671,
-      "genres": [
-        9648,
-        53
-      ],
+      "genres": [9648, 53],
       "credits": [
         {
           "id": "115440",
@@ -8246,11 +7948,7 @@
       "popularity": 51.9908,
       "budget": 200000000,
       "revenue": 2019206586,
-      "genres": [
-        28,
-        12,
-        878
-      ],
+      "genres": [28, 12, 878],
       "credits": [
         {
           "id": "1136406",
@@ -8409,11 +8107,7 @@
       "popularity": 44.6873,
       "budget": 110000000,
       "revenue": 299300000,
-      "genres": [
-        28,
-        878,
-        18
-      ],
+      "genres": [28, 878, 18],
       "credits": [
         {
           "id": "6968",
@@ -8508,10 +8202,7 @@
       "popularity": 40.9408,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        10749,
-        35
-      ],
+      "genres": [10749, 35],
       "credits": [
         {
           "id": "1108119",
@@ -8565,9 +8256,7 @@
       "popularity": 46.4606,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        27
-      ],
+      "genres": [27],
       "credits": [
         {
           "id": "4442168",
@@ -8634,10 +8323,7 @@
       "popularity": 50.779,
       "budget": 63000000,
       "revenue": 463517383,
-      "genres": [
-        28,
-        878
-      ],
+      "genres": [28, 878],
       "credits": [
         {
           "id": "6384",
@@ -8748,10 +8434,7 @@
       "popularity": 39.5738,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        35,
-        28
-      ],
+      "genres": [35, 28],
       "credits": [
         {
           "id": "1989290",
@@ -8826,11 +8509,7 @@
       "popularity": 44.999,
       "budget": 105000000,
       "revenue": 184500000,
-      "genres": [
-        28,
-        878,
-        12
-      ],
+      "genres": [28, 878, 12],
       "credits": [
         {
           "id": "18050",
@@ -8969,10 +8648,7 @@
       "popularity": 49.2597,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        99,
-        10770
-      ],
+      "genres": [99, 10770],
       "credits": [
         {
           "id": "2925129",
@@ -9039,9 +8715,7 @@
       "popularity": 52.2379,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        35
-      ],
+      "genres": [35],
       "credits": [
         {
           "id": "928229",
@@ -9095,9 +8769,7 @@
       "popularity": 37.3399,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        35
-      ],
+      "genres": [35],
       "credits": [
         {
           "id": "29541",
@@ -9160,11 +8832,7 @@
       "popularity": 47.6514,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        18,
-        10749,
-        53
-      ],
+      "genres": [18, 10749, 53],
       "credits": [
         {
           "id": "2527414",
@@ -9275,9 +8943,7 @@
       "popularity": 38.1611,
       "budget": 0,
       "revenue": 103411,
-      "genres": [
-        35
-      ],
+      "genres": [35],
       "credits": [
         {
           "id": "41160",
@@ -9336,10 +9002,7 @@
       "popularity": 46.5469,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        10749,
-        35
-      ],
+      "genres": [10749, 35],
       "credits": [
         {
           "id": "16866",
@@ -9422,10 +9085,7 @@
       "popularity": 47.211,
       "budget": 500000,
       "revenue": 21610797,
-      "genres": [
-        27,
-        9648
-      ],
+      "genres": [27, 9648],
       "credits": [
         {
           "id": "1603514",
@@ -9556,10 +9216,7 @@
       "popularity": 43.7597,
       "budget": 0,
       "revenue": 0,
-      "genres": [
-        27,
-        9648
-      ],
+      "genres": [27, 9648],
       "credits": [
         {
           "id": "6057681",
@@ -9658,11 +9315,7 @@
       "popularity": 45.4795,
       "budget": 185000000,
       "revenue": 1004558444,
-      "genres": [
-        28,
-        80,
-        53
-      ],
+      "genres": [28, 80, 53],
       "credits": [
         {
           "id": "3894",

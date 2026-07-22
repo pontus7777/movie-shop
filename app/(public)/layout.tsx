@@ -20,7 +20,7 @@ export default async function UserLayout({
   })
 
   return (
-    <div className="flex min-h-screen w-full flex-col">
+    <div className="flex min-h-screen w-full flex-col overflow-x-hidden">
       <Header cartCount={cartCount} userName={session?.user.name ?? null} />
       <main className="flex-1">{children}</main>
       <Footer />
