@@ -9,6 +9,7 @@ import { getMovieImageSrc } from '@/lib/image-utils'
 import Image from 'next/image'
 import { Minus, Plus, Trash } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
+import { calculateCartTotals } from '@/lib/discount'
 // import { requireAuth } from '@/lib/session-validation'
 
 export default async function CartPage() {
@@ -17,9 +18,13 @@ export default async function CartPage() {
 
   const isCartEmpty = cart.items.length === 0
 
-  const total = cart.items.reduce(
-    (sum, item) => sum + convertToEuro(item.movie.priceInCents) * item.quantity,
-    0,
+  // const total = cart.items.reduce(
+  //   (sum, item) => sum + convertToEuro(item.movie.priceInCents) * item.quantity,
+  //   0,
+  // )
+
+  const { subtotal, discountPercentage, discountAmount, total } = await calculateCartTotals(
+    cart.items,
   )
 
   return (
@@ -101,12 +106,30 @@ export default async function CartPage() {
             </CardHeader>
 
             <CardContent className="space-y-4">
-              <div className="flex justify-between">
+              {/* <div className="flex justify-between">
                 <span>Sum of Items</span>
                 <span>€{total.toFixed(2)}</span>
               </div>
               <Separator />
 
+              <div className="flex justify-between text-lg font-semibold">
+                <span>Total</span>
+                <span>€{total.toFixed(2)}</span>
+              </div> */}
+
+              <div className="flex justify-between">
+                <span>Subtotal</span>
+                <span>€{subtotal.toFixed(2)}</span>
+              </div>
+
+              {discountPercentage > 0 && (
+                <div className="flex justify-between text-emerald-600">
+                  <span>Bulk discount ({discountPercentage}% off)</span>
+                  <span>-€{discountAmount.toFixed(2)}</span>
+                </div>
+              )}
+
+              <Separator />
               <div className="flex justify-between text-lg font-semibold">
                 <span>Total</span>
                 <span>€{total.toFixed(2)}</span>
