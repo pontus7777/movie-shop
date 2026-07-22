@@ -270,3 +270,13 @@ model WishlistItem {
   @@unique([wishlistId, movieId])
   @@map("wishlistItem")
 }
+
+model BulkDiscountTier {
+  id            String   @id @default(cuid())
+  minQuantity   Int      @unique
+  percentageOff Int // whole number, 1-100
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  @@map("bulkDiscountTier")
+}
