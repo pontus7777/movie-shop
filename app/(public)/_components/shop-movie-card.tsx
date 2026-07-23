@@ -72,7 +72,7 @@ export default function ShopMovieCard({ movie, quantity, isWishlisted }: Props) 
         <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
 
         {/* Top-left stack: wishlist + sale badge, so they never overlap */}
-        <div className="absolute left-1.5 top-1.5 flex flex-col items-start gap-1 sm:left-3 sm:top-3">
+        {/* <div className="absolute left-1.5 top-1.5 flex flex-col items-start gap-1 sm:left-3 sm:top-3"> */}
         {/* Wishlist */}
         <div className="absolute left-1.5 top-1.5 z-20 sm:left-3 sm:top-3">
           <WishlistButton
