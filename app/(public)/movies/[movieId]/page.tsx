@@ -12,6 +12,7 @@ import { WishlistButton } from '../../wishlist/_components/wishlist-button'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { isMovieInWishlist } from '@/lib/wishlist'
+import { ReviewSection } from './_components/review-section'
 
 export default async function MovieDetailsPage(props: PageProps<'/movies/[movieId]'>) {
   const params = await props.params
@@ -22,21 +23,41 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
 
   const movie = await prisma.movie.findUnique({
     where: { id: params.movieId },
-    include: { genres: true, credits: true },
+    include: {
+      genres: true,
+      credits: true,
+      reviews: {
+        include: {
+          user: {
+            select: {
+              name: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      },
+    },
   })
 
   if (!movie) {
     notFound()
   }
+
   const actors = await prisma.crew.findMany({
     where: {
-      id: { in: movie.credits.filter((c) => c.role === 'ACTOR').map((c) => c.crewId) },
+      id: {
+        in: movie.credits.filter((c) => c.role === 'ACTOR').map((c) => c.crewId),
+      },
     },
   })
 
   const directors = await prisma.crew.findMany({
     where: {
-      id: { in: movie.credits.filter((c) => c.role === 'DIRECTOR').map((c) => c.crewId) },
+      id: {
+        in: movie.credits.filter((c) => c.role === 'DIRECTOR').map((c) => c.crewId),
+      },
     },
   })
 
@@ -44,13 +65,30 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
   const posterSrc = getMovieImageSrc(movie.imageUrl)
   const trailerEmbedUrl = getYoutubeEmbedUrl(movie.trailerUrl)
 
-  const session = await auth.api.getSession({ headers: await headers() })
-  const alreadyWishlisted = session ? await isMovieInWishlist(session.user.id, movie.id) : false
-  console.log('Trailer URL: ', trailerEmbedUrl)
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  const isWishlisted = session ? await isMovieInWishlist(session.user.id, movie.id) : false
+
+  const userReview = session
+    ? await prisma.review.findUnique({
+        where: {
+          userId_movieId: {
+            userId: session.user.id,
+            movieId: movie.id,
+          },
+        },
+        select: {
+          rating: true,
+          comment: true,
+        },
+      })
+    : null
 
   return (
     <div>
-      {/* ===== HERO: trailer if available, else blurred poster banner ===== */}
+      {/* ===== HERO ===== */}
       <div className="relative w-full bg-black">
         {trailerEmbedUrl ? (
           <div className="relative mx-auto aspect-video w-full max-w-6xl pb-30">
@@ -73,10 +111,11 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
             />
           </div>
         )}
+
         <div className="to-background pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-b from-transparent" />
       </div>
 
-      {/* ===== FLOATING INFO CARD ===== */}
+      {/* ===== INFO ===== */}
       <div className="relative mx-auto max-w-5xl px-6">
         <div className="-mt-16 flex flex-col gap-6 sm:flex-row sm:items-end">
           <div className="mx-auto w-35 shrink-0 overflow-hidden rounded-xl shadow-2xl ring-1 shadow-black/50 ring-white/10 sm:mx-0 sm:w-47.5">
@@ -92,6 +131,7 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
 
           <div className="flex-1 text-center sm:pb-1 sm:text-left">
             <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">{movie.title}</h1>
+
             <p className="text-muted-foreground mt-1 text-sm">
               {movie.releaseYear} &middot; {movie.runtime} min
               {directors.length > 0 && (
@@ -104,11 +144,12 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
             </p>
           </div>
 
-          {movie.rating != null && (
+          {movie.imdbRating != null && (
             <div className="mx-auto flex shrink-0 flex-col items-center sm:mx-0 sm:pb-1">
               <div className="flex size-14 items-center justify-center rounded-full border-2 border-purple-500 bg-purple-950/40 text-base font-bold text-purple-300">
-                {movie.rating.toFixed(1)}
+                {movie.imdbRating.toFixed(1)}
               </div>
+
               <span className="text-muted-foreground mt-1 text-[10px] tracking-wide uppercase">
                 Rating
               </span>
@@ -128,6 +169,7 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
                 {genre.name}
               </Badge>
             ))}
+
             {!movie.stock && <Badge variant="destructive">Out of stock</Badge>}
           </div>
 
@@ -146,6 +188,7 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
 
           <div className="mx-auto flex w-fit items-center gap-3 rounded-xl border border-white/10 bg-white/3 p-3 sm:mx-0">
             <span className="text-1.5xl font-bold text-purple-400">€{displayPrice}</span>
+
             <CartActionButton
               movieId={movie.id}
               action={addToCart}
@@ -159,13 +202,21 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
 
             <WishlistButton
               movieId={movie.id}
-              initialIsWishlisted={alreadyWishlisted}
+              initialIsWishlisted={isWishlisted}
               size="lg"
               variant="outline"
             />
           </div>
         </div>
       </div>
+
+      <ReviewSection
+        reviews={movie.reviews}
+        movieId={movie.id}
+        userRating={movie.userRating}
+        userReviewCount={movie.userReviewCount}
+        userReview={userReview}
+      />
 
       <div className="pb-16" />
     </div>
