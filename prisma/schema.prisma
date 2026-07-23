@@ -149,7 +149,7 @@ model CrewOnMovie {
   crew   Crew   @relation(fields: [crewId], references: [id])
 
   movieId String
-  movie   Movie  @relation(fields: [movieId], references: [id])
+  movie   Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
 
   role CrewRole
 
@@ -244,7 +244,7 @@ model CartItem {
   quantity Int    @default(1)
 
   cart  Cart  @relation(fields: [cartId], references: [id])
-  movie Movie @relation(fields: [movieId], references: [id])
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
 
   @@unique([cartId, movieId])
   @@map("cart_items")
