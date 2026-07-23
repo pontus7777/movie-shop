@@ -5,10 +5,14 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+
 import { MoveRight } from 'lucide-react'
 import placeHolder from '@/public/file.svg'
 import { getMovieImageSrc } from '@/lib/image-utils'
 import { convertToEuro } from '@/lib/priceUtils'
+import { getEffectivePriceInCents, isMovieOnSale } from '@/lib/pricing'
+
 import {
   TableHeader,
   TableRow,
@@ -96,6 +100,9 @@ function MovieTable({ movies, currentPage, totalPages, currentPageSize }: Props)
         <TableBody>
           {movies.map((movie) => {
             const imageSrc = getMovieImageSrc(movie.imageUrl)
+            const onSale = isMovieOnSale(movie)
+            const effectivePrice = getEffectivePriceInCents(movie)
+
             return (
               <TableRow key={movie.id}>
                 <TableCell>
@@ -107,14 +114,37 @@ function MovieTable({ movies, currentPage, totalPages, currentPageSize }: Props)
                     />
                   </Avatar>
                 </TableCell>
-                <TableCell className="font-medium">{movie.title}</TableCell>
+
+                <TableCell className="font-medium">
+                  <div className="flex items-center gap-2">
+                    {movie.title}
+                    {onSale && (
+                      <Badge className="bg-red-600 text-white hover:bg-red-600">Sale</Badge>
+                    )}
+                  </div>
+                </TableCell>
+
                 <TableCell>
                   {movie.genres.length > 0
                     ? movie.genres.map((g) => g.name).join(', ')
                     : 'No genre'}
                 </TableCell>
 
-                <TableCell>€{convertToEuro(movie.priceInCents)}</TableCell>
+                <TableCell>
+                  {onSale ? (
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="font-medium text-red-600">
+                        €{convertToEuro(effectivePrice)}
+                      </span>
+                      <span className="text-muted-foreground text-xs line-through">
+                        €{convertToEuro(movie.priceInCents)}
+                      </span>
+                    </div>
+                  ) : (
+                    <span>€{convertToEuro(movie.priceInCents)}</span>
+                  )}
+                </TableCell>
+
                 <TableCell>{movie.releaseYear}</TableCell>
 
                 <TableCell className="text-right">
