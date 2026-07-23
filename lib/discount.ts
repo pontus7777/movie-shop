@@ -1,5 +1,6 @@
 import prisma from './prisma'
 import { convertToEuro } from './priceUtils'
+import { getEffectivePriceInCents } from './pricing'
 
 export type CartTotals = {
   totalQuantity: number
@@ -23,12 +24,25 @@ export async function getBestDiscountTier(totalQuantity: number) {
 }
 
 export async function calculateCartTotals(
-  items: { movie: { priceInCents: number }; quantity: number }[],
+  items: {
+    movie: {
+      priceInCents: number
+      salePriceInCents: number | null
+      saleStartsAt: Date | null
+      saleEndsAt: Date | null
+    }
+    quantity: number
+  }[],
 ): Promise<CartTotals> {
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0)
 
+  // const subtotal = items.reduce(
+  //   (sum, item) => sum + convertToEuro(item.movie.priceInCents) * item.quantity,
+  //   0,
+  // )
+
   const subtotal = items.reduce(
-    (sum, item) => sum + convertToEuro(item.movie.priceInCents) * item.quantity,
+    (sum, item) => sum + convertToEuro(getEffectivePriceInCents(item.movie)) * item.quantity,
     0,
   )
 

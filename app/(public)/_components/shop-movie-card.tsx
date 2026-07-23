@@ -9,6 +9,7 @@ import { addToCart, removeFromCart } from '../cart/_actions/cart-actions'
 
 import type { Crew, CrewOnMovie, Genre, Movie, MovieKeyword } from '@/generated/prisma/client'
 import { WishlistButton } from '@/app/(public)/wishlist/_components/wishlist-button'
+import { getEffectivePriceInCents, isMovieOnSale } from '@/lib/pricing'
 
 export type MovieWithRelations = Movie & {
   genres: Genre[]
@@ -23,6 +24,9 @@ type Props = {
 }
 
 export default function ShopMovieCard({ movie, quantity, isWishlisted }: Props) {
+  const onSale = isMovieOnSale(movie)
+  const effectivePrice = getEffectivePriceInCents(movie)
+
   return (
     <article
       className="
@@ -67,6 +71,8 @@ export default function ShopMovieCard({ movie, quantity, isWishlisted }: Props) 
 
         <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
 
+        {/* Top-left stack: wishlist + sale badge, so they never overlap */}
+        <div className="absolute left-1.5 top-1.5 flex flex-col items-start gap-1 sm:left-3 sm:top-3">
         {/* Wishlist */}
         <div className="absolute left-1.5 top-1.5 z-20 sm:left-3 sm:top-3">
           <WishlistButton
@@ -75,6 +81,12 @@ export default function ShopMovieCard({ movie, quantity, isWishlisted }: Props) 
             size="icon"
             variant="secondary"
           />
+
+          {onSale && (
+            <div className="rounded-md bg-red-600 px-2 py-0.5 text-[10px] font-bold text-white sm:text-xs">
+              SALE
+            </div>
+          )}
         </div>
 
         {/* Rating */}
@@ -153,9 +165,14 @@ export default function ShopMovieCard({ movie, quantity, isWishlisted }: Props) 
                 .join(' • ') || 'Movie'}
             </span>
 
-            <span className="shrink-0 text-xs font-bold sm:text-sm">
-              €{convertToEuro(movie.priceInCents)}
-            </span>
+            <div className="flex shrink-0 items-baseline gap-1">
+              <span className="text-xs font-bold sm:text-sm">€{convertToEuro(effectivePrice)}</span>
+              {onSale && (
+                <span className="text-[10px] text-white/60 line-through sm:text-xs">
+                  €{convertToEuro(movie.priceInCents)}
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -12,6 +12,7 @@ import { WishlistButton } from '../../wishlist/_components/wishlist-button'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { isMovieInWishlist } from '@/lib/wishlist'
+import { isMovieOnSale } from '@/lib/pricing'
 import { ReviewSection } from './_components/review-section'
 
 export default async function MovieDetailsPage(props: PageProps<'/movies/[movieId]'>) {
@@ -61,7 +62,12 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
     },
   })
 
+  const onSale = isMovieOnSale(movie)
+
   const displayPrice = convertToEuro(movie.priceInCents)
+
+  const originalPrice = convertToEuro(movie.priceInCents)
+
   const posterSrc = getMovieImageSrc(movie.imageUrl)
   const trailerEmbedUrl = getYoutubeEmbedUrl(movie.trailerUrl)
 
@@ -127,6 +133,11 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
               className="h-full w-full object-cover"
               priority
             />
+            {onSale && (
+              <div className="absolute top-2 left-2 rounded-md bg-red-600 px-2 py-0.5 text-xs font-bold text-white">
+                SALE
+              </div>
+            )}
           </div>
 
           <div className="flex-1 text-center sm:pb-1 sm:text-left">
@@ -207,6 +218,12 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
               variant="outline"
             />
           </div>
+
+          {onSale && movie.saleEndsAt && (
+            <p className="text-muted-foreground text-center text-xs sm:text-left">
+              Sale ends {movie.saleEndsAt.toLocaleString()}
+            </p>
+          )}
         </div>
       </div>
 
