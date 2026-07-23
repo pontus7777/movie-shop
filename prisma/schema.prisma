@@ -119,6 +119,10 @@ model Movie {
   updatedAt     DateTime       @default(now()) @updatedAt
   wishlistItems WishlistItem[]
 
+  salePriceInCents Int?
+  saleStartsAt     DateTime?
+  saleEndsAt       DateTime?
+
   @@map("movies")
 }
 
