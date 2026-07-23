@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { Minus, Plus, ShoppingCart, Star } from 'lucide-react'
 
 import { CartActionButton } from '@/components/cart-action-button'
-
 import { getMovieImageSrc } from '@/lib/image-utils'
 import { convertToEuro } from '@/lib/priceUtils'
 import { addToCart, removeFromCart } from '../cart/_actions/cart-actions'
@@ -28,6 +27,7 @@ export default function ShopMovieCard({ movie, quantity, isWishlisted }: Props) 
     <article
       className="
         group
+        relative
         overflow-hidden
         rounded-lg
         sm:rounded-xl
@@ -39,6 +39,13 @@ export default function ShopMovieCard({ movie, quantity, isWishlisted }: Props) 
         hover:shadow-xl
       "
     >
+      {/* Whole card clickable */}
+      <Link
+        href={`/movies/${movie.id}`}
+        className="absolute inset-0 z-10"
+        aria-label={`View ${movie.title}`}
+      />
+
       {/* Poster */}
       <div className="relative aspect-2/3 overflow-hidden">
         <Image
@@ -61,7 +68,7 @@ export default function ShopMovieCard({ movie, quantity, isWishlisted }: Props) 
         <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
 
         {/* Wishlist */}
-        <div className="absolute left-1.5 top-1.5 sm:left-3 sm:top-3">
+        <div className="absolute left-1.5 top-1.5 z-20 sm:left-3 sm:top-3">
           <WishlistButton
             movieId={movie.id}
             initialIsWishlisted={isWishlisted}
@@ -76,6 +83,7 @@ export default function ShopMovieCard({ movie, quantity, isWishlisted }: Props) 
             absolute
             right-1.5
             top-1.5
+            z-20
             flex
             items-center
             gap-0.5
@@ -94,7 +102,8 @@ export default function ShopMovieCard({ movie, quantity, isWishlisted }: Props) 
           "
         >
           <Star className="h-2.5 w-2.5 fill-yellow-400 text-yellow-400 sm:h-3 sm:w-3" />
-          {movie.rating?.toFixed(1) ?? '—'}
+
+          {movie.imdbRating?.toFixed(1) ?? '—'}
         </div>
 
         {/* Info */}
@@ -104,15 +113,14 @@ export default function ShopMovieCard({ movie, quantity, isWishlisted }: Props) 
             bottom-0
             left-0
             right-0
+            z-20
             p-2
             text-white
             sm:p-3
           "
         >
-          <Link
-            href={`/movies/${movie.id}`}
+          <h3
             className="
-              block
               truncate
               text-xs
               font-bold
@@ -120,7 +128,7 @@ export default function ShopMovieCard({ movie, quantity, isWishlisted }: Props) 
             "
           >
             {movie.title}
-          </Link>
+          </h3>
 
           <div
             className="
@@ -153,7 +161,7 @@ export default function ShopMovieCard({ movie, quantity, isWishlisted }: Props) 
       </div>
 
       {/* Cart */}
-      <div className="bg-background p-1.5 sm:p-2">
+      <div className="relative z-20 bg-background p-1.5 sm:p-2">
         {quantity === 0 ? (
           <CartActionButton
             className="

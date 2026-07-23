@@ -29,7 +29,7 @@ interface SeedMovie {
   imdbId: string | null
   stock: boolean
   runtime: number
-  rating: number | null
+  imdbRating: number | null
   popularity: number | null
   budget: number | null
   revenue: number | null
@@ -139,7 +139,7 @@ async function seed() {
         imdbId: m.imdbId,
         stock: m.stock,
         runtime: m.runtime,
-        rating: m.rating,
+        imdbRating: m.imdbRating,
         popularity: m.popularity,
         budget: m.budget,
         revenue: m.revenue,

@@ -101,7 +101,7 @@ export default function MovieCard({
             "
           >
             <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-            {movie.rating ? movie.rating.toFixed(1) : '—'}
+            {movie.imdbRating ? movie.imdbRating.toFixed(1) : '—'}
           </div>
 
           {/* Bottom info overlay */}

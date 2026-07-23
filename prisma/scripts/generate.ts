@@ -101,7 +101,9 @@ async function generate() {
       imdbId: details.imdb_id ?? null,
       stock: true,
       runtime: details.runtime ?? 90,
-      rating: details.vote_average ?? null,
+
+      imdbRating: details.vote_average ?? null,
+
       popularity: details.popularity ?? null,
       budget: details.budget ?? null,
       revenue: details.revenue ?? null,
