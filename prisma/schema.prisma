@@ -13,25 +13,25 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String   @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean  @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  //admin plugin fields
-  role          String?   @default("user")
-  banned        Boolean?  @default(false)
-  banReason     String?
-  banExpires    DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  role       String?   @default("user")
+  banned     Boolean?  @default(false)
+  banReason  String?
+  banExpires DateTime?
 
   sessions Session[]
   accounts Account[]
   orders   Order[]
-  // cartId        String
   cart     Cart?
   wishlist Wishlist?
+  reviews  Review[]
 
   @@unique([email])
   @@map("user")
@@ -89,21 +89,28 @@ model Movie {
   id String @id @default(cuid())
 
   title         String    @db.VarChar(100)
-  originalTitle String? // OPTIONAL
+  originalTitle String?
   description   String
   tagline       String?
   priceInCents  Int
   releaseYear   Int       @map("release_year")
-  releaseDate   DateTime? // OPTIONAL
+  releaseDate   DateTime?
   imageUrl      String?
   backdropUrl   String?
   trailerUrl    String?
-  imdbId        String? // OPTIONAL can link to imdb link
-  adult         Boolean?  @default(false) // OPTIONAL
+  imdbId        String?
+  adult         Boolean?  @default(false)
 
-  stock      Boolean
-  runtime    Int
-  rating     Float?
+  stock   Boolean
+  runtime Int
+
+  // External rating (IMDb/TMDb)
+  imdbRating Float?
+
+  // Ratings from MovieBox users
+  userRating      Float? @default(0)
+  userReviewCount Int    @default(0)
+
   popularity Float?
   budget     Int?
   revenue    Int?
@@ -114,6 +121,7 @@ model Movie {
 
   orderItems OrderItem[]
   cartItems  CartItem[]
+  reviews    Review[]
 
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @default(now()) @updatedAt
@@ -216,8 +224,8 @@ enum PaymentMethod {
 
 model OrderItem {
   id           String @id @default(cuid())
-  orderId      String // @unique
-  movieId      String // @unique
+  orderId      String
+  movieId      String
   quantity     Int
   priceInCents Int
 
@@ -239,8 +247,8 @@ model Cart {
 
 model CartItem {
   id       String @id @default(cuid())
-  cartId   String // @unique
-  movieId  String // @unique
+  cartId   String
+  movieId  String
   quantity Int    @default(1)
 
   cart  Cart  @relation(fields: [cartId], references: [id])
@@ -283,4 +291,27 @@ model BulkDiscountTier {
   createdAt     DateTime @default(now())
 
   @@map("bulkDiscountTier")
+}
+
+model Review {
+  id String @id @default(cuid())
+
+  userId  String
+  movieId String
+
+  // 1–5 stars
+  rating Int
+
+  comment String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, movieId])
+  @@index([movieId])
+  @@index([userId])
+  @@map("reviews")
 }

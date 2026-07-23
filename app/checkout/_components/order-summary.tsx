@@ -9,6 +9,7 @@ import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from '@/components/u
 import { Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+
 import { requireAuth } from '@/lib/session-validation'
 import { calculateCartTotals } from '@/lib/discount'
 import { getEffectivePriceInCents, isMovieOnSale } from '@/lib/pricing'
@@ -65,6 +66,22 @@ export async function OrderSummary() {
         {cart.items.map((item) => {
           const onSale = isMovieOnSale(item.movie)
           const effectivePrice = getEffectivePriceInCents(item.movie)
+
+        <Button asChild variant="outline" size="sm">
+          <Link href="/cart">
+            <Pencil className="mr-2 h-4 w-4" />
+            Edit
+          </Link>
+        </Button>
+      </CardHeader>
+
+      <Separator />
+
+      <CardContent className="space-y-4 pt-4">
+        {/* Items */}
+        {cart.items.map((item) => {
+          const price = convertToEuro(item.movie.priceInCents)
+          const itemTotal = price * item.quantity
 
           return (
             <div key={item.id} className="flex items-center justify-between border-b pb-3">

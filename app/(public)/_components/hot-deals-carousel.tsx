@@ -12,7 +12,7 @@ type CarouselMovie = {
   title: string
   backdropUrl: string | null
   priceInCents: number
-  rating: number | null
+  imdbRating: number | null
   genres: {
     id: number
     name: string
@@ -136,7 +136,7 @@ export default function HotDealsCarousel({ movies }: Props) {
 
             <p className="mt-2 text-sm text-white/70">
               {movie.genres.map((g) => g.name).join(' • ') || 'No genres'}
-              {' • '}⭐ {movie.rating?.toFixed(1) ?? '—'}
+              {' • '}⭐ {movie.imdbRating?.toFixed(1) ?? '—'}
             </p>
           </div>
         </div>
