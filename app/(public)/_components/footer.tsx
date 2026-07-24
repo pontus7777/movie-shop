@@ -56,13 +56,14 @@ export default function Footer() {
             <Link href="/sign-in" className="text-sm transition-colors hover:text-purple-400">
               Sign In
             </Link>
-
-            <Link href="/register" className="text-sm transition-colors hover:text-purple-400">
+            <Link href="/register" className="text-sm hover:text-purple-400 transition-colors">
               Register
             </Link>
-
             <Link href="/user" className="text-sm transition-colors hover:text-purple-400">
-              My Dashboard
+              My Orders
+            </Link>
+            <Link href="/user" className="text-sm transition-colors hover:text-purple-400">
+              My Profile
             </Link>
           </div>
 

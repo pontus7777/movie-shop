@@ -1,7 +1,7 @@
 'use client'
 
 import { useForm } from '@tanstack/react-form'
-import { useRouter } from 'next/navigation'
+
 import { toast } from 'sonner'
 import z from 'zod'
 
@@ -27,7 +27,6 @@ const formSchema = z
   })
 
 function RegisterForm() {
-  const router = useRouter()
   const form = useForm({
     defaultValues: {
       name: '',
@@ -49,19 +48,8 @@ function RegisterForm() {
         toast.error(result.error.message || 'Could not register account')
         return
       }
-      await mergeCurrentUserCart()
-
-      const session = await authClient.getSession()
-      const role = session?.data?.user?.role
-
-      toast.success('Registered account!')
-      if (role === 'admin') {
-        router.push('/admin')
-      } else {
-        router.push('/')
-      }
-
-      router.refresh()
+      toast.success('Welcome to CineVault!')
+      window.location.href = '/movies'
     },
   })
 

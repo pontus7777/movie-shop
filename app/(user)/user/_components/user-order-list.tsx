@@ -1,21 +1,11 @@
-import { Order, Prisma } from '@/generated/prisma/client'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
+import { Prisma } from '@/generated/prisma/client'
+import Link from 'next/link'
+import { ShoppingBag, ChevronRight } from 'lucide-react'
 
 type OrderWithItems = Prisma.OrderGetPayload<{
   include: {
     items: {
-      include: {
-        movie: true
-      }
+      include: { movie: true }
     }
     shippingAddress: true
   }
@@ -24,69 +14,74 @@ type OrderWithItems = Prisma.OrderGetPayload<{
 type Props = {
   orders: OrderWithItems[]
 }
-const statusVariant = {
-  PENDING: 'secondary',
-  PAID: 'default',
-  CANCELLED: 'destructive',
-} as const
+
+const statusStyles: Record<string, string> = {
+  PAID: 'bg-green-500/10 text-green-400',
+  PENDING: 'bg-yellow-500/10 text-yellow-400',
+  CANCELLED: 'bg-red-500/10 text-red-400',
+}
 
 export function UserOrderList({ orders }: Props) {
   if (orders.length === 0) {
     return (
-      <div>
-        <h1>You have no order history!</h1>
+      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-16 text-center">
+        <ShoppingBag className="h-10 w-10 text-muted-foreground mb-3" />
+        <p className="font-medium text-foreground">No orders yet</p>
+        <p className="text-sm text-muted-foreground mt-1 mb-4">
+          Your order history will appear here once you make a purchase.
+        </p>
+        <Link
+          href="/movies"
+          className="text-sm font-medium text-purple-400 hover:text-purple-300 underline-offset-4 hover:underline"
+        >
+          Browse movies
+        </Link>
       </div>
     )
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-2">
       {orders.map((order) => (
-        <Card key={order.id}>
-          <CardHeader className="flex flex-row items-start justify-between space-y-0">
-            <div>
-              <CardTitle className="text-base">Order #{order.id}</CardTitle>
-              <CardDescription>{order.createdAt.toLocaleDateString()}</CardDescription>
-            </div>
-            <Badge variant={statusVariant[order.status]}>{order.status}</Badge>
-          </CardHeader>
+        <Link
+          key={order.id}
+          href={`/user/${order.id}`}
+          className="flex items-center gap-4 rounded-xl border bg-card px-4 py-3.5 transition-colors hover:bg-muted/40"
+        >
+          <div className="flex h-13 w-9 shrink-0 items-center justify-center rounded-md bg-muted">
+            <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+          </div>
 
-          <CardContent className="space-y-4">
-            {/* Items */}
-            <div className="space-y-1">
-              {order.items.map((item) => (
-                <div key={item.id} className="flex justify-between text-sm">
-                  <span>
-                    {item.movie.title} × {item.quantity}
-                  </span>
-                  <span>{(item.priceInCents / 100).toFixed(2)}</span>
-                </div>
-              ))}
-            </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-foreground">
+              Order{' '}
+              <span className="font-mono text-xs text-muted-foreground">
+                #{order.id.slice(-8).toUpperCase()}
+              </span>
+            </p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {new Date(order.createdAt).toLocaleDateString('en-GB', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+              })}{' '}
+              &middot; {order.items.length} {order.items.length === 1 ? 'item' : 'items'}
+            </p>
+          </div>
 
-            {/* Shipping address */}
-            {order.shippingAddress && (
-              <>
-                <Separator />
-                <div className="text-sm text-muted-foreground">
-                  <p className="mb-1 font-medium text-foreground">Shipping Address</p>
-                  <p>
-                    {order.shippingAddress.firstName} {order.shippingAddress.lastName}
-                  </p>
-                  <p>{order.shippingAddress.street}</p>
-                  <p>
-                    {order.shippingAddress.postalCode} {order.shippingAddress.city}
-                  </p>
-                  <p>{order.shippingAddress.country}</p>
-                </div>
-              </>
-            )}
-          </CardContent>
+          <div className="flex flex-col items-end gap-1 shrink-0">
+            <span className="text-sm font-semibold text-purple-400">
+              €{(order.total / 100).toFixed(2)}
+            </span>
+            <span
+              className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${statusStyles[order.status] ?? 'bg-muted text-muted-foreground'}`}
+            >
+              {order.status.charAt(0) + order.status.slice(1).toLowerCase()}
+            </span>
+          </div>
 
-          <CardFooter className="justify-end border-t pt-4">
-            <p className="font-semibold">Total: {(order.total / 100).toFixed(2)}</p>
-          </CardFooter>
-        </Card>
+          <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+        </Link>
       ))}
     </div>
   )

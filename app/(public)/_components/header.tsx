@@ -43,8 +43,7 @@ export default function Header({
     await authClient.signOut()
 
     setSigningOut(false)
-    router.push('/')
-    router.refresh()
+    window.location.href = '/'
   }
 
   return (
@@ -88,7 +87,13 @@ export default function Header({
               variant="ghost"
               size="icon"
               className="rounded-full"
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              onClick={() => {
+                if (isSearchOpen && searchQuery.trim()) {
+                  router.push(`/movies?q=${encodeURIComponent(searchQuery.trim())}&page=1`)
+                } else {
+                  setIsSearchOpen(!isSearchOpen) // ★ always toggle if no search query
+                }
+              }}
             >
               <Search className="h-5 w-5" />
             </Button>

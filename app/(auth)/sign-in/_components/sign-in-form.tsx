@@ -44,11 +44,10 @@ function SignInForm() {
 
       await mergeCurrentUserCart()
 
-      toast.success('Sign in successeded ')
       const session = await authClient.getSession()
       const role = session?.data?.user?.role
 
-      toast.success('Registered account!')
+      toast.success('Sign in successeded ')
       if (role === 'admin') {
         router.push('/admin')
       } else {
