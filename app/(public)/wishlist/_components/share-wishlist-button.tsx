@@ -54,7 +54,7 @@ export function ShareWishlistButton({ initialIsPublic, initialShareId }: Props) 
           className={cn(
             'flex size-9 items-center justify-center rounded-full border transition-colors',
             isPublic
-              ? 'border-purple-500/40 bg-purple-950/40 text-purple-300'
+              ? 'border-blue-500/40 bg-blue-950/40 text-blue-300'
               : 'border-white/10 bg-white/5 text-muted-foreground',
           )}
         >
@@ -77,7 +77,7 @@ export function ShareWishlistButton({ initialIsPublic, initialShareId }: Props) 
             size="sm"
             variant="ghost"
             onClick={handleCopy}
-            className="text-purple-300 hover:bg-purple-950/40 hover:text-purple-200"
+            className="text-blue-300 hover:bg-blue-950/40 hover:text-blue-200"
           >
             {copied ? <Check className="mr-1 size-4" /> : <Copy className="mr-1 size-4" />}
             {copied ? 'Copied' : 'Copy link'}
@@ -90,8 +90,8 @@ export function ShareWishlistButton({ initialIsPublic, initialShareId }: Props) 
           onClick={handleToggle}
           disabled={isPending}
           className={cn(
-            !isPublic && 'bg-purple-600 text-white hover:bg-purple-700',
-            isPublic && 'border-purple-500/40',
+            !isPublic && 'bg-blue-600 text-white hover:bg-blue-700',
+            isPublic && 'border-blue-500/40',
           )}
         >
           <Share2 className="mr-1 size-4" />

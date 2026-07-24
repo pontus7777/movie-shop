@@ -52,21 +52,6 @@ export async function OrderSummary() {
     <Card>
       <CardHeader className="flex flex-row items-start justify-between">
         <CardTitle>Order Summary</CardTitle>
-        <div className="text-muted-foreground flex items-center gap-1 text-sm">
-          <Button asChild variant="outline" size="sm">
-            <Link href="/cart">
-              <Pencil className="ml-2 h-4 w-4" />
-              Edit
-            </Link>
-          </Button>
-        </div>
-      </CardHeader>
-      <Separator className="my-2" />
-      <CardContent className="space-y-4">
-        {cart.items.map((item) => {
-          const onSale = isMovieOnSale(item.movie)
-          const effectivePrice = getEffectivePriceInCents(item.movie)
-
         <Button asChild variant="outline" size="sm">
           <Link href="/cart">
             <Pencil className="mr-2 h-4 w-4" />
@@ -78,10 +63,9 @@ export async function OrderSummary() {
       <Separator />
 
       <CardContent className="space-y-4 pt-4">
-        {/* Items */}
         {cart.items.map((item) => {
-          const price = convertToEuro(item.movie.priceInCents)
-          const itemTotal = price * item.quantity
+          const onSale = isMovieOnSale(item.movie)
+          const effectivePrice = getEffectivePriceInCents(item.movie)
 
           return (
             <div key={item.id} className="flex items-center justify-between border-b pb-3">
