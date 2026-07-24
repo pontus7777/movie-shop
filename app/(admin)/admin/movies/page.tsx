@@ -1,10 +1,10 @@
-import MovieCard from '@/app/(public)/_components/movie-card'
 import { MovieWithRelations } from '@/app/(public)/_components/shop-movie-card'
 import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
 import Link from 'next/link'
 import { MovieTable } from './_components/movie-table'
 import { requireAdmin } from '@/lib/session-validation'
+import AdminMovieCard from './_components/admin-movie-card'
 
 const DEFAULT_PAGE_SIZE = 10
 const ALLOWED_PAGE_SIZES = [10, 25, 50, 100]
@@ -56,7 +56,7 @@ export default async function Page({
 
       <div className="grid grid-cols-1 gap-4 md:hidden">
         {movies.map((m) => (
-          <MovieCard key={m.id} movie={m} />
+          <AdminMovieCard key={m.id} movie={m} />
         ))}
       </div>
       <div className="hidden md:block">
