@@ -1,9 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Star } from 'lucide-react'
-// import { MovieWithGenres } from './movie-row'
 import { convertToEuro } from '@/lib/priceUtils'
 import { MovieWithGenres } from '@/app/(public)/_components/movie-row'
+import { getEffectivePriceInCents, isMovieOnSale } from '@/lib/pricing'
 
 export default function AdminMovieCard({
   movie,
@@ -13,6 +13,9 @@ export default function AdminMovieCard({
   showDealBadge?: boolean
 }) {
   if (!movie.imageUrl) return null
+
+  const onSale = isMovieOnSale(movie)
+  const effectivePrice = getEffectivePriceInCents(movie)
 
   return (
     <Link href={`/movies/${movie.id}`} className="block">
@@ -61,8 +64,8 @@ export default function AdminMovieCard({
             "
           />
 
-          {/* Deal badge */}
-          {showDealBadge && (
+          {/* Sale badge — takes priority over the manual deal badge */}
+          {onSale ? (
             <div
               className="
                 absolute
@@ -78,8 +81,28 @@ export default function AdminMovieCard({
                 shadow-lg
               "
             >
-              €{convertToEuro(movie.priceInCents)} ONLY
+              SALE
             </div>
+          ) : (
+            showDealBadge && (
+              <div
+                className="
+                  absolute
+                  left-3
+                  top-3
+                  rounded-full
+                  bg-red-600
+                  px-3
+                  py-1
+                  text-xs
+                  font-bold
+                  text-white
+                  shadow-lg
+                "
+              >
+                €{convertToEuro(movie.priceInCents)} ONLY
+              </div>
+            )
           )}
 
           {/* Rating */}
@@ -127,16 +150,28 @@ export default function AdminMovieCard({
               {movie.title}
             </h3>
 
-            <p
-              className="
-                mt-1
-                line-clamp-1
-                text-xs
-                text-white/70
-              "
-            >
-              {movie.genres.length ? movie.genres.map((g) => g.name).join(' • ') : 'No genres'}
-            </p>
+            <div className="mt-1 flex items-center justify-between gap-1">
+              <p
+                className="
+                  line-clamp-1
+                  text-xs
+                  text-white/70
+                "
+              >
+                {movie.genres.length ? movie.genres.map((g) => g.name).join(' • ') : 'No genres'}
+              </p>
+
+              <div className="flex shrink-0 items-baseline gap-1">
+                <span className="text-xs font-bold sm:text-sm">
+                  €{convertToEuro(effectivePrice)}
+                </span>
+                {onSale && (
+                  <span className="text-[10px] text-white/60 line-through sm:text-xs">
+                    €{convertToEuro(movie.priceInCents)}
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </article>
