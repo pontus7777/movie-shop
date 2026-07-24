@@ -1,12 +1,28 @@
-import MovieCard from '@/app/(public)/_components/movie-card'
 import { MovieWithRelations } from '@/app/(public)/_components/shop-movie-card'
 import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
 import Link from 'next/link'
 import { MovieTable } from './_components/movie-table'
+import { requireAdmin } from '@/lib/session-validation'
+import AdminMovieCard from './_components/admin-movie-card'
 
-export default async function Page() {
-  const movies = (await prisma.movie.findMany({
+const DEFAULT_PAGE_SIZE = 10
+const ALLOWED_PAGE_SIZES = [10, 25, 50, 100]
+
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string; pageSize?: string }>
+}) {
+  const { page, pageSize } = await searchParams
+  const currentPage = Math.max(1, Number(page) || 1)
+  const parsedPageSize = Number(pageSize)
+  const currentPageSize = ALLOWED_PAGE_SIZES.includes(parsedPageSize)
+    ? parsedPageSize
+    : DEFAULT_PAGE_SIZE
+
+  await requireAdmin()
+  const movies = await prisma.movie.findMany({
     include: {
       genres: true,
       keywords: true,
@@ -17,7 +33,13 @@ export default async function Page() {
     orderBy: {
       title: 'asc',
     },
-  })) as MovieWithRelations[]
+    skip: (currentPage - 1) * currentPageSize,
+    take: currentPageSize,
+  })
+
+  const totalMovies = await prisma.movie.count()
+
+  const totalPages = Math.max(1, Math.ceil(totalMovies / currentPageSize))
 
   return (
     <div className="bg-card rounded-xl border p-6 shadow-sm">
@@ -34,11 +56,16 @@ export default async function Page() {
 
       <div className="grid grid-cols-1 gap-4 md:hidden">
         {movies.map((m) => (
-          <MovieCard key={m.id} movie={m} />
+          <AdminMovieCard key={m.id} movie={m} />
         ))}
       </div>
       <div className="hidden md:block">
-        <MovieTable movies={movies} />
+        <MovieTable
+          movies={movies as unknown as MovieWithRelations[]}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          currentPageSize={currentPageSize}
+        />
       </div>
     </div>
   )

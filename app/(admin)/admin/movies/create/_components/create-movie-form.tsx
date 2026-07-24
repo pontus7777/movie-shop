@@ -31,6 +31,14 @@ const formSchema = z.object({
   stock: z.boolean(),
   runtime: z.number().min(10),
   imageUrl: z.string(),
+  salePrice: z
+    .string()
+    .refine(
+      (val) => val === '' || /^\d+(\.\d{1,2})?$/.test(val),
+      'Sale price must be a valid number like 4.99, or empty',
+    ),
+  saleStartsAt: z.string(), // datetime-local input, empty string = no sale scheduled
+  saleEndsAt: z.string(),
 
   crew: z
     .array(
@@ -59,6 +67,10 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
       imageUrl: '',
       crew: [] as { id: string; role: 'ACTOR' | 'DIRECTOR' }[],
       genreIds: [] as number[],
+
+      salePrice: '',
+      saleStartsAt: '',
+      saleEndsAt: '',
     },
     validators: {
       onSubmit: formSchema,
@@ -109,7 +121,6 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
             )
           }}
         </form.Field>
-
         <form.Field name="description">
           {(field) => {
             const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
@@ -128,7 +139,6 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
             )
           }}
         </form.Field>
-
         <form.Field name="imageUrl">
           {(field) => (
             <Field>
@@ -143,7 +153,6 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
             </Field>
           )}
         </form.Field>
-
         <form.Field name="price">
           {(field) => {
             const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
@@ -162,7 +171,53 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
             )
           }}
         </form.Field>
-
+        <form.Field name="salePrice">
+          {(field) => {
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Sale price (optional)</FieldLabel>
+                <Input
+                  id={field.name}
+                  type="text"
+                  placeholder="e.g. 4.99"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            )
+          }}
+        </form.Field>
+        <form.Field name="saleStartsAt">
+          {(field) => (
+            <Field>
+              <FieldLabel htmlFor={field.name}>Sale starts</FieldLabel>
+              <Input
+                id={field.name}
+                type="datetime-local"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
+            </Field>
+          )}
+        </form.Field>
+        <form.Field name="saleEndsAt">
+          {(field) => (
+            <Field>
+              <FieldLabel htmlFor={field.name}>Sale ends</FieldLabel>
+              <Input
+                id={field.name}
+                type="datetime-local"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
+            </Field>
+          )}
+        </form.Field>
         <form.Field name="releaseYear">
           {(field) => {
             const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
@@ -180,7 +235,6 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
             )
           }}
         </form.Field>
-
         <form.Field name="stock">
           {(field) => (
             <Field orientation="horizontal">
@@ -194,7 +248,6 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
             </Field>
           )}
         </form.Field>
-
         <form.Field name="runtime">
           {(field) => {
             const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
@@ -212,7 +265,6 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
             )
           }}
         </form.Field>
-
         <form.Field name="crew">
           {(field) => {
             const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
@@ -228,7 +280,6 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
             )
           }}
         </form.Field>
-
         <form.Field name="genreIds">
           {(field) => {
             const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid

@@ -19,28 +19,45 @@ import { Save } from 'lucide-react'
 import { editMovie } from '../../../_actions/edit-movie-action'
 import { CrewCommandSelector } from '../../../_components/crew-command-selector'
 
-const editFormSchema = z.object({
-  title: z.string().min(1).max(50),
-  description: z.string().min(1).max(1000),
-  price: z
-    .string()
-    .refine((val) => /^\d+(\.\d{1,2})?$/.test(val), 'Price must be a valid number like 21.29'),
+const editFormSchema = z
+  .object({
+    title: z.string().min(1).max(50),
+    description: z.string().min(1).max(1000),
+    price: z
+      .string()
+      .refine((val) => /^\d+(\.\d{1,2})?$/.test(val), 'Price must be a valid number like 21.29'),
 
-  releaseYear: z.number().min(0).max(9999),
-  stock: z.boolean(),
-  runtime: z.number().min(10),
-  imageUrl: z.string(),
+    salePrice: z
+      .string()
+      .refine(
+        (val) => val === '' || /^\d+(\.\d{1,2})?$/.test(val),
+        'Sale price must be a valid number like 4.99, or empty',
+      ),
+    saleStartsAt: z.string(),
+    saleEndsAt: z.string(),
 
-  // NEW: crew with roles
-  crew: z.array(
-    z.object({
-      id: z.string(),
-      role: z.enum(['ACTOR', 'DIRECTOR']),
-    }),
-  ),
+    releaseYear: z.number().min(0).max(9999),
+    stock: z.boolean(),
+    runtime: z.number().min(10),
+    imageUrl: z.string(),
 
-  genreIds: z.array(z.number()),
-})
+    // NEW: crew with roles
+    crew: z.array(
+      z.object({
+        id: z.string(),
+        role: z.enum(['ACTOR', 'DIRECTOR']),
+      }),
+    ),
+
+    genreIds: z.array(z.number()),
+  })
+  .refine(
+    (data) => {
+      if (!data.saleStartsAt || !data.saleEndsAt) return true
+      return new Date(data.saleEndsAt) > new Date(data.saleStartsAt)
+    },
+    { message: 'Sale end date must be after the start date', path: ['saleEndsAt'] },
+  )
 
 type EditMovieProps = {
   movie: {
@@ -53,6 +70,10 @@ type EditMovieProps = {
     runtime: number
     imageUrl: string | null
 
+    salePriceInCents: number | null
+    saleStartsAt: Date | null
+    saleEndsAt: Date | null
+
     credits: {
       crew: Crew
       role: 'ACTOR' | 'DIRECTOR'
@@ -63,6 +84,17 @@ type EditMovieProps = {
 
   crewMembers: Crew[]
   genres: Genre[]
+}
+
+function toDatetimeLocalValue(date: Date | null): string {
+  if (!date) return ''
+  const pad = (n: number) => String(n).padStart(2, '0')
+  const year = date.getFullYear()
+  const month = pad(date.getMonth() + 1)
+  const day = pad(date.getDate())
+  const hours = pad(date.getHours())
+  const minutes = pad(date.getMinutes())
+  return `${year}-${month}-${day}T${hours}:${minutes}`
 }
 
 export function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
@@ -77,6 +109,10 @@ export function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
       stock: movie.stock,
       runtime: movie.runtime,
       imageUrl: movie.imageUrl ?? '',
+
+      salePrice: movie.salePriceInCents != null ? (movie.salePriceInCents / 100).toFixed(2) : '',
+      saleStartsAt: toDatetimeLocalValue(movie.saleStartsAt),
+      saleEndsAt: toDatetimeLocalValue(movie.saleEndsAt),
 
       crew: movie.credits.map((credit) => ({
         id: credit.crew.id,
@@ -105,6 +141,13 @@ export function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
         stock: updatedMovie.stock,
         runtime: updatedMovie.runtime,
         imageUrl: updatedMovie.imageUrl ?? '',
+
+        salePrice:
+          updatedMovie.salePriceInCents != null
+            ? (updatedMovie.salePriceInCents / 100).toFixed(2)
+            : '',
+        saleStartsAt: toDatetimeLocalValue(updatedMovie.saleStartsAt),
+        saleEndsAt: toDatetimeLocalValue(updatedMovie.saleEndsAt),
 
         crew: updatedMovie.credits.map((credit) => ({
           id: credit.crew.id,
@@ -180,6 +223,66 @@ export function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
                   id={field.name}
                   type="text"
                   value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            )
+          }}
+        </form.Field>
+
+        {/* SALE PRICE */}
+        <form.Field name="salePrice">
+          {(field) => {
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Sale price (€, optional)</FieldLabel>
+                <Input
+                  id={field.name}
+                  type="text"
+                  placeholder="e.g. 4.99"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            )
+          }}
+        </form.Field>
+
+        {/* SALE STARTS */}
+        <form.Field name="saleStartsAt">
+          {(field) => {
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Sale starts</FieldLabel>
+                <Input
+                  id={field.name}
+                  type="datetime-local"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            )
+          }}
+        </form.Field>
+
+        {/* SALE ENDS */}
+        <form.Field name="saleEndsAt">
+          {(field) => {
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Sale ends</FieldLabel>
+                <Input
+                  id={field.name}
+                  type="datetime-local"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}

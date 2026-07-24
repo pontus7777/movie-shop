@@ -1,10 +1,9 @@
-import { requireSignedIn } from '@/lib/require-signed-in'
 import prisma from '@/lib/prisma'
 import { Prisma } from '@/generated/prisma/client'
 import TabContent from './_components/user-tab-content'
 
 export default async function UserPage() {
-  const session = await requireSignedIn()
+  const session = await requireAuth()
 
   const orders = await prisma.order.findMany({
     where: { userId: session.user.id },

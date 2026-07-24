@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Crew } from '@/generated/prisma/client'
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 
 export type CrewMemberForm = {
   isNew: boolean

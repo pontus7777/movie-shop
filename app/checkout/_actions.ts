@@ -7,6 +7,7 @@ import { auth } from '@/lib/auth'
 import prisma from '@/lib/prisma'
 
 import { checkoutSchema, type CheckoutInput } from '@/lib/validations/checkout'
+import { requireAuth } from '@/lib/session-validation'
 
 export async function checkout(input: CheckoutInput) {
   // Validate input on the server as well
@@ -17,6 +18,8 @@ export async function checkout(input: CheckoutInput) {
   }
 
   const data = parsed.data
+
+  // await requireAuth() be used instead?
 
   // Get current session
   const session = await auth.api.getSession({

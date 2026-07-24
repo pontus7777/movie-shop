@@ -103,7 +103,6 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
             <h3>
               <span className="text-lg font-medium">Payment Information</span>
             </h3>
-            <Separator className="my-2" />
             <form.Field name="paymentMethod">
               {(field) => {
                 const invalid = field.state.meta.isTouched && !field.state.meta.isValid

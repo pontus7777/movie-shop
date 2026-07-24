@@ -1,14 +1,15 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { Minus, Plus, ShoppingCart, Star } from 'lucide-react'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-
-import { getMovieImageSrc } from '@/lib/image-utils'
-import { Crew, CrewOnMovie, Genre, Movie, MovieKeyword } from '@/generated/prisma/client'
 import { CartActionButton } from '@/components/cart-action-button'
-import { addToCart, removeFromCart } from '../cart/_actions/cart-actions'
+import { getMovieImageSrc } from '@/lib/image-utils'
 import { convertToEuro } from '@/lib/priceUtils'
-import { Minus, Plus } from 'lucide-react'
+import { addToCart, removeFromCart } from '../cart/_actions/cart-actions'
+
+import type { Crew, CrewOnMovie, Genre, Movie, MovieKeyword } from '@/generated/prisma/client'
+import { WishlistButton } from '@/app/(public)/wishlist/_components/wishlist-button'
+import { getEffectivePriceInCents, isMovieOnSale } from '@/lib/pricing'
 
 export type MovieWithRelations = Movie & {
   genres: Genre[]
@@ -19,83 +20,210 @@ export type MovieWithRelations = Movie & {
 type Props = {
   movie: MovieWithRelations
   quantity: number
+  isWishlisted: boolean
 }
 
-export default function ShopMovieCard({ movie, quantity }: Props) {
-  const imageSrc = getMovieImageSrc(movie.imageUrl)
+export default function ShopMovieCard({ movie, quantity, isWishlisted }: Props) {
+  const onSale = isMovieOnSale(movie)
+  const effectivePrice = getEffectivePriceInCents(movie)
 
   return (
-    <Card className="flex w-56 flex-col overflow-hidden rounded-md">
-      {/* Movie Poster */}
-      <Image
-        src={imageSrc}
-        alt={movie.title}
-        width={300}
-        height={450}
-        className="aspect-2/3 w-full rounded-t-md object-cover"
+    <article
+      className="
+        group
+        relative
+        overflow-hidden
+        rounded-lg
+        sm:rounded-xl
+        bg-muted
+        shadow-sm
+        transition-all
+        duration-300
+        hover:-translate-y-1
+        hover:shadow-xl
+      "
+    >
+      {/* Whole card clickable */}
+      <Link
+        href={`/movies/${movie.id}`}
+        className="absolute inset-0 z-10"
+        aria-label={`View ${movie.title}`}
       />
 
-      {/* Header */}
-      <CardHeader className="py-2">
-        <CardTitle className="space-y-0.5 text-sm leading-tight font-semibold">
-          <Link href={`/movies/${movie.id}`} className="underline-offset-2 hover:underline">
-            {movie.title}
-          </Link>
+      {/* Poster */}
+      <div className="relative aspect-2/3 overflow-hidden">
+        <Image
+          src={getMovieImageSrc(movie.imageUrl)}
+          alt={movie.title}
+          fill
+          sizes="
+            (max-width: 640px) 45vw,
+            (max-width: 1024px) 30vw,
+            220px
+          "
+          className="
+            object-cover
+            transition-transform
+            duration-500
+            group-hover:scale-105
+          "
+        />
 
-          <span className="text-muted-foreground block text-xs">⭐ {movie.rating?.toFixed(1)}</span>
-        </CardTitle>
-      </CardHeader>
+        <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
 
-      {/* Footer */}
-      <CardContent className="flex h-full flex-col px-3 pt-0 pb-3">
-        {movie.tagline && (
-          <p className="text-muted-foreground mb-1 line-clamp-2 text-xs">{movie.tagline}</p>
-        )}
+        {/* Top-left stack: wishlist + sale badge, so they never overlap */}
+        {/* <div className="absolute left-1.5 top-1.5 flex flex-col items-start gap-1 sm:left-3 sm:top-3"> */}
+        {/* Wishlist */}
+        <div className="absolute left-1.5 top-1.5 z-20 sm:left-3 sm:top-3">
+          <WishlistButton
+            movieId={movie.id}
+            initialIsWishlisted={isWishlisted}
+            size="icon"
+            variant="secondary"
+          />
 
-        <p className="mb-2 text-base font-bold tracking-tight">
-          €{convertToEuro(movie.priceInCents)}
-        </p>
-
-        {quantity > 0 && (
-          <div className="text-muted-foreground mb-2 text-xs font-medium">Count: {quantity}</div>
-        )}
-
-        <div className="mt-auto flex gap-2">
-          {quantity === 0 ? (
-            <CartActionButton
-              className="w-full"
-              action={addToCart}
-              movieId={movie.id}
-              toastMessage="Succesfully added to cart"
-            >
-              Add to Cart
-            </CartActionButton>
-          ) : (
-            <>
-              <CartActionButton
-                className="w-1/2"
-                action={async (movieId) => {
-                  'use server'
-                  await removeFromCart(movieId, true)
-                }}
-                movieId={movie.id}
-                toastMessage="Removed from cart"
-              >
-                <Minus />
-              </CartActionButton>
-
-              <CartActionButton
-                className="w-1/2"
-                action={addToCart}
-                movieId={movie.id}
-                toastMessage="Added to cart"
-              >
-                <Plus />
-              </CartActionButton>
-            </>
+          {onSale && (
+            <div className="rounded-md bg-red-600 px-2 py-0.5 text-[10px] font-bold text-white sm:text-xs">
+              SALE
+            </div>
           )}
         </div>
-      </CardContent>
-    </Card>
+
+        {/* Rating */}
+        <div
+          className="
+            absolute
+            right-1.5
+            top-1.5
+            z-20
+            flex
+            items-center
+            gap-0.5
+            rounded-full
+            bg-black/70
+            px-1.5
+            py-0.5
+            text-[10px]
+            font-semibold
+            text-white
+            sm:right-3
+            sm:top-3
+            sm:px-2
+            sm:py-1
+            sm:text-xs
+          "
+        >
+          <Star className="h-2.5 w-2.5 fill-yellow-400 text-yellow-400 sm:h-3 sm:w-3" />
+
+          {movie.imdbRating?.toFixed(1) ?? '—'}
+        </div>
+
+        {/* Info */}
+        <div
+          className="
+            absolute
+            bottom-0
+            left-0
+            right-0
+            z-20
+            p-2
+            text-white
+            sm:p-3
+          "
+        >
+          <h3
+            className="
+              truncate
+              text-xs
+              font-bold
+              sm:text-sm
+            "
+          >
+            {movie.title}
+          </h3>
+
+          <div
+            className="
+              mt-0.5
+              flex
+              items-center
+              justify-between
+              gap-1
+            "
+          >
+            <span
+              className="
+                truncate
+                text-[10px]
+                text-white/70
+                sm:text-xs
+              "
+            >
+              {movie.genres
+                .slice(0, 2)
+                .map((g) => g.name)
+                .join(' • ') || 'Movie'}
+            </span>
+
+            <div className="flex shrink-0 items-baseline gap-1">
+              <span className="text-xs font-bold sm:text-sm">€{convertToEuro(effectivePrice)}</span>
+              {onSale && (
+                <span className="text-[10px] text-white/60 line-through sm:text-xs">
+                  €{convertToEuro(movie.priceInCents)}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Cart */}
+      <div className="relative z-20 bg-background p-1.5 sm:p-2">
+        {quantity === 0 ? (
+          <CartActionButton
+            className="
+              h-7
+              w-full
+              text-[11px]
+              sm:h-8
+              sm:text-xs
+            "
+            action={addToCart}
+            movieId={movie.id}
+            toastMessage="Added to cart"
+          >
+            <ShoppingCart className="mr-1 h-3 w-3" />
+            Add
+          </CartActionButton>
+        ) : (
+          <div className="flex gap-1">
+            <CartActionButton
+              className="h-7 flex-1 sm:h-8"
+              action={async (movieId) => {
+                'use server'
+                await removeFromCart(movieId, true)
+              }}
+              movieId={movie.id}
+              toastMessage="Removed from cart"
+            >
+              <Minus className="h-3 w-3" />
+            </CartActionButton>
+
+            <div className="flex h-7 flex-1 items-center justify-center rounded-md border text-xs sm:h-8">
+              {quantity}
+            </div>
+
+            <CartActionButton
+              className="h-7 flex-1 sm:h-8"
+              action={addToCart}
+              movieId={movie.id}
+              toastMessage="Added to cart"
+            >
+              <Plus className="h-3 w-3" />
+            </CartActionButton>
+          </div>
+        )}
+      </div>
+    </article>
   )
 }
