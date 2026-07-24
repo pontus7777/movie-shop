@@ -34,8 +34,7 @@ export default function Header({
     setSigningOut(true)
     await authClient.signOut()
     setSigningOut(false)
-    router.push('/')
-    router.refresh()
+    window.location.href = '/'
   }
 
   return (
@@ -73,10 +72,8 @@ export default function Header({
               onClick={() => {
                 if (isSearchOpen && searchQuery.trim()) {
                   router.push(`/movies?q=${encodeURIComponent(searchQuery.trim())}&page=1`)
-                } else if (isSearchOpen && !searchQuery.trim()) {
-                  router.push('/movies')
                 } else {
-                  setIsSearchOpen(!isSearchOpen)
+                  setIsSearchOpen(!isSearchOpen) // ★ always toggle if no search query
                 }
               }}
             >

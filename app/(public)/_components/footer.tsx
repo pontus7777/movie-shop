@@ -46,13 +46,13 @@ export default function Footer() {
             <Link href="/sign-in" className="text-sm transition-colors hover:text-purple-400">
               Sign In
             </Link>
-            <Link href="/sign-up" className="text-sm hover:text-purple-400 transition-colors">
+            <Link href="/register" className="text-sm hover:text-purple-400 transition-colors">
               Register
             </Link>
-            <Link href="/orders" className="text-sm transition-colors hover:text-purple-400">
+            <Link href="/user" className="text-sm transition-colors hover:text-purple-400">
               My Orders
             </Link>
-            <Link href="/profile" className="text-sm transition-colors hover:text-purple-400">
+            <Link href="/user" className="text-sm transition-colors hover:text-purple-400">
               My Profile
             </Link>
           </div>
