@@ -20,7 +20,7 @@ export default async function AdminLayout({
           <div className="p-4">
             <SidebarTrigger />
           </div>
-          <Toaster position="bottom-right" richColors />
+          {/* <Toaster position="bottom-right" richColors /> */}
           <div className="flex-1 p-6">{children}</div>
         </main>
       </div>
