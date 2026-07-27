@@ -47,7 +47,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
     router.refresh()
   }
   async function goToProfile() {
-    router.push('/user')
+    router.push('/profile')
     router.refresh()
   }
 
@@ -154,12 +154,12 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
                   <AvatarFallback>
                     {user.name
                       ? user.name
-                          .split(' ')
-                          .filter(Boolean)
-                          .map((word) => word[0])
-                          .join('')
-                          .slice(0, 2)
-                          .toUpperCase()
+                        .split(' ')
+                        .filter(Boolean)
+                        .map((word) => word[0])
+                        .join('')
+                        .slice(0, 2)
+                        .toUpperCase()
                       : 'U'}
                   </AvatarFallback>
                 </Avatar>
