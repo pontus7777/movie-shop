@@ -192,6 +192,7 @@ model Order {
   paymentMethod   PaymentMethod
   shippingAddress ShippingAddress?
 
+  @@index([userId, status])
   @@map("orders")
 }
 
