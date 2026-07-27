@@ -51,7 +51,11 @@ export async function checkout(input: CheckoutInput) {
   }, 0)
 
   // Fake payment delay
-  await new Promise((resolve) => setTimeout(resolve, 1500))
+  // await new Promise((resolve) => setTimeout(resolve, 1500))
+
+  if (process.env.SIMULATE_PAYMENT_DELAY === 'true') {
+    await new Promise((resolve) => setTimeout(resolve, 1500))
+  }
 
   // Everything below succeeds or everything rolls back
   const order = await prisma.$transaction(async (tx) => {
