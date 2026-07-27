@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { SignInForm } from './_components/sign-in-form'
 import Link from 'next/link'
-import { Film, Popcorn } from 'lucide-react'
+import { Popcorn } from 'lucide-react'
 
 export default async function SignInPage() {
   const session = await auth.api.getSession({

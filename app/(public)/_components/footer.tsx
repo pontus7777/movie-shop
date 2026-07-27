@@ -1,4 +1,4 @@
-import { Film, Mail, Globe } from 'lucide-react'
+import { Mail, Globe } from 'lucide-react'
 import Link from 'next/link'
 import Logo from './logo'
 
@@ -52,10 +52,10 @@ export default function Footer() {
             <Link href="/register" className="text-sm hover:text-primary transition-colors">
               Register
             </Link>
-            <Link href="/user" className="text-sm transition-colors hover:text-primary">
+            <Link href="/profile" className="text-sm transition-colors hover:text-primary">
               My Orders
             </Link>
-            <Link href="/user" className="text-sm transition-colors hover:text-primary">
+            <Link href="/profile" className="text-sm transition-colors hover:text-primary">
               My Profile
             </Link>
           </div>

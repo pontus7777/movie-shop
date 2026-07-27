@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { isRedirectError } from 'next/dist/client/components/redirect-error'
 
 type checkoutFormProps = {
   isCartEmpty: boolean
@@ -40,8 +41,13 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
 
     onSubmit: async ({ value }) => {
       try {
+        toast.success('Order placed successfully!')
+
         await checkout(value)
       } catch (error) {
+        if (isRedirectError(error)) {
+          throw error
+        }
         toast.error(error instanceof Error ? error.message : 'Checkout failed.')
       }
     },

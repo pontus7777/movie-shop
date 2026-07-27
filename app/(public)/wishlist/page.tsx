@@ -13,6 +13,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { ShareWishlistButton } from './_components/share-wishlist-button'
+import { getPurchasedMovieIds } from '@/lib/order'
 
 export default async function WishlistPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -22,6 +23,9 @@ export default async function WishlistPage() {
 
   const wishlist = await getDatabaseWishlist(session.user.id)
   const items = wishlist?.items ?? []
+
+  const movieIds = items.map((item) => item.movie.id)
+  const purchasedIds = await getPurchasedMovieIds(session.user.id, movieIds)
 
   if (items.length === 0) {
     return (
@@ -42,6 +46,7 @@ export default async function WishlistPage() {
         {items.map((item) => {
           const onSale = isMovieOnSale(item.movie)
           const effectivePrice = getEffectivePriceInCents(item.movie)
+          const purchased = purchasedIds.has(item.movie.id)
 
           return (
             <Card key={item.movie.id}>
@@ -66,6 +71,11 @@ export default async function WishlistPage() {
                     <h3 className="text-lg font-semibold">{item.movie.title}</h3>
                     {onSale && (
                       <Badge className="bg-red-600 text-white hover:bg-red-600">Sale</Badge>
+                    )}
+                    {purchased && (
+                      <Badge className="bg-amber-500 text-white hover:bg-amber-500">
+                        Purchased
+                      </Badge>
                     )}
                   </div>
 

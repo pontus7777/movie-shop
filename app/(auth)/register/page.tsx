@@ -5,7 +5,7 @@ import { auth } from '@/lib/auth'
 
 import { RegisterForm } from './_components/register-form'
 import Link from 'next/link'
-import { Film, Popcorn } from 'lucide-react'
+import { Popcorn } from 'lucide-react'
 
 export default async function RegisterPage() {
   const session = await auth.api.getSession({

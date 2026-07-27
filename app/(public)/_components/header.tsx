@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useState } from 'react'
-import { ShoppingCart, Search, Film, Menu, X, User, Popcorn, FilmIcon } from 'lucide-react'
+import { ShoppingCart, Search, Menu, X, User } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { ThemeModeToggle } from '../../../components/theme-mode-toggle'
@@ -139,7 +139,7 @@ export default function Header({
           {userName ? (
             <div className="flex items-center gap-3">
               <Link
-                href="/user"
+                href="/profile"
                 className="flex items-center gap-2 rounded-full px-2 py-1 transition hover:bg-muted"
               >
                 {userImage ? (
@@ -191,7 +191,7 @@ export default function Header({
           </Link>
 
           {userName && (
-            <Link href="/user">
+            <Link href="/profile">
               {userImage ? (
                 <Image
                   src={userImage}
@@ -241,7 +241,7 @@ export default function Header({
             {userName ? (
               <>
                 <Button variant="ghost" asChild>
-                  <Link href="/user">Profile</Link>
+                  <Link href="/profile">Profile</Link>
                 </Button>
 
                 <Button variant="ghost" onClick={handleSignOut}>
