@@ -4,7 +4,6 @@ import Header from '@/app/(public)/_components/header'
 import { getCart } from '@/lib/cart'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import { Toaster } from 'sonner'
 
 export default async function UserLayout({
   children,
@@ -22,7 +21,7 @@ export default async function UserLayout({
     <div className="flex min-h-screen w-full flex-col overflow-x-hidden">
       <Header cartCount={cartCount} userName={session?.user.name ?? null} />
       <main className="flex-1">{children}</main>
-      <Toaster />
+      {/* <Toaster /> */}
       <Footer />
     </div>
   )

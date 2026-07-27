@@ -17,6 +17,11 @@ type MoviesPaginationProps = {
   genreIds?: number[]
   directorIds?: string[]
   actorIds?: string[]
+
+  yearFrom?: string
+  yearTo?: string
+  runtimeMin?: string
+  runtimeMax?: string
 }
 
 export function MoviesPagination({
@@ -26,6 +31,10 @@ export function MoviesPagination({
   genreIds = [],
   directorIds = [],
   actorIds = [],
+  yearFrom,
+  yearTo,
+  runtimeMin,
+  runtimeMax,
 }: MoviesPaginationProps) {
   const router = useRouter()
 
@@ -33,9 +42,17 @@ export function MoviesPagination({
     const params = new URLSearchParams()
 
     if (query) params.set('q', query)
+
     genreIds.forEach((id) => params.append('genre', String(id)))
     directorIds.forEach((id) => params.append('director', id))
     actorIds.forEach((id) => params.append('actor', id))
+
+    if (yearFrom) params.set('yearFrom', yearFrom)
+    if (yearTo) params.set('yearTo', yearTo)
+
+    if (runtimeMin) params.set('runtimeMin', runtimeMin)
+    if (runtimeMax) params.set('runtimeMax', runtimeMax)
+
     params.set('page', String(p))
 
     router.push(`/movies?${params.toString()}`)
@@ -52,6 +69,7 @@ export function MoviesPagination({
 
         {Array.from({ length: totalPages }).map((_, i) => {
           const pageNumber = i + 1
+
           return (
             <PaginationItem key={pageNumber}>
               <PaginationLink isActive={page === pageNumber} onClick={() => goToPage(pageNumber)}>

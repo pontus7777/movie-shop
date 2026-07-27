@@ -18,7 +18,6 @@ export default async function AdminGenresPage() {
 
         <AddGenreButton />
       </div>
-      {/* <GenresTable genres={genres} /> */}
       <GenresDataTable columns={columns} data={genres} />
     </div>
   )

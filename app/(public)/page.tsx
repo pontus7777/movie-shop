@@ -8,24 +8,20 @@ export default async function Home() {
 
   return (
     <main className="bg-background text-foreground">
-      <section className="border-b px-6 py-12 text-center">
-        <h1 className="mb-2 text-3xl font-extrabold md:text-4xl">
-          Find Your Next <span className="text-purple-500">Favorite Movie</span>
+      <section className="border-b px-2 py-4 text-center">
+        <h1 className="mb-2 text-1xl font-extrabold md:text-2xl">
+          Find Your Next <span className="text-primary">Favorite Movie</span>
         </h1>
 
         <p className="text-muted-foreground">Stay updated with what everyone&apos;s watching</p>
       </section>
 
-      <section className="border-y border-purple-500/20 bg-purple-950/10 py-8">
-        <div className="mx-auto max-w-7xl px-6">
-          <h2 className="mb-1 text-xl font-bold">🏷️ Hot Deals</h2>
+      <section className="relative h-[63vh] w-7x1 overflow-hidden">
+        {/* Fullscreen Carousel */}
+        <HotDealsCarousel movies={cheapestMovies} />
 
-          <p className="text-muted-foreground mb-4 text-sm">
-            Grab your favorite movies at the best prices
-          </p>
-
-          <HotDealsCarousel movies={cheapestMovies} />
-        </div>
+        {/* Gradient overlay for readability */}
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/40 via-black/20 to-black/60" />
       </section>
 
       {mostPurchasedMovies.length > 0 && (

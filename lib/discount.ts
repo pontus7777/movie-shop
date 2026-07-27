@@ -36,11 +36,6 @@ export async function calculateCartTotals(
 ): Promise<CartTotals> {
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0)
 
-  // const subtotal = items.reduce(
-  //   (sum, item) => sum + convertToEuro(item.movie.priceInCents) * item.quantity,
-  //   0,
-  // )
-
   const subtotal = items.reduce(
     (sum, item) => sum + convertToEuro(getEffectivePriceInCents(item.movie)) * item.quantity,
     0,

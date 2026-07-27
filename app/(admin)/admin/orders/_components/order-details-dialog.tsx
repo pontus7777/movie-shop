@@ -1,23 +1,11 @@
 'use client'
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Prisma } from '@/generated/prisma/client'
 import { CustomerCard } from './customer-card'
 import { ShippingCard } from './shipping-card'
 import { OrderItemsTable } from './order-items-table'
 import { OrderSummaryCard } from './order-summary-card'
-
-type OrderWithDetails = Prisma.OrderGetPayload<{
-  include: {
-    user: true
-    shippingAddress: true
-    items: {
-      include: {
-        movie: true
-      }
-    }
-  }
-}>
+import { OrderWithDetails } from '../_types/order'
 
 type Props = {
   order: OrderWithDetails

@@ -67,11 +67,11 @@ export default function HotDealsCarousel({ movies }: Props) {
           className={`
             relative
             h-55
-            w-full
+            w-7.5xl
             overflow-hidden
             transition-opacity
             duration-300
-            md:h-110
+            md:h-170
             ${fade ? 'opacity-100' : 'opacity-0'}
           `}
         >
@@ -100,12 +100,19 @@ export default function HotDealsCarousel({ movies }: Props) {
               to-transparent
             "
           />
+          {/* Hot Deals heading */}
+          <div className="absolute left-9 top-4 z-30 text-white">
+            <h2 className="text-2xl font-bold drop-shadow-lg">🏷️ Hot Deals</h2>
+            <p className="text-white text-sm drop-shadow-md">
+              Grab your favorite movies at the best prices
+            </p>
+          </div>
 
           {/* Price badge */}
           <div
             className="
               absolute
-              left-4
+              right-9
               top-4
               rounded-full
               bg-red-600
@@ -134,7 +141,7 @@ export default function HotDealsCarousel({ movies }: Props) {
           >
             <h3 className="text-xl font-bold md:text-3xl">{movie.title}</h3>
 
-            <p className="mt-2 text-sm text-white/70">
+            <p className="mt-2 text-sm text-white">
               {movie.genres.map((g) => g.name).join(' • ') || 'No genres'}
               {' • '}⭐ {movie.imdbRating?.toFixed(1) ?? '—'}
             </p>
@@ -156,7 +163,7 @@ export default function HotDealsCarousel({ movies }: Props) {
           text-white
           backdrop-blur
           transition
-          hover:bg-purple-600
+          hover:bg-primary
         "
       >
         <ChevronLeft className="h-5 w-5" />
@@ -176,7 +183,7 @@ export default function HotDealsCarousel({ movies }: Props) {
           text-white
           backdrop-blur
           transition
-          hover:bg-purple-600
+          hover:bg-primary
         "
       >
         <ChevronRight className="h-5 w-5" />
@@ -186,7 +193,7 @@ export default function HotDealsCarousel({ movies }: Props) {
       <div
         className="
           absolute
-          bottom-3
+          bottom-8
           right-1/2
           flex
           translate-x-1/2

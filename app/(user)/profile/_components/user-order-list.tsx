@@ -32,7 +32,7 @@ export function UserOrderList({ orders }: Props) {
         </p>
         <Link
           href="/movies"
-          className="text-sm font-medium text-purple-400 hover:text-purple-300 underline-offset-4 hover:underline"
+          className="text-sm font-medium text-red-400 hover:text-red-300 underline-offset-4 hover:underline"
         >
           Browse movies
         </Link>
@@ -45,7 +45,7 @@ export function UserOrderList({ orders }: Props) {
       {orders.map((order) => (
         <Link
           key={order.id}
-          href={`/user/${order.id}`}
+          href={`/profile/${order.id}`}
           className="flex items-center gap-4 rounded-xl border bg-card px-4 py-3.5 transition-colors hover:bg-muted/40"
         >
           <div className="flex h-13 w-9 shrink-0 items-center justify-center rounded-md bg-muted">
@@ -70,7 +70,7 @@ export function UserOrderList({ orders }: Props) {
           </div>
 
           <div className="flex flex-col items-end gap-1 shrink-0">
-            <span className="text-sm font-semibold text-purple-400">
+            <span className="text-sm font-semibold text-primary">
               €{(order.total / 100).toFixed(2)}
             </span>
             <span

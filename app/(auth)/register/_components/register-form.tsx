@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { authClient } from '@/lib/auth-client'
-import { mergeCurrentUserCart } from '../../_actions/merge-cart'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import Link from 'next/link'
@@ -172,7 +171,7 @@ function RegisterForm() {
             Already have an account?{' '}
             <Link
               href="/sign-in"
-              className="font-medium text-purple-500 hover:text-purple-400 underline-offset-4 hover:underline"
+              className="font-medium text-primary hover:text-primary underline-offset-4 hover:underline"
             >
               Sign In
             </Link>

@@ -27,7 +27,14 @@ import {
 import { useState } from 'react'
 import { authClient } from '@/lib/auth-client'
 
-export function AdminSidebar() {
+type AdminSidebarProps = {
+  user: {
+    name: string
+    image?: string | null
+  }
+}
+
+export function AdminSidebar({ user }: AdminSidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [signingOut, setSigningOut] = useState(false)
@@ -37,6 +44,10 @@ export function AdminSidebar() {
     await authClient.signOut()
     setSigningOut(false)
     router.push('/')
+    router.refresh()
+  }
+  async function goToProfile() {
+    router.push('/user')
     router.refresh()
   }
 
@@ -56,39 +67,62 @@ export function AdminSidebar() {
               <SidebarMenuButton
                 asChild
                 className={pathname === '/admin' ? 'border-b-2 border-b-blue-400' : ''}
-                // temporary minor style
                 isActive={pathname === '/admin'}
               >
                 <Link href={'/admin'}>Overview</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={pathname === '/admin/movies'}>
+              <SidebarMenuButton
+                asChild
+                className={pathname === '/admin/movies' ? 'border-b-2 border-b-blue-400' : ''}
+                isActive={pathname === '/admin/movies'}
+              >
                 <Link href={'/admin/movies'}>Movies</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={pathname === '/admin/genres'}>
+              <SidebarMenuButton
+                asChild
+                className={pathname === '/admin/genres' ? 'border-b-2 border-b-blue-400' : ''}
+                isActive={pathname === '/admin/genres'}
+              >
                 <Link href={'/admin/genres'}>Genres</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={pathname === '/admin/orders'}>
+              <SidebarMenuButton
+                asChild
+                className={pathname === '/admin/orders' ? 'border-b-2 border-b-blue-400' : ''}
+                isActive={pathname === '/admin/orders'}
+              >
                 <Link href={'/admin/orders'}>Orders</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={pathname === '/admin/users'}>
+              <SidebarMenuButton
+                asChild
+                className={pathname === '/admin/users' ? 'border-b-2 border-b-blue-400' : ''}
+                isActive={pathname === '/admin/users'}
+              >
                 <Link href={'/admin/users'}>Users</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={pathname === '/admin/crew'}>
+              <SidebarMenuButton
+                asChild
+                className={pathname === '/admin/crew' ? 'border-b-2 border-b-blue-400' : ''}
+                isActive={pathname === '/admin/crew'}
+              >
                 <Link href={'/admin/crew'}>Crew</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={pathname === '/admin/discounts'}>
+              <SidebarMenuButton
+                asChild
+                className={pathname === '/admin/discounts' ? 'border-b-2 border-b-blue-400' : ''}
+                isActive={pathname === '/admin/discounts'}
+              >
                 <Link href={'/admin/discounts'}>Discounts</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -116,19 +150,29 @@ export function AdminSidebar() {
             <DropdownMenuTrigger asChild>
               <button className="hover:bg-accent flex w-full items-center gap-3 rounded-md p-2 transition">
                 <Avatar className="h-9 w-9">
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
+                  {user.image && <AvatarImage src={user.image} />}
+                  <AvatarFallback>
+                    {user.name
+                      ? user.name
+                          .split(' ')
+                          .filter(Boolean)
+                          .map((word) => word[0])
+                          .join('')
+                          .slice(0, 2)
+                          .toUpperCase()
+                      : 'U'}
+                  </AvatarFallback>
                 </Avatar>
 
                 <div className="flex flex-col text-left">
-                  <span className="font-medium">John Admin</span>
+                  <span className="font-medium">{user.name}</span>
                   <span className="text-muted-foreground text-xs">Administrator</span>
                 </div>
               </button>
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem onClick={goToProfile}>Profile</DropdownMenuItem>
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem
                 onClick={handleSignOut}

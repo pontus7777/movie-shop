@@ -18,7 +18,6 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Prisma } from '@/generated/prisma/client'
-import Link from 'next/link'
 import {
   Pagination,
   PaginationContent,
@@ -76,7 +75,7 @@ export function UserTable({ users, totalUsers, currentPage, totalPages }: UserTa
           </TableHeader>
 
           <TableBody>
-            {users.map((user, index) => {
+            {users.map((user) => {
               return (
                 <TableRow key={user.id}>
                   <TableCell>
@@ -141,16 +140,10 @@ export function UserTable({ users, totalUsers, currentPage, totalPages }: UserTa
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-
-                    {/* <Button variant="ghost" size="icon">
-                      ⋮
-                    </Button> */}
                   </TableCell>
                 </TableRow>
               )
             })}
-
-            {/* More rows... */}
           </TableBody>
         </Table>
 

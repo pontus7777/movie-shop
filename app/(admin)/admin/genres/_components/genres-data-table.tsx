@@ -45,6 +45,7 @@ export function GenresDataTable<TData, TValue>({ columns, data }: DataTableProps
     pageIndex: 0,
     pageSize: 10,
   })
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,

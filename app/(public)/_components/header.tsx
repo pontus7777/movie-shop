@@ -4,11 +4,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useState } from 'react'
-import { ShoppingCart, Search, Film, Menu, X, User } from 'lucide-react'
+import { ShoppingCart, Search, Menu, X, User } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { ThemeModeToggle } from '../../../components/theme-mode-toggle'
 import { authClient } from '@/lib/auth-client'
+import Logo from './logo'
 
 export default function Header({
   userName,
@@ -48,26 +49,47 @@ export default function Header({
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
+      <div className="mx-auto flex max-w-7.5xl items-centre justify-between px-18 py-3">
         {/* Logo */}
-        <div className="flex items-center gap-3">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-xl font-extrabold tracking-tight sm:text-2xl"
-          >
-            <div className="rounded-lg bg-purple-600 p-1.5">
-              <Film className="h-5 w-5 text-white" />
-            </div>
+        <div className="flex items-center gap-4">
+          <Logo />
 
-            <span>
-              Cine<span className="text-purple-500">Vault</span>
+          <Link
+            href="/movies"
+            className="
+      group flex items-center gap-2 px-2 py-1
+      text-sm font-medium text-foreground
+      transition-all duration-200
+      hover:text-primary
+    "
+          >
+            {/* Play Circle Icon */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-primary"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <polygon points="10,8 16,12 10,16" fill="currentColor" />
+            </svg>
+
+            <span className="relative">
+              Movies
+              <span
+                className="
+          absolute left-0 -bottom-0.5
+          block h-[2px] w-0 bg-primary
+          transition-all duration-300
+          group-hover:w-full
+        "
+              />
             </span>
           </Link>
-
-          <Button variant="ghost" asChild className="hidden sm:inline-flex">
-            <Link href="/movies">Movies</Link>
-          </Button>
         </div>
+
 
         {/* Desktop */}
         <div className="hidden items-center gap-2 md:flex">
@@ -77,9 +99,8 @@ export default function Header({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search movies..."
-              className={`rounded-full border border-border bg-muted px-3 py-1.5 text-sm outline-none transition-all ${
-                isSearchOpen ? 'mr-2 w-48 opacity-100' : 'w-0 opacity-0'
-              }`}
+              className={`rounded-full border border-border bg-muted px-3 py-1.5 text-sm outline-none transition-all ${isSearchOpen ? 'mr-2 w-48 opacity-100' : 'w-0 opacity-0'
+                }`}
             />
 
             <Button
@@ -105,7 +126,7 @@ export default function Header({
               <ShoppingCart className="h-5 w-5" />
 
               {cartCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-purple-600 text-xs text-white">
+                <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-xs text-white">
                   {cartCount > 9 ? '9+' : cartCount}
                 </span>
               )}
@@ -118,7 +139,7 @@ export default function Header({
           {userName ? (
             <div className="flex items-center gap-3">
               <Link
-                href="/user"
+                href="/profile"
                 className="flex items-center gap-2 rounded-full px-2 py-1 transition hover:bg-muted"
               >
                 {userImage ? (
@@ -148,7 +169,7 @@ export default function Header({
                 <Link href="/sign-in">Sign in</Link>
               </Button>
 
-              <Button className="rounded-full bg-purple-600 text-white hover:bg-purple-700" asChild>
+              <Button className="variant=ghost asChild bg-primary text-white hover:bg-primary/80">
                 <Link href="/register">Register</Link>
               </Button>
             </>
@@ -162,7 +183,7 @@ export default function Header({
               <ShoppingCart className="h-5 w-5" />
 
               {cartCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-purple-600 px-1 text-[10px] font-bold text-white">
+                <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white">
                   {cartCount > 9 ? '9+' : cartCount}
                 </span>
               )}
@@ -170,7 +191,7 @@ export default function Header({
           </Link>
 
           {userName && (
-            <Link href="/user">
+            <Link href="/profile">
               {userImage ? (
                 <Image
                   src={userImage}
@@ -220,7 +241,7 @@ export default function Header({
             {userName ? (
               <>
                 <Button variant="ghost" asChild>
-                  <Link href="/user">Profile</Link>
+                  <Link href="/profile">Profile</Link>
                 </Button>
 
                 <Button variant="ghost" onClick={handleSignOut}>
@@ -233,7 +254,7 @@ export default function Header({
                   <Link href="/sign-in">Sign in</Link>
                 </Button>
 
-                <Button className="rounded-full bg-purple-600 text-white" asChild>
+                <Button className="variant=ghost asChild bg-primary text-white" >
                   <Link href="/register">Register</Link>
                 </Button>
               </>
