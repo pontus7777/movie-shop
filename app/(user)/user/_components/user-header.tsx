@@ -20,11 +20,11 @@ export function UserPageHeader() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
         {/* ===== HOME LINK ===== */}
         <Link href="/" className="flex items-center gap-2 text-2xl font-extrabold tracking-tight">
-          <div className="rounded-lg bg-purple-600 p-1.5">
+          <div className="rounded-lg bg-primary p-1.5">
             <Film className="h-5 w-5 text-white" />
           </div>
           <span>
-            Cine<span className="text-purple-500">Vault</span>
+            Cine<span className="text-primary">Vault</span>
           </span>
         </Link>
 
@@ -39,7 +39,7 @@ export function UserPageHeader() {
           {/* Sign Out Button */}
           <Button
             onClick={handleSignOut}
-            className="flex items-center gap-2 rounded-full bg-purple-600 font-medium text-white hover:bg-purple-700"
+            className="flex items-center gap-2 rounded-full bg-primary font-medium text-white hover:bg-primary/80"
           >
             <LogOut className="h-4 w-4" />
             Sign Out

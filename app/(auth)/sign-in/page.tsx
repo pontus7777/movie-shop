@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { SignInForm } from './_components/sign-in-form'
 import Link from 'next/link'
-import { Film } from 'lucide-react'
+import { Film, Popcorn } from 'lucide-react'
 
 export default async function SignInPage() {
   const session = await auth.api.getSession({
@@ -20,11 +20,11 @@ export default async function SignInPage() {
         {/* Logo */}
         <div className="flex flex-col items-center gap-2 text-center">
           <Link href="/" className="flex items-center gap-2">
-            <div className="bg-purple-600 rounded-lg p-2">
-              <Film className="h-5 w-5 text-white" />
+            <div className="bg-primary rounded-lg p-2">
+              <Popcorn className="h-5 w-5 text-white" />
             </div>
             <span className="text-2xl font-extrabold tracking-tight">
-              Cine<span className="text-purple-500">Vault</span>
+              Cine<span className="text-primary">Vault</span>
             </span>
           </Link>
           <h1 className="text-2xl font-bold mt-2">Welcome back</h1>
@@ -41,7 +41,7 @@ export default async function SignInPage() {
           Don&apos;t have an account?{' '}
           <Link
             href="/register"
-            className="font-medium text-purple-500 hover:text-purple-400 underline-offset-4 hover:underline"
+            className="font-medium text-primary hover:text-primary underline-offset-4 hover:underline"
           >
             Register
           </Link>

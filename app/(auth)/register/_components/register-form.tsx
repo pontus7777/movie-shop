@@ -171,7 +171,7 @@ function RegisterForm() {
             Already have an account?{' '}
             <Link
               href="/sign-in"
-              className="font-medium text-purple-500 hover:text-purple-400 underline-offset-4 hover:underline"
+              className="font-medium text-primary hover:text-primary underline-offset-4 hover:underline"
             >
               Sign In
             </Link>
