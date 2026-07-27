@@ -1,13 +1,37 @@
 'use client'
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useTransition } from 'react'
+
+import { useRef, useTransition } from 'react'
 
 export function useFilterParams() {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+
   const [isPending, startTransition] = useTransition()
+
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  function push(params: URLSearchParams) {
+    const url = `${pathname}?${params.toString()}`
+
+    startTransition(() => {
+      router.replace(url, {
+        scroll: false,
+      })
+    })
+  }
+
+  function debouncedPush(params: URLSearchParams) {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      push(params)
+    }, 300)
+  }
 
   function updateParam(key: string, value: string, checked: boolean) {
     const params = new URLSearchParams(searchParams)
@@ -29,20 +53,6 @@ export function useFilterParams() {
     push(params)
   }
 
-  function updateSingleParam(key: string, value: string) {
-    const params = new URLSearchParams(searchParams)
-
-    if (value) {
-      params.set(key, value)
-    } else {
-      params.delete(key)
-    }
-
-    params.delete('page')
-
-    push(params)
-  }
-
   function updateRangeParam(minKey: string, maxKey: string, value: [number, number]) {
     const params = new URLSearchParams(searchParams)
 
@@ -51,29 +61,23 @@ export function useFilterParams() {
 
     params.delete('page')
 
-    push(params)
+    debouncedPush(params)
   }
 
   function clearParams(keys: string[]) {
     const params = new URLSearchParams(searchParams)
 
     keys.forEach((key) => params.delete(key))
+
     params.delete('page')
 
     push(params)
-  }
-
-  function push(params: URLSearchParams) {
-    startTransition(() => {
-      router.replace(`${pathname}?${params.toString()}`)
-    })
   }
 
   return {
     searchParams,
     isPending,
     updateParam,
-    updateSingleParam,
     updateRangeParam,
     clearParams,
   }

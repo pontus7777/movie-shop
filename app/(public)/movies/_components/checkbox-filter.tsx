@@ -5,17 +5,19 @@ type Item = {
   name: string
 }
 
-export function CheckboxFilter({
+import { memo } from 'react'
+
+export const CheckboxFilter = memo(function CheckboxFilter({
   items,
   selected,
   onChange,
-  disabled,
 }: {
   items: Item[]
   selected: string[]
   onChange: (id: string) => void
-  disabled?: boolean
 }) {
+  const selectedSet = new Set(selected)
+
   return (
     <div className="space-y-1">
       {items.map((item) => {
@@ -24,14 +26,10 @@ export function CheckboxFilter({
         return (
           <label
             key={value}
-            className="
-              flex items-center gap-2 rounded-md px-2 py-1.5
-              hover:bg-muted cursor-pointer
-            "
+            className="hover:bg-muted flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5"
           >
             <Checkbox
-              checked={selected.includes(value)}
-              disabled={disabled}
+              checked={selectedSet.has(value)}
               onCheckedChange={() => onChange(value)}
             />
 
@@ -41,4 +39,4 @@ export function CheckboxFilter({
       })}
     </div>
   )
-}
+})
