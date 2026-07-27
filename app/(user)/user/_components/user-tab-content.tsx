@@ -114,7 +114,7 @@ export default function TabContent({
 
       {/* MAIN */}
       <div className="mx-auto max-w-10xl">
-        <div className="flex min-h-[900px]">
+        <div className="flex min-h-225">
           {/* SIDEBAR */}
           <aside className="w-52 border-r py-5 px-3 flex flex-col gap-3">
             <p className="px-2 mb-2 text-[11px] uppercase tracking-widest text-muted-foreground">
@@ -122,17 +122,17 @@ export default function TabContent({
             </p>
 
             <div
-              onClick={() => setTab('orders')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'orders' ? 'bg-purple-950/30 text-purple-300' : 'text-muted-foreground hover:bg-muted/50'}`}
-            >
-              Orders
-            </div>
-
-            <div
               onClick={() => setTab('profile')}
               className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'profile' ? 'bg-purple-950/30 text-purple-300' : 'text-muted-foreground hover:bg-muted/50'}`}
             >
               Profile
+            </div>
+
+            <div
+              onClick={() => setTab('orders')}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'orders' ? 'bg-purple-950/30 text-purple-300' : 'text-muted-foreground hover:bg-muted/50'}`}
+            >
+              Orders
             </div>
 
             <div
