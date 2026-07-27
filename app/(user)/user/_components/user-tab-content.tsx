@@ -11,6 +11,8 @@ import { toast } from 'sonner'
 import AddressManager, { Address } from './address-manager'
 import ChangeEmailModal from './change-email-modal'
 import ChangePasswordModal from './change-password-modal'
+import Link from 'next/link'
+import { requireAuth } from '@/lib/session-validation'
 
 type OrderWithItems = Prisma.OrderGetPayload<{
   include: {
@@ -18,6 +20,8 @@ type OrderWithItems = Prisma.OrderGetPayload<{
     shippingAddress: true
   }
 }>
+type Session = Awaited<ReturnType<typeof requireAuth>>
+
 
 /* -------------------------------------------------------
    MAIN TAB CONTENT
@@ -26,7 +30,7 @@ export default function TabContent({
   session,
   orders,
 }: {
-  session: { user: User }
+  session: Session//{ user: User }
   orders: OrderWithItems[]
 }) {
   const [tab, setTab] = useState<'orders' | 'profile' | 'settings'>('orders')
@@ -117,39 +121,51 @@ export default function TabContent({
         <div className="flex min-h-225">
           {/* SIDEBAR */}
           <aside className="w-52 border-r py-5 px-3 flex flex-col gap-3">
+
+            {session.user.role === 'admin' && (
+              <>
+                <div className="my-2 border-t" />
+                <Link
+                  href="/admin"
+                  className="px-3 py-2 rounded-lg text-muted-foreground hover:bg-muted/50"
+                >
+                  Dashboard
+                </Link>
+              </>
+            )}
+
+
+
             <p className="px-2 mb-2 text-[11px] uppercase tracking-widest text-muted-foreground">
               Account
             </p>
 
             <div
               onClick={() => setTab('orders')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${
-                tab === 'orders'
-                  ? 'bg-primary/20 text-primary'
-                  : 'text-muted-foreground hover:bg-muted/50'
-              }`}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'orders'
+                ? 'bg-primary/20 text-primary'
+                : 'text-muted-foreground hover:bg-muted/50'
+                }`}
             >
               Profile
             </div>
 
             <div
               onClick={() => setTab('profile')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${
-                tab === 'profile'
-                  ? 'bg-primary/20 text-primary'
-                  : 'text-muted-foreground hover:bg-muted/50'
-              }`}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'profile'
+                ? 'bg-primary/20 text-primary'
+                : 'text-muted-foreground hover:bg-muted/50'
+                }`}
             >
               Orders
             </div>
 
             <div
               onClick={() => setTab('settings')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${
-                tab === 'settings'
-                  ? 'bg-primary/20 text-primary'
-                  : 'text-muted-foreground hover:bg-muted/50'
-              }`}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'settings'
+                ? 'bg-primary/20 text-primary'
+                : 'text-muted-foreground hover:bg-muted/50'
+                }`}
             >
               Settings
             </div>
