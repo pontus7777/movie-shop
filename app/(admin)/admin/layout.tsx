@@ -11,11 +11,11 @@ export default async function AdminLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  await requireAdmin()
+  const adminSession = await requireAdmin()
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
-        <AdminSidebar />
+        <AdminSidebar user={adminSession.user} />
         <main className="flex flex-1 flex-col">
           <div className="p-4">
             <SidebarTrigger />

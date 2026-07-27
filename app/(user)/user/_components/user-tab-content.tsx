@@ -6,17 +6,11 @@ import { Prisma } from '@/generated/prisma/client'
 import { UserProfile } from './user-profile'
 import { UserOrderList } from './user-order-list'
 import { DeleteUserAccountButton } from './delete-account-button'
-import { authClient } from '@/lib/auth-client'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
+import AddressManager, { Address } from './address-manager'
+import ChangeEmailModal from './change-email-modal'
+import ChangePasswordModal from './change-password-modal'
 
 type OrderWithItems = Prisma.OrderGetPayload<{
   include: {
@@ -25,256 +19,6 @@ type OrderWithItems = Prisma.OrderGetPayload<{
   }
 }>
 
-/* -------------------------------------------------------
-   CHANGE EMAIL MODAL
-------------------------------------------------------- */
-function ChangeEmailModal({
-  open,
-  onClose,
-  currentEmail,
-}: {
-  open: boolean
-  onClose: () => void
-  currentEmail: string | null
-}) {
-  const [email, setEmail] = useState(currentEmail || '')
-  const [loading, setLoading] = useState(false)
-
-  async function handleSave() {
-    setLoading(true)
-    try {
-      toast.success('Email updated')
-      onClose()
-    } catch {
-      toast.error('Failed to update email')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Change Email</DialogTitle>
-        </DialogHeader>
-
-        <Input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter new email"
-        />
-
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button onClick={handleSave} disabled={loading}>
-            Save
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-/* -------------------------------------------------------
-   CHANGE PASSWORD MODAL
-------------------------------------------------------- */
-function ChangePasswordModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [currentPassword, setCurrentPassword] = useState('')
-  const [newPassword, setNewPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-
-  async function handleSave() {
-    // validation
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      toast.error('Please fill in all fields')
-      return
-    }
-    if (newPassword.length < 8) {
-      toast.error('New password must be at least 8 characters')
-      return
-    }
-    if (newPassword !== confirmPassword) {
-      toast.error("New passwords don't match")
-      return
-    }
-
-    setLoading(true)
-    try {
-      const result = await authClient.changePassword({
-        currentPassword,
-        newPassword,
-        revokeOtherSessions: true, // ★ signs out all other devices on password change
-      })
-
-      if (result.error) {
-        toast.error(result.error.message ?? 'Failed to change password')
-        return
-      }
-
-      toast.success('Password changed successfully')
-      setCurrentPassword('')
-      setNewPassword('')
-      setConfirmPassword('')
-      onClose()
-    } catch {
-      toast.error('Failed to change password')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Change Password</DialogTitle>
-        </DialogHeader>
-
-        <div className="space-y-3">
-          <div className="space-y-1">
-            <label className="text-sm text-muted-foreground">Current password</label>
-            <Input
-              type="password"
-              placeholder="Enter current password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label className="text-sm text-muted-foreground">New password</label>
-            <Input
-              type="password"
-              placeholder="At least 8 characters"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label className="text-sm text-muted-foreground">Confirm new password</label>
-            <Input
-              type="password"
-              placeholder="Repeat new password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-          </div>
-        </div>
-
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose} disabled={loading}>
-            Cancel
-          </Button>
-          <Button onClick={handleSave} disabled={loading}>
-            {loading ? 'Saving...' : 'Change password'}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  )
-}
-/* -------------------------------------------------------
-   ADDRESS MANAGER (UI ONLY)
-------------------------------------------------------- */
-
-type Address = {
-  id: string
-  firstName: string
-  lastName: string
-  street: string
-  postalCode: string
-  city: string
-  country: string
-  orderId: string
-}
-
-function AddressManager({
-  addresses,
-  onAdd,
-  onDelete,
-  newAddress,
-  setNewAddress,
-}: {
-  addresses: Address[]
-  onAdd: () => void
-  onDelete: (id: string) => void
-  newAddress: {
-    firstName: string
-    lastName: string
-    street: string
-    postalCode: string
-    city: string
-    country: string
-  }
-  setNewAddress: (v: {
-    firstName: string
-    lastName: string
-    street: string
-    postalCode: string
-    city: string
-    country: string
-  }) => void
-}) {
-  return (
-    <div className="space-y-4">
-      {addresses.length === 0 && (
-        <p className="text-sm text-muted-foreground">No addresses added yet.</p>
-      )}
-
-      {addresses.map((addr) => (
-        <div key={addr.id} className="border rounded-lg p-3 flex justify-between">
-          <p className="text-sm">
-            {addr.firstName} {addr.lastName}, {addr.street}, {addr.city}
-          </p>
-          <button className="text-red-400 text-sm" onClick={() => onDelete(addr.id)}>
-            Delete
-          </button>
-        </div>
-      ))}
-
-      {/* FULL ADDRESS FORM */}
-      <div className="grid grid-cols-2 gap-2">
-        <Input
-          placeholder="First name"
-          value={newAddress.firstName}
-          onChange={(e) => setNewAddress({ ...newAddress, firstName: e.target.value })}
-        />
-        <Input
-          placeholder="Last name"
-          value={newAddress.lastName}
-          onChange={(e) => setNewAddress({ ...newAddress, lastName: e.target.value })}
-        />
-        <Input
-          placeholder="Street"
-          value={newAddress.street}
-          onChange={(e) => setNewAddress({ ...newAddress, street: e.target.value })}
-        />
-        <Input
-          placeholder="Postal code"
-          value={newAddress.postalCode}
-          onChange={(e) => setNewAddress({ ...newAddress, postalCode: e.target.value })}
-        />
-        <Input
-          placeholder="City"
-          value={newAddress.city}
-          onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
-        />
-        <Input
-          placeholder="Country"
-          value={newAddress.country}
-          onChange={(e) => setNewAddress({ ...newAddress, country: e.target.value })}
-        />
-      </div>
-
-      <Button onClick={onAdd}>Add</Button>
-    </div>
-  )
-}
 /* -------------------------------------------------------
    MAIN TAB CONTENT
 ------------------------------------------------------- */
@@ -370,7 +114,7 @@ export default function TabContent({
 
       {/* MAIN */}
       <div className="mx-auto max-w-10xl">
-        <div className="flex min-h-[900px]">
+        <div className="flex min-h-225">
           {/* SIDEBAR */}
           <aside className="w-52 border-r py-5 px-3 flex flex-col gap-3">
             <p className="px-2 mb-2 text-[11px] uppercase tracking-widest text-muted-foreground">
@@ -378,17 +122,17 @@ export default function TabContent({
             </p>
 
             <div
-              onClick={() => setTab('orders')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'orders' ? 'bg-purple-950/30 text-purple-300' : 'text-muted-foreground hover:bg-muted/50'}`}
-            >
-              Orders
-            </div>
-
-            <div
               onClick={() => setTab('profile')}
               className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'profile' ? 'bg-purple-950/30 text-purple-300' : 'text-muted-foreground hover:bg-muted/50'}`}
             >
               Profile
+            </div>
+
+            <div
+              onClick={() => setTab('orders')}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'orders' ? 'bg-purple-950/30 text-purple-300' : 'text-muted-foreground hover:bg-muted/50'}`}
+            >
+              Orders
             </div>
 
             <div

@@ -11,19 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Eye, Mail, MoreHorizontal, Printer, XCircle } from 'lucide-react'
 import { useState } from 'react'
 import { OrderDetailsDialog } from './order-details-dialog'
-import { Prisma } from '@/generated/prisma/client'
-
-type OrderWithDetails = Prisma.OrderGetPayload<{
-  include: {
-    user: true
-    shippingAddress: true
-    items: {
-      include: {
-        movie: true
-      }
-    }
-  }
-}>
+import { OrderWithDetails } from '../_types/order'
 
 type Props = {
   order: OrderWithDetails

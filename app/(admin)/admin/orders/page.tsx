@@ -17,7 +17,6 @@ type Props = {
 export default async function OrdersPage({ searchParams }: Props) {
   await requireAdmin()
   const params = await searchParams
-  // const page = Number(params.page ?? 1)
 
   const [data, statistics] = await Promise.all([
     getOrders({
@@ -38,8 +37,6 @@ export default async function OrdersPage({ searchParams }: Props) {
           <h1 className="text-3xl font-bold">Orders</h1>
           <p className="text-muted-foreground">Manage customer orders</p>
         </div>
-
-        {/* <Button>Create Order</Button> */}
       </div>
 
       {/* Statistics */}

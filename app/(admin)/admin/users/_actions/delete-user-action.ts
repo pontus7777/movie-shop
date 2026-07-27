@@ -43,6 +43,4 @@ export async function deleteUser(data: z.infer<typeof DeleteSchema>) {
       error: 'User not found or could not be deleted.',
     }
   }
-
-  // return { success: true }
 }

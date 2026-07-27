@@ -7,7 +7,7 @@ import { z } from 'zod'
 
 const AddUserSchema = z.object({
   name: z.string().min(2),
-  email: z.string().email(),
+  email: z.email(),
   password: z.string().min(8),
   role: z.enum(['user', 'admin']),
 })
@@ -37,10 +37,10 @@ export async function createUser(values: z.infer<typeof AddUserSchema>) {
     })
 
     return { success: true, user: result }
-  } catch (err: any) {
+  } catch (err: unknown) {
     return {
       success: false,
-      error: err?.message ?? 'Something went wrong',
+      error: err instanceof Error ? err.message : 'Something went wrong',
     }
   }
 }

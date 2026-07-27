@@ -41,7 +41,6 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
     onSubmit: async ({ value }) => {
       try {
         await checkout(value)
-        // toast.success('Order placed successfully!')
       } catch (error) {
         toast.error(error instanceof Error ? error.message : 'Checkout failed.')
       }
@@ -150,18 +149,15 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
                               placeholder="1234 5678 9012 3456"
                               value={field.state.value}
                               onBlur={field.handleBlur}
-                              onChange={
-                                (e) => {
-                                  const value = e.target.value
-                                    .replace(/\D/g, '')
-                                    .slice(0, 16)
-                                    .replace(/(.{4})/g, '$1 ')
-                                    .trim()
+                              onChange={(e) => {
+                                const value = e.target.value
+                                  .replace(/\D/g, '')
+                                  .slice(0, 16)
+                                  .replace(/(.{4})/g, '$1 ')
+                                  .trim()
 
-                                  field.handleChange(value)
-                                }
-                                // field.handleChange(e.target.value)
-                              }
+                                field.handleChange(value)
+                              }}
                               inputMode="numeric"
                               maxLength={19}
                               autoComplete="cc-number"
@@ -187,19 +183,15 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
                                 placeholder="MM/YY"
                                 value={field.state.value}
                                 onBlur={field.handleBlur}
-                                onChange={
-                                  (e) => {
-                                    let value = e.target.value.replace(/\D/g, '').slice(0, 4)
+                                onChange={(e) => {
+                                  let value = e.target.value.replace(/\D/g, '').slice(0, 4)
 
-                                    if (value.length > 2) {
-                                      value = `${value.slice(0, 2)}/${value.slice(2)}`
-                                    }
-
-                                    field.handleChange(value)
+                                  if (value.length > 2) {
+                                    value = `${value.slice(0, 2)}/${value.slice(2)}`
                                   }
 
-                                  // field.handleChange(e.target.value)
-                                }
+                                  field.handleChange(value)
+                                }}
                                 inputMode="numeric"
                                 maxLength={5}
                                 autoComplete="cc-exp"

@@ -47,13 +47,12 @@ function SignInForm() {
       const session = await authClient.getSession()
       const role = session?.data?.user?.role
 
-      toast.success('Sign in successeded ')
+      toast.success('Successfully signed in!')
       if (role === 'admin') {
         router.push('/admin')
       } else {
         router.push('/movies')
       }
-      //window.location.href = '/movies'
       router.refresh()
     },
   })
