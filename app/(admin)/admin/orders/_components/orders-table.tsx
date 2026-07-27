@@ -22,20 +22,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Prisma } from '@/generated/prisma/client'
 import { OrderActions } from './order-actions-component'
-
-type OrdersWithRelations = Prisma.OrderGetPayload<{
-  include: {
-    user: true
-    items: {
-      include: {
-        movie: true
-      }
-    }
-    shippingAddress: true
-  }
-}>
+import { OrdersWithRelations } from '../_types/order'
 
 type Props = {
   orders: OrdersWithRelations[]

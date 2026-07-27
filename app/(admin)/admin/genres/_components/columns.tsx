@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { MoreHorizontal } from 'lucide-react'
 import { EditGenreMenuItem } from './edit-genre-menu-item'
-import { DeleteGenreDialog } from './delete-genre-dialog' // ★ NEW
+import { DeleteGenreDialog } from './delete-genre-dialog'
 
 export const columns: ColumnDef<Genre>[] = [
   {
@@ -54,7 +54,6 @@ export const columns: ColumnDef<Genre>[] = [
 
             <EditGenreMenuItem id={genre.id} description={genre.description} name={genre.name} />
 
-            {/* ★ NEW — delete dialog menu item */}
             <DeleteGenreDialog id={genre.id} name={genre.name} />
           </DropdownMenuContent>
         </DropdownMenu>

@@ -63,11 +63,7 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
   })
 
   const onSale = isMovieOnSale(movie)
-
   const displayPrice = convertToEuro(movie.priceInCents)
-
-  const originalPrice = convertToEuro(movie.priceInCents)
-
   const posterSrc = getMovieImageSrc(movie.imageUrl)
   const trailerEmbedUrl = getYoutubeEmbedUrl(movie.trailerUrl)
 

@@ -9,7 +9,6 @@ import { z } from 'zod'
 const UpdateUserSchema = z.object({
   id: z.string(),
   name: z.string().min(1).max(32, 'Title must be less than 32 characters'),
-  //   role: z.enum(['user', 'admin']),
 })
 
 export async function updateUser(values: z.infer<typeof UpdateUserSchema>) {
