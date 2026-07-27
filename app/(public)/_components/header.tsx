@@ -51,9 +51,45 @@ export default function Header({
     <header className="sticky top-0 z-50 border-b border-white/10 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-7.5xl items-centre justify-between px-18 py-3">
         {/* Logo */}
-        <div>
+        <div className="flex items-center gap-4">
           <Logo />
+
+          <Link
+            href="/movies"
+            className="
+      group flex items-center gap-2 px-2 py-1
+      text-sm font-medium text-foreground
+      transition-all duration-200
+      hover:text-primary
+    "
+          >
+            {/* Play Circle Icon */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-primary"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <polygon points="10,8 16,12 10,16" fill="currentColor" />
+            </svg>
+
+            <span className="relative">
+              Movies
+              <span
+                className="
+          absolute left-0 -bottom-0.5
+          block h-[2px] w-0 bg-primary
+          transition-all duration-300
+          group-hover:w-full
+        "
+              />
+            </span>
+          </Link>
         </div>
+
 
         {/* Desktop */}
         <div className="hidden items-center gap-2 md:flex">
@@ -63,9 +99,8 @@ export default function Header({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search movies..."
-              className={`rounded-full border border-border bg-muted px-3 py-1.5 text-sm outline-none transition-all ${
-                isSearchOpen ? 'mr-2 w-48 opacity-100' : 'w-0 opacity-0'
-              }`}
+              className={`rounded-full border border-border bg-muted px-3 py-1.5 text-sm outline-none transition-all ${isSearchOpen ? 'mr-2 w-48 opacity-100' : 'w-0 opacity-0'
+                }`}
             />
 
             <Button
@@ -134,7 +169,7 @@ export default function Header({
                 <Link href="/sign-in">Sign in</Link>
               </Button>
 
-              <Button className="rounded-full bg-primary text-white hover:bg-primary/80" asChild>
+              <Button className="variant=ghost asChild bg-primary text-white hover:bg-primary/80">
                 <Link href="/register">Register</Link>
               </Button>
             </>
@@ -219,7 +254,7 @@ export default function Header({
                   <Link href="/sign-in">Sign in</Link>
                 </Button>
 
-                <Button className="rounded-full bg-primary text-white" asChild>
+                <Button className="variant=ghost asChild bg-primary text-white" >
                   <Link href="/register">Register</Link>
                 </Button>
               </>
