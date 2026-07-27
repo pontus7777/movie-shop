@@ -24,7 +24,7 @@ export function UserMenu({ user }: Props) {
 
   return (
     <Link
-      href="/user"
+      href="/profile"
       className="
         flex
         items-center

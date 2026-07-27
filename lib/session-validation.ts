@@ -15,6 +15,8 @@ export async function requireAuth() {
   return session
 }
 
+export type AuthSession = Awaited<ReturnType<typeof requireAuth>>
+
 export async function requireAdmin() {
   const session = await requireAuth()
 

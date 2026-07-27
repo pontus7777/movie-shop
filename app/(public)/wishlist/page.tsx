@@ -48,7 +48,6 @@ export default async function WishlistPage() {
           const effectivePrice = getEffectivePriceInCents(item.movie)
           const purchased = purchasedIds.has(item.movie.id)
 
-
           return (
             <Card key={item.movie.id}>
               <CardContent className="flex gap-4 p-4">
@@ -73,8 +72,11 @@ export default async function WishlistPage() {
                     {onSale && (
                       <Badge className="bg-red-600 text-white hover:bg-red-600">Sale</Badge>
                     )}
-                    {purchased && <Badge className="bg-amber-500 text-white hover:bg-amber-500">Purchased</Badge>}
-
+                    {purchased && (
+                      <Badge className="bg-amber-500 text-white hover:bg-amber-500">
+                        Purchased
+                      </Badge>
+                    )}
                   </div>
 
                   <div className="mb-4 flex items-baseline gap-2">

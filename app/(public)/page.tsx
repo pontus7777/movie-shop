@@ -21,7 +21,7 @@ export default async function Home() {
         <HotDealsCarousel movies={cheapestMovies} />
 
         {/* Gradient overlay for readability */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/40 via-black/20 to-black/60" />
       </section>
 
       {mostPurchasedMovies.length > 0 && (

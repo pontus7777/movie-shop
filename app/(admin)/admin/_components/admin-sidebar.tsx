@@ -34,7 +34,6 @@ type AdminSidebarProps = {
   }
 }
 
-
 export function AdminSidebar({ user }: AdminSidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
@@ -77,7 +76,8 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
               <SidebarMenuButton
                 asChild
                 className={pathname === '/admin/movies' ? 'border-b-2 border-b-blue-400' : ''}
-                isActive={pathname === '/admin/movies'}>
+                isActive={pathname === '/admin/movies'}
+              >
                 <Link href={'/admin/movies'}>Movies</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -85,7 +85,8 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
               <SidebarMenuButton
                 asChild
                 className={pathname === '/admin/genres' ? 'border-b-2 border-b-blue-400' : ''}
-                isActive={pathname === '/admin/genres'}>
+                isActive={pathname === '/admin/genres'}
+              >
                 <Link href={'/admin/genres'}>Genres</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -93,7 +94,8 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
               <SidebarMenuButton
                 asChild
                 className={pathname === '/admin/orders' ? 'border-b-2 border-b-blue-400' : ''}
-                isActive={pathname === '/admin/orders'}>
+                isActive={pathname === '/admin/orders'}
+              >
                 <Link href={'/admin/orders'}>Orders</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -101,7 +103,8 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
               <SidebarMenuButton
                 asChild
                 className={pathname === '/admin/users' ? 'border-b-2 border-b-blue-400' : ''}
-                isActive={pathname === '/admin/users'}>
+                isActive={pathname === '/admin/users'}
+              >
                 <Link href={'/admin/users'}>Users</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -109,7 +112,8 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
               <SidebarMenuButton
                 asChild
                 className={pathname === '/admin/crew' ? 'border-b-2 border-b-blue-400' : ''}
-                isActive={pathname === '/admin/crew'}>
+                isActive={pathname === '/admin/crew'}
+              >
                 <Link href={'/admin/crew'}>Crew</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -117,7 +121,8 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
               <SidebarMenuButton
                 asChild
                 className={pathname === '/admin/discounts' ? 'border-b-2 border-b-blue-400' : ''}
-                isActive={pathname === '/admin/discounts'}>
+                isActive={pathname === '/admin/discounts'}
+              >
                 <Link href={'/admin/discounts'}>Discounts</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -145,18 +150,16 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
             <DropdownMenuTrigger asChild>
               <button className="hover:bg-accent flex w-full items-center gap-3 rounded-md p-2 transition">
                 <Avatar className="h-9 w-9">
-                  {user.image && (
-                    <AvatarImage src={user.image} />
-                  )}
+                  {user.image && <AvatarImage src={user.image} />}
                   <AvatarFallback>
                     {user.name
                       ? user.name
-                        .split(' ')
-                        .filter(Boolean)
-                        .map((word) => word[0])
-                        .join('')
-                        .slice(0, 2)
-                        .toUpperCase()
+                          .split(' ')
+                          .filter(Boolean)
+                          .map((word) => word[0])
+                          .join('')
+                          .slice(0, 2)
+                          .toUpperCase()
                       : 'U'}
                   </AvatarFallback>
                 </Avatar>

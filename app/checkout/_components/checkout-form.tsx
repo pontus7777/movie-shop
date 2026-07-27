@@ -14,7 +14,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator'
 import { isRedirectError } from 'next/dist/client/components/redirect-error'
 
-
 type checkoutFormProps = {
   isCartEmpty: boolean
 }
@@ -45,7 +44,6 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
         toast.success('Order placed successfully!')
 
         await checkout(value)
-
       } catch (error) {
         if (isRedirectError(error)) {
           throw error
