@@ -98,7 +98,7 @@ export default function TabContent({
       {/* HEADER */}
       <div className="border-b bg-card px-6 py-4">
         <div className="mx-auto max-w-10xl flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-600 text-lg font-semibold text-white">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-lg font-semibold text-white">
             {session.user.name?.charAt(0).toUpperCase() ?? '?'}
           </div>
 
@@ -122,22 +122,34 @@ export default function TabContent({
             </p>
 
             <div
-              onClick={() => setTab('profile')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'profile' ? 'bg-purple-950/30 text-purple-300' : 'text-muted-foreground hover:bg-muted/50'}`}
+              onClick={() => setTab('orders')}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${
+                tab === 'orders'
+                  ? 'bg-primary/20 text-primary'
+                  : 'text-muted-foreground hover:bg-muted/50'
+              }`}
             >
               Profile
             </div>
 
             <div
-              onClick={() => setTab('orders')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'orders' ? 'bg-purple-950/30 text-purple-300' : 'text-muted-foreground hover:bg-muted/50'}`}
+              onClick={() => setTab('profile')}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${
+                tab === 'profile'
+                  ? 'bg-primary/20 text-primary'
+                  : 'text-muted-foreground hover:bg-muted/50'
+              }`}
             >
               Orders
             </div>
 
             <div
               onClick={() => setTab('settings')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'settings' ? 'bg-purple-950/30 text-purple-300' : 'text-muted-foreground hover:bg-muted/50'}`}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${
+                tab === 'settings'
+                  ? 'bg-primary/20 text-primary'
+                  : 'text-muted-foreground hover:bg-muted/50'
+              }`}
             >
               Settings
             </div>
@@ -153,11 +165,11 @@ export default function TabContent({
               <div className="max-w-xl space-y-6">
                 {/* Profile Picture */}
                 <div className="flex items-center gap-4">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-purple-600 text-2xl font-semibold text-white">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-2xl font-semibold text-white">
                     {session.user.name?.charAt(0).toUpperCase() ?? '?'}
                   </div>
                   <div className="flex flex-col gap-2">
-                    <button className="text-sm text-purple-400 hover:text-purple-300">
+                    <button className="text-sm text-red-400 hover:text-red-300">
                       Change Picture
                     </button>
                     <button className="text-sm text-red-400 hover:text-red-300">
@@ -174,7 +186,7 @@ export default function TabContent({
                   <p className="text-sm text-muted-foreground">Email</p>
                   <p className="font-normal">{session.user.email}</p>
                   <button
-                    className="text-sm text-purple-400 hover:text-purple-300 mt-1"
+                    className="text-sm text-red-400 hover:text-red-300 mt-1"
                     onClick={() => setShowEmailModal(true)}
                   >
                     Change Email
@@ -185,7 +197,7 @@ export default function TabContent({
                 <div>
                   <p className="text-sm text-muted-foreground">Phone Number</p>
                   <p className="font-normal">Not added</p>
-                  <button className="text-sm text-purple-400 hover:text-purple-300 mt-1">
+                  <button className="text-sm  text-red-400 hover:text-red-300 mt-1">
                     Add Phone Number
                   </button>
                 </div>

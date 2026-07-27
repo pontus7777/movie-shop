@@ -18,7 +18,7 @@ type Props = {
 export function MovieRow({ rowTitle, movies }: Props) {
   return (
     <section className="py-8">
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
+      <div className="mx-auto w-full max-w-7.5xl px-4 sm:px-18">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-xl font-bold sm:text-2xl">{rowTitle}</h2>
 
