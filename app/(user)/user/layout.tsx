@@ -13,7 +13,7 @@ export default async function UserPagesLayout({ children }: { children: React.Re
         <UserPageHeader />
 
         {/* Toasts */}
-        <Toaster position="bottom-right" richColors />
+        {/* <Toaster position="bottom-right" richColors /> */}
 
         {/* Page content */}
         <div className="flex-1 px-6 py-8">{children}</div>
