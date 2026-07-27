@@ -1,23 +1,84 @@
-## Setup and Run instructions:
+# Top Group
 
-1. Install dependencies
+A Next.js application built with TypeScript, Prisma, Tailwind CSS, and modern React tooling.
+
+## Features
+
+- Next.js 16 App Router
+- TypeScript support
+- Prisma ORM with database migrations and seeding
+- Authentication with Better Auth
+- Tailwind CSS styling
+- React Email integration
+- TMDB data generation and seeding
+- ESLint and Prettier configuration
+
+---
+
+## Requirements
+
+Before running the project, make sure you have installed:
+
+- Node.js (recommended: latest LTS version)
+- npm
+- A configured database supported by Prisma
+
+---
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone <repository-url>
+cd top-group
+```
+
+Install dependencies:
 
 ```bash
 npm install
 ```
 
-2. Add .env file in the root and refer to example.env for enviroment variables ex. BASE_URL & KEYS
-3. Migrate prisma
+---
+
+## Environment Setup
+
+Create a `.env` file in the project root.
+
+Use `example.env` as a reference and provide all required environment variables, such as:
+
+- Database connection details
+- Base URL configuration
+- Authentication keys
+- External API keys
+
+Example:
+
+```env
+DATABASE_URL=
+BASE_URL=
+```
+
+Do not commit your `.env` file.
+
+---
+
+## Database Setup
+
+Run Prisma migrations:
 
 ```bash
 npx prisma migrate dev
 ```
 
-4. Generate prisma client
+Generate the Prisma client:
 
 ```bash
 npx prisma generate
 ```
+
+Seed the database:
 
 ```bash
 npx prisma db seed
@@ -25,40 +86,149 @@ npx prisma db seed
 
 ---
 
-Run the development server:
+## TMDB Data Generation
 
-```bash
-npm run dev
-```
-
-Seed commands:
+Generate TMDB data:
 
 ```bash
 npm run generate:tmdb
 ```
 
-drag the tmdb-data.json into prisma/
+After generating the data:
+
+1. Move the generated `tmdb-data.json` file into the `prisma/` directory.
+2. Run the seed command:
 
 ```bash
 npm run seed
 ```
 
+---
+
+## Email Development
+
+The project uses React Email for developing and previewing email templates.
+
+Start the email development server:
+
 ```bash
-npm install nodemailer
+npm run email:dev
+```
+
+The email preview server will run on:
+
+```
+http://localhost:3001
+```
+
+---
+
+## Development
+
+Start the Next.js development server:
+
+```bash
+npm run dev
+```
+
+Open:
+
+```
+http://localhost:3000
+```
+
+---
+
+## Available Scripts
+
+| Command                 | Description                          |
+| ----------------------- | ------------------------------------ |
+| `npm run dev`           | Start the development server         |
+| `npm run build`         | Create a production build            |
+| `npm run start`         | Start the production server          |
+| `npm run lint`          | Run ESLint checks                    |
+| `npm run format`        | Format the project using Prettier    |
+| `npm run format:check`  | Check formatting                     |
+| `npm run generate:tmdb` | Generate TMDB data                   |
+| `npm run seed`          | Seed the database                    |
+| `npm run email:dev`     | Start React Email development server |
+
+---
+
+## Code Quality
+
+Before submitting changes, run:
+
+```bash
+npm run lint
 ```
 
 ```bash
-npm install @types/nodemailer
+npm run format:check
 ```
 
 ```bash
- npm install @react-email/ui react-email
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+These checks help ensure consistent formatting, code quality, and production compatibility.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project can be deployed using platforms that support Next.js applications, such as Vercel.
+
+For deployment instructions, see the official Next.js deployment documentation:
+
+https://nextjs.org/docs/app/building-your-application/deploying
+
+---
+
+## Tech Stack
+
+### Framework
+
+- Next.js
+- React
+- TypeScript
+
+### Styling
+
+- Tailwind CSS
+- Radix UI
+- Base UI
+
+### Database
+
+- Prisma ORM
+- PostgreSQL
+
+### Authentication
+
+- Better Auth
+
+### Developer Tools
+
+- ESLint
+- Prettier
+- Prisma CLI
+
+### Email
+
+- React Email
+- Nodemailer
+
+---
+
+## Contributing
+
+When contributing:
+
+1. Create a new branch.
+2. Make your changes.
+3. Run linting and build checks.
+4. Commit your changes with a descriptive message.
+5. Open a pull request.
+
+Keep commits focused and follow the existing project style.

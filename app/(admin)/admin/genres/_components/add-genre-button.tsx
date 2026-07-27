@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { toast } from 'sonner' // ★ NEW IMPORT
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -19,13 +19,12 @@ export default function AddGenreButton() {
     const name = formData.get('name') as string
     const description = formData.get('description') as string
 
-    // ★ NEW: wrapped in try/catch so failures show feedback instead of silently doing nothing
     try {
       await createGenre({ name, description })
-      toast.success(`Genre "${name}" added successfully`) // ★ NEW
+      toast.success(`Genre "${name}" added successfully`)
       setOpen(false) // close modal after saving
     } catch {
-      toast.error('Failed to add genre') // ★ NEW
+      toast.error('Failed to add genre')
     }
   }
 

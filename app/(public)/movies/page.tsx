@@ -16,10 +16,21 @@ export default async function MoviesPage(props: PageProps<'/movies'>) {
   const params = await props.searchParams
 
   const pageSize = 18
-
   const page = Number(params.page) || 1
 
   const query = typeof params.q === 'string' ? params.q.trim() : ''
+
+  const yearFrom = typeof params.yearFrom === 'string' ? params.yearFrom : undefined
+  const yearTo = typeof params.yearTo === 'string' ? params.yearTo : undefined
+
+  const runtimeMin = typeof params.runtimeMin === 'string' ? params.runtimeMin : undefined
+  const runtimeMax = typeof params.runtimeMax === 'string' ? params.runtimeMax : undefined
+
+  const yearFromNumber = yearFrom ? Number(yearFrom) : undefined
+  const yearToNumber = yearTo ? Number(yearTo) : undefined
+
+  const runtimeMinNumber = runtimeMin ? Number(runtimeMin) : undefined
+  const runtimeMaxNumber = runtimeMax ? Number(runtimeMax) : undefined
 
   const genreIds = (
     Array.isArray(params.genre) ? params.genre : params.genre ? [params.genre] : []
@@ -45,6 +56,32 @@ export default async function MoviesPage(props: PageProps<'/movies'>) {
       },
     }),
 
+    ...(yearFromNumber || yearToNumber
+      ? {
+          releaseYear: {
+            ...(yearFromNumber && {
+              gte: yearFromNumber,
+            }),
+            ...(yearToNumber && {
+              lte: yearToNumber,
+            }),
+          },
+        }
+      : {}),
+
+    ...(runtimeMinNumber || runtimeMaxNumber
+      ? {
+          runtime: {
+            ...(runtimeMinNumber && {
+              gte: runtimeMinNumber,
+            }),
+            ...(runtimeMaxNumber && {
+              lte: runtimeMaxNumber,
+            }),
+          },
+        }
+      : {}),
+
     ...(genreIds.length > 0 && {
       genres: {
         some: {
@@ -55,27 +92,41 @@ export default async function MoviesPage(props: PageProps<'/movies'>) {
       },
     }),
 
-    ...(directorIds.length > 0 && {
-      credits: {
-        some: {
-          role: 'DIRECTOR' as const,
-          crewId: {
-            in: directorIds,
-          },
-        },
-      },
-    }),
+    ...(directorIds.length > 0 || actorIds.length > 0
+      ? {
+          AND: [
+            ...(directorIds.length > 0
+              ? [
+                  {
+                    credits: {
+                      some: {
+                        role: 'DIRECTOR' as const,
+                        crewId: {
+                          in: directorIds,
+                        },
+                      },
+                    },
+                  },
+                ]
+              : []),
 
-    ...(actorIds.length > 0 && {
-      credits: {
-        some: {
-          role: 'ACTOR' as const,
-          crewId: {
-            in: actorIds,
-          },
-        },
-      },
-    }),
+            ...(actorIds.length > 0
+              ? [
+                  {
+                    credits: {
+                      some: {
+                        role: 'ACTOR' as const,
+                        crewId: {
+                          in: actorIds,
+                        },
+                      },
+                    },
+                  },
+                ]
+              : []),
+          ],
+        }
+      : {}),
   }
 
   const session = await auth.api.getSession({
@@ -144,7 +195,14 @@ export default async function MoviesPage(props: PageProps<'/movies'>) {
 
   const totalPages = Math.ceil(total / pageSize)
 
-  const hasActiveFilters = genreIds.length > 0 || directorIds.length > 0 || actorIds.length > 0
+  const hasActiveFilters =
+    genreIds.length > 0 ||
+    directorIds.length > 0 ||
+    actorIds.length > 0 ||
+    !!yearFrom ||
+    !!yearTo ||
+    !!runtimeMin ||
+    !!runtimeMax
 
   return (
     <main className="min-h-lvh px-3 py-4 sm:px-6 sm:py-6">
@@ -174,6 +232,10 @@ export default async function MoviesPage(props: PageProps<'/movies'>) {
               selectedGenres={genreIds}
               selectedDirectors={directorIds}
               selectedActors={actorIds}
+              yearFrom={yearFrom}
+              yearTo={yearTo}
+              runtimeMin={runtimeMin}
+              runtimeMax={runtimeMax}
             />
           </Suspense>
 
@@ -217,6 +279,10 @@ export default async function MoviesPage(props: PageProps<'/movies'>) {
               genreIds={genreIds}
               directorIds={directorIds}
               actorIds={actorIds}
+              yearFrom={yearFrom}
+              yearTo={yearTo}
+              runtimeMin={runtimeMin}
+              runtimeMax={runtimeMax}
             />
           </section>
         </div>

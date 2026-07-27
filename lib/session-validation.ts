@@ -19,7 +19,7 @@ export async function requireAdmin() {
   const session = await requireAuth()
 
   if (session.user.role !== 'admin') {
-    redirect('/') // or throw new Error("Forbidden")
+    redirect('/')
   }
 
   return session

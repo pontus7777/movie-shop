@@ -37,15 +37,6 @@ export default async function SuccessPage({ searchParams }: Props) {
           <Link href="/movies">Continue shopping</Link>
         </Button>
       </Card>
-
-      {/* <div className="mx-auto max-w-xl py-16 text-center">
-        <h1 className="text-4xl font-bold text-green-600">Payment Successful</h1>
-
-        <p className="mt-6">Thank you for your purchase.</p>
-
-        <p className="mt-2 font-medium">Order ID: {orderId}</p>
-
-      </div> */}
     </>
   )
 }
