@@ -4,11 +4,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useState } from 'react'
-import { ShoppingCart, Search, Film, Menu, X, User } from 'lucide-react'
+import { ShoppingCart, Search, Film, Menu, X, User, Popcorn, FilmIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { ThemeModeToggle } from '../../../components/theme-mode-toggle'
 import { authClient } from '@/lib/auth-client'
+import Logo from './logo'
 
 export default function Header({
   userName,
@@ -48,25 +49,10 @@ export default function Header({
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
+      <div className="mx-auto flex max-w-7.5xl items-centre justify-between px-18 py-3">
         {/* Logo */}
-        <div className="flex items-center gap-3">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-xl font-extrabold tracking-tight sm:text-2xl"
-          >
-            <div className="rounded-lg bg-purple-600 p-1.5">
-              <Film className="h-5 w-5 text-white" />
-            </div>
-
-            <span>
-              Cine<span className="text-purple-500">Vault</span>
-            </span>
-          </Link>
-
-          <Button variant="ghost" asChild className="hidden sm:inline-flex">
-            <Link href="/movies">Movies</Link>
-          </Button>
+        <div>
+          <Logo />
         </div>
 
         {/* Desktop */}
@@ -105,7 +91,7 @@ export default function Header({
               <ShoppingCart className="h-5 w-5" />
 
               {cartCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-purple-600 text-xs text-white">
+                <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-xs text-white">
                   {cartCount > 9 ? '9+' : cartCount}
                 </span>
               )}
@@ -148,7 +134,7 @@ export default function Header({
                 <Link href="/sign-in">Sign in</Link>
               </Button>
 
-              <Button className="rounded-full bg-purple-600 text-white hover:bg-purple-700" asChild>
+              <Button className="rounded-full bg-primary text-white hover:bg-primary/80" asChild>
                 <Link href="/register">Register</Link>
               </Button>
             </>
@@ -162,7 +148,7 @@ export default function Header({
               <ShoppingCart className="h-5 w-5" />
 
               {cartCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-purple-600 px-1 text-[10px] font-bold text-white">
+                <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white">
                   {cartCount > 9 ? '9+' : cartCount}
                 </span>
               )}
@@ -233,7 +219,7 @@ export default function Header({
                   <Link href="/sign-in">Sign in</Link>
                 </Button>
 
-                <Button className="rounded-full bg-purple-600 text-white" asChild>
+                <Button className="rounded-full bg-primary text-white" asChild>
                   <Link href="/register">Register</Link>
                 </Button>
               </>

@@ -1,6 +1,6 @@
 import prisma from '@/lib/prisma'
-import { Prisma } from '@/generated/prisma/client'
 import TabContent from './_components/user-tab-content'
+import { requireAuth } from '@/lib/session-validation'
 
 export default async function UserPage() {
   const session = await requireAuth()

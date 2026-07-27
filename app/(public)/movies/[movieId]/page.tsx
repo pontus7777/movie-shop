@@ -157,7 +157,7 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
 
           {movie.imdbRating != null && (
             <div className="mx-auto flex shrink-0 flex-col items-center sm:mx-0 sm:pb-1">
-              <div className="flex size-14 items-center justify-center rounded-full border-2 border-purple-500 bg-purple-950/40 text-base font-bold text-purple-300">
+              <div className="flex size-14 items-center justify-center rounded-full border-2 border-primary bg-primary text-base font-bold text-white">
                 {movie.imdbRating.toFixed(1)}
               </div>
 
@@ -175,7 +175,7 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
               <Badge
                 key={genre.id}
                 variant="secondary"
-                className="border-purple-500/20 bg-purple-950/40 text-purple-200"
+                className="border-primary bg-primary text-white"
               >
                 {genre.name}
               </Badge>
@@ -198,7 +198,7 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
           <Separator className="my-2" />
 
           <div className="mx-auto flex w-fit items-center gap-3 rounded-xl border border-white/10 bg-white/3 p-3 sm:mx-0">
-            <span className="text-1.5xl font-bold text-purple-400">€{displayPrice}</span>
+            <span className="text-1.5xl font-bold text-primary">€{displayPrice}</span>
 
             <CartActionButton
               movieId={movie.id}
@@ -206,7 +206,7 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
               toastMessage="Added to cart!"
               disabled={!movie.stock}
               size="lg"
-              className="bg-purple-600 px-4 text-white hover:bg-purple-700"
+              className="bg-primary px-4 text-white hover:bg-primary"
             >
               {movie.stock ? 'Add to cart' : 'Out of stock'}
             </CartActionButton>
