@@ -170,7 +170,7 @@ export default function TabContent({ session, orders }: Props) {
                 : 'text-muted-foreground hover:bg-muted/50'
                 }`}
             >
-              My Watch List
+              My Library
             </div>
 
 
