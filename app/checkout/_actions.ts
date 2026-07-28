@@ -7,6 +7,7 @@ import { auth } from '@/lib/auth'
 import prisma from '@/lib/prisma'
 
 import { checkoutSchema, type CheckoutInput } from '@/lib/validations/checkout'
+import { removeMoviesFromWishlist } from '@/lib/wishlist'
 
 export async function checkout(input: CheckoutInput) {
   // Validate input on the server as well
@@ -103,6 +104,9 @@ export async function checkout(input: CheckoutInput) {
 
     return createdOrder
   })
+
+  const purchasedMovieIds = cart.items.map((item) => item.movieId)
+  await removeMoviesFromWishlist(session.user.id, purchasedMovieIds)
 
   redirect(`/checkout/success?orderId=${order.id}`)
 }
