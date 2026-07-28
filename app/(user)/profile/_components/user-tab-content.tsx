@@ -11,8 +11,7 @@ import ChangeEmailModal from './change-email-modal'
 import ChangePasswordModal from './change-password-modal'
 import Link from 'next/link'
 import { AuthSession } from '@/lib/session-validation'
-import { UserAddress } from './user-address'
-import { UserPhoneNumber } from './user-phone-number'
+import { UserMovieLibrary } from './user-movie-library'
 
 type OrderWithItems = Prisma.OrderGetPayload<{
   include: {
@@ -29,11 +28,78 @@ type Props = {
    MAIN TAB CONTENT
 ------------------------------------------------------- */
 export default function TabContent({ session, orders }: Props) {
-  const [tab, setTab] = useState<'orders' | 'profile' | 'settings'>('orders')
+  const [tab, setTab] = useState<'orders' | 'library' | 'profile' | 'settings'>('orders')
 
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [showPasswordModal, setShowPasswordModal] = useState(false)
 
+  // Convert shippingAddress into usable UI addresses
+  const initialAddresses = orders
+    .map((o) => o.shippingAddress)
+    .filter(Boolean)
+    .map((addr) => ({
+      id: addr!.id,
+      firstName: addr!.firstName,
+      lastName: addr!.lastName,
+      street: addr!.street,
+      postalCode: addr!.postalCode,
+      city: addr!.city,
+      country: addr!.country,
+      orderId: addr!.orderId,
+    }))
+
+  const purchasedMovies = Array.from(
+    new Map(
+      orders
+        .filter((order) => order.status === 'PAID')
+        .flatMap((order) => order.items)
+        .map((item) => [item.movie.id, item.movie])
+    ).values()
+  )
+
+  const [addresses, setAddresses] = useState<Address[]>(initialAddresses)
+  const [newAddress, setNewAddress] = useState({
+    firstName: '',
+    lastName: '',
+    street: '',
+    postalCode: '',
+    city: '',
+    country: '',
+  })
+
+  function addAddress() {
+    if (!newAddress.street.trim() || !newAddress.firstName.trim()) {
+      toast.error('Please fill in at least first name and street')
+      return
+    }
+
+    const newAddr: Address = {
+      id: crypto.randomUUID(),
+      firstName: newAddress.firstName,
+      lastName: newAddress.lastName,
+      street: newAddress.street,
+      postalCode: newAddress.postalCode,
+      city: newAddress.city,
+      country: newAddress.country,
+      orderId: crypto.randomUUID(),
+    }
+
+    setAddresses((prev) => [...prev, newAddr])
+    setNewAddress({
+      firstName: '',
+      lastName: '',
+      street: '',
+      postalCode: '',
+      city: '',
+      country: '',
+    })
+    toast.success('Address added')
+  }
+
+  function deleteAddress(id: string) {
+    setAddresses((prev) => prev.filter((a) => a.id !== id))
+    toast.success('Address deleted')
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -95,6 +161,18 @@ export default function TabContent({ session, orders }: Props) {
               Orders
             </div>
 
+
+            <div
+              onClick={() => setTab('library')}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'library'
+                ? 'bg-primary/20 text-primary'
+                : 'text-muted-foreground hover:bg-muted/50'
+                }`}
+            >
+              My Library
+            </div>
+
+
             <div
               onClick={() => setTab('settings')}
               className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'settings'
@@ -110,6 +188,8 @@ export default function TabContent({ session, orders }: Props) {
           <main className="flex-1 py-5 px-6">
             {/* ORDERS */}
             {tab === 'orders' && <UserOrderList orders={orders} />}
+            {/* LIBRARY */}
+            {tab === 'library' && <UserMovieLibrary movies={purchasedMovies} />}
 
             {/* PROFILE */}
             {tab === 'profile' && (

@@ -47,7 +47,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
     router.refresh()
   }
   async function goToProfile() {
-    router.push('/user')
+    router.push('/profile')
     router.refresh()
   }
 
@@ -66,8 +66,9 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                className={pathname === '/admin' ? 'border-b-2 border-b-blue-400' : ''}
+                className={pathname === '/admin' ? 'border-b-2 border-b-orange-400' : ''}
                 isActive={pathname === '/admin'}
+
               >
                 <Link href={'/admin'}>Overview</Link>
               </SidebarMenuButton>
@@ -75,7 +76,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                className={pathname === '/admin/movies' ? 'border-b-2 border-b-blue-400' : ''}
+                className={pathname === '/admin/movies' ? 'border-b-2 border-b-orange-400' : ''}
                 isActive={pathname === '/admin/movies'}
               >
                 <Link href={'/admin/movies'}>Movies</Link>
@@ -84,7 +85,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                className={pathname === '/admin/genres' ? 'border-b-2 border-b-blue-400' : ''}
+                className={pathname === '/admin/genres' ? 'border-b-2 border-b-orange-400' : ''}
                 isActive={pathname === '/admin/genres'}
               >
                 <Link href={'/admin/genres'}>Genres</Link>
@@ -93,7 +94,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                className={pathname === '/admin/orders' ? 'border-b-2 border-b-blue-400' : ''}
+                className={pathname === '/admin/orders' ? 'border-b-2 border-b-orange-400' : ''}
                 isActive={pathname === '/admin/orders'}
               >
                 <Link href={'/admin/orders'}>Orders</Link>
@@ -102,7 +103,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                className={pathname === '/admin/users' ? 'border-b-2 border-b-blue-400' : ''}
+                className={pathname === '/admin/users' ? 'border-b-2 border-b-orange-400' : ''}
                 isActive={pathname === '/admin/users'}
               >
                 <Link href={'/admin/users'}>Users</Link>
@@ -111,7 +112,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                className={pathname === '/admin/crew' ? 'border-b-2 border-b-blue-400' : ''}
+                className={pathname === '/admin/crew' ? 'border-b-2 border-b-orange-400' : ''}
                 isActive={pathname === '/admin/crew'}
               >
                 <Link href={'/admin/crew'}>Crew</Link>
@@ -120,7 +121,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                className={pathname === '/admin/discounts' ? 'border-b-2 border-b-blue-400' : ''}
+                className={pathname === '/admin/discounts' ? 'border-b-2 border-b-orange-400' : ''}
                 isActive={pathname === '/admin/discounts'}
               >
                 <Link href={'/admin/discounts'}>Discounts</Link>

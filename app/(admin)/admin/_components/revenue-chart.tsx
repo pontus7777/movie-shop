@@ -56,7 +56,7 @@ export function RevenueChart({ data }: Props) {
 
         <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
 
-        <Line dataKey="revenue" type="monotone" strokeWidth={2} dot={false} />
+        <Line dataKey="revenue" type="monotone" strokeWidth={2} stroke='var(--chart-1)' dot={false} />
       </LineChart>
     </ChartContainer>
   )
