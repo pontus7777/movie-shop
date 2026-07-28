@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useSearchParams, useRouter, usePathname } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import { Prisma } from '@/generated/prisma/client'
 import { UserProfile } from './user-profile'
 import { UserOrderList } from './user-order-list'
@@ -29,7 +30,21 @@ type Props = {
    MAIN TAB CONTENT
 ------------------------------------------------------- */
 export default function TabContent({ session, orders }: Props) {
-  const [tab, setTab] = useState<'orders' | 'library' | 'profile' | 'settings'>('orders')
+
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
+  const playMovieId = searchParams.get('play')
+
+  // const [tab, setTab] = useState<'orders' | 'library' | 'profile' | 'settings'>('orders')
+  const tab = (searchParams.get('tab') as 'orders' | 'library' | 'profile' | 'settings') || 'orders'
+
+  function setTab(newTab: string) {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('tab', newTab)
+    router.push(`${pathname}?${params.toString()}`)
+  }
+
 
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [showPasswordModal, setShowPasswordModal] = useState(false)
@@ -187,10 +202,14 @@ export default function TabContent({ session, orders }: Props) {
 
           {/* RIGHT CONTENT */}
           <main className="flex-1 py-5 px-6">
+
+            {/* LIBRARY */}
+            {tab === 'library' && (
+              <UserMovieLibrary movies={purchasedMovies} autoPlayMovieId={playMovieId} />
+            )}
+
             {/* ORDERS */}
             {tab === 'orders' && <UserOrderList orders={orders} />}
-            {/* LIBRARY */}
-            {tab === 'library' && <UserMovieLibrary movies={purchasedMovies} />}
 
             {/* PROFILE */}
             {tab === 'profile' && (
