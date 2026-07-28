@@ -126,16 +126,6 @@ export function UserTable({ users, totalUsers, currentPage, totalPages }: UserTa
                   <TableCell>{user.role}</TableCell>
 
                   <TableCell>
-                    {/* <Badge
-                      className={
-                        user.emailVerified
-                          ? 'bg-green-400 hover:bg-green-600'
-                          : 'bg-red-400 hover:bg-red-600'
-                      }
-                    >
-                      {user.emailVerified ? 'Verified' : 'Not Verified'}
-                    </Badge> */}
-
 
                     <div className="flex items-center gap-2">
                       <Switch
@@ -147,7 +137,6 @@ export function UserTable({ users, totalUsers, currentPage, totalPages }: UserTa
                         {user.emailVerified ? 'Verified' : 'Not Verified'}
                       </span>
                     </div>
-
 
                   </TableCell>
 
