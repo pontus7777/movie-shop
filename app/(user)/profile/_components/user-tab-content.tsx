@@ -7,11 +7,12 @@ import { UserOrderList } from './user-order-list'
 import { DeleteUserAccountButton } from './delete-account-button'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
-import AddressManager, { Address } from './address-manager'
 import ChangeEmailModal from './change-email-modal'
 import ChangePasswordModal from './change-password-modal'
 import Link from 'next/link'
 import { AuthSession } from '@/lib/session-validation'
+import { UserAddress } from './user-address'
+import { UserPhoneNumber } from './user-phone-number'
 
 type OrderWithItems = Prisma.OrderGetPayload<{
   include: {
@@ -33,64 +34,6 @@ export default function TabContent({ session, orders }: Props) {
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [showPasswordModal, setShowPasswordModal] = useState(false)
 
-  // Convert shippingAddress into usable UI addresses
-  const initialAddresses = orders
-    .map((o) => o.shippingAddress)
-    .filter(Boolean)
-    .map((addr) => ({
-      id: addr!.id,
-      firstName: addr!.firstName,
-      lastName: addr!.lastName,
-      street: addr!.street,
-      postalCode: addr!.postalCode,
-      city: addr!.city,
-      country: addr!.country,
-      orderId: addr!.orderId,
-    }))
-
-  const [addresses, setAddresses] = useState<Address[]>(initialAddresses)
-  const [newAddress, setNewAddress] = useState({
-    firstName: '',
-    lastName: '',
-    street: '',
-    postalCode: '',
-    city: '',
-    country: '',
-  })
-
-  function addAddress() {
-    if (!newAddress.street.trim() || !newAddress.firstName.trim()) {
-      toast.error('Please fill in at least first name and street')
-      return
-    }
-
-    const newAddr: Address = {
-      id: crypto.randomUUID(),
-      firstName: newAddress.firstName,
-      lastName: newAddress.lastName,
-      street: newAddress.street,
-      postalCode: newAddress.postalCode,
-      city: newAddress.city,
-      country: newAddress.country,
-      orderId: crypto.randomUUID(),
-    }
-
-    setAddresses((prev) => [...prev, newAddr])
-    setNewAddress({
-      firstName: '',
-      lastName: '',
-      street: '',
-      postalCode: '',
-      city: '',
-      country: '',
-    })
-    toast.success('Address added')
-  }
-
-  function deleteAddress(id: string) {
-    setAddresses((prev) => prev.filter((a) => a.id !== id))
-    toast.success('Address deleted')
-  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -134,33 +77,30 @@ export default function TabContent({ session, orders }: Props) {
 
             <div
               onClick={() => setTab('profile')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${
-                tab === 'profile'
-                  ? 'bg-primary/20 text-primary'
-                  : 'text-muted-foreground hover:bg-muted/50'
-              }`}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'profile'
+                ? 'bg-primary/20 text-primary'
+                : 'text-muted-foreground hover:bg-muted/50'
+                }`}
             >
               Profile
             </div>
 
             <div
               onClick={() => setTab('orders')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${
-                tab === 'orders'
-                  ? 'bg-primary/20 text-primary'
-                  : 'text-muted-foreground hover:bg-muted/50'
-              }`}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'orders'
+                ? 'bg-primary/20 text-primary'
+                : 'text-muted-foreground hover:bg-muted/50'
+                }`}
             >
               Orders
             </div>
 
             <div
               onClick={() => setTab('settings')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${
-                tab === 'settings'
-                  ? 'bg-primary/20 text-primary'
-                  : 'text-muted-foreground hover:bg-muted/50'
-              }`}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'settings'
+                ? 'bg-primary/20 text-primary'
+                : 'text-muted-foreground hover:bg-muted/50'
+                }`}
             >
               Settings
             </div>
@@ -207,22 +147,16 @@ export default function TabContent({ session, orders }: Props) {
                 {/* Phone */}
                 <div>
                   <p className="text-sm text-muted-foreground">Phone Number</p>
-                  <p className="font-normal">Not added</p>
-                  <button className="text-sm  text-red-400 hover:text-red-300 mt-1">
-                    Add Phone Number
-                  </button>
+                  <p className="font-normal">{session.user.mobileNumber ?? 'Not added'}</p>
+                  <UserPhoneNumber user={session.user} />
                 </div>
 
                 {/* Address Book */}
+                {/* Address */}
                 <div>
-                  <p className="text-sm text-muted-foreground mb-2">Addresses</p>
-                  <AddressManager
-                    addresses={addresses}
-                    onAdd={addAddress}
-                    onDelete={deleteAddress}
-                    newAddress={newAddress}
-                    setNewAddress={setNewAddress}
-                  />
+                  <p className="text-sm text-muted-foreground">Address</p>
+                  <p className="font-normal whitespace-pre-line">{session.user.address ?? 'Not added'}</p>
+                  <UserAddress user={session.user} />
                 </div>
               </div>
             )}

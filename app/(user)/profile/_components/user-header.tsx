@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { authClient } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
-import { Film, LogOut } from 'lucide-react'
+import { LogOut, Popcorn } from 'lucide-react'
 import { ThemeModeToggle } from '@/components/theme-mode-toggle'
 
 export function UserPageHeader() {
@@ -21,7 +21,7 @@ export function UserPageHeader() {
         {/* ===== HOME LINK ===== */}
         <Link href="/" className="flex items-center gap-2 text-2xl font-extrabold tracking-tight">
           <div className="rounded-lg bg-primary p-1.5">
-            <Film className="h-5 w-5 text-white" />
+            <Popcorn className="h-5 w-5 text-white" />
           </div>
           <span>
             Cine<span className="text-primary">Vault</span>
