@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
+// import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -32,9 +32,16 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu'
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { EditUserDialog } from './edit-user-dialog'
 import { DeleteUserDialog } from './delete-user-dialog'
+import { updateUserVerification } from '../_actions/update-user-verification-action'
+import { toast } from 'sonner'
+import { Switch } from '@/components/ui/switch'
+import { useRouter } from 'next/navigation'
+
+
+
 type UserWithRelations = Prisma.UserGetPayload<{
   include: {
     orders: true
@@ -49,9 +56,34 @@ export type UserTableProps = {
 }
 
 export function UserTable({ users, totalUsers, currentPage, totalPages }: UserTableProps) {
+  const router = useRouter()
+
   const [selectedUser, setSelectedUser] = useState<UserWithRelations | null>(null)
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const [isPending, startTransition] = useTransition()
+  const [pendingId, setPendingId] = useState<string | null>(null)
+
+  function handleVerifyToggle(user: UserWithRelations, checked: boolean) {
+    setPendingId(user.id)
+    startTransition(async () => {
+      const result = await updateUserVerification({
+        id: user.id,
+        emailVerified: checked,
+      })
+
+      if (!result.success) {
+        toast.error(result.error)
+      } else {
+        toast.success(
+          checked ? 'User marked as verified' : 'User marked as unverified'
+        )
+        router.refresh()
+      }
+      setPendingId(null)
+    })
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -94,15 +126,18 @@ export function UserTable({ users, totalUsers, currentPage, totalPages }: UserTa
                   <TableCell>{user.role}</TableCell>
 
                   <TableCell>
-                    <Badge
-                      className={
-                        user.emailVerified
-                          ? 'bg-green-400 hover:bg-green-600'
-                          : 'bg-red-400 hover:bg-red-600'
-                      }
-                    >
-                      {user.emailVerified ? 'Verified' : 'Not Verified'}
-                    </Badge>
+
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={user.emailVerified}
+                        disabled={isPending && pendingId === user.id}
+                        onCheckedChange={(checked) => handleVerifyToggle(user, checked)}
+                      />
+                      <span className="text-sm text-muted-foreground">
+                        {user.emailVerified ? 'Verified' : 'Not Verified'}
+                      </span>
+                    </div>
+
                   </TableCell>
 
                   <TableCell>{user.orders.length}</TableCell>
