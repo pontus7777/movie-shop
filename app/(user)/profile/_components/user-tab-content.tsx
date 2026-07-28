@@ -12,6 +12,7 @@ import ChangeEmailModal from './change-email-modal'
 import ChangePasswordModal from './change-password-modal'
 import Link from 'next/link'
 import { AuthSession } from '@/lib/session-validation'
+import { UserMovieLibrary } from './user-movie-library'
 
 type OrderWithItems = Prisma.OrderGetPayload<{
   include: {
@@ -28,7 +29,7 @@ type Props = {
    MAIN TAB CONTENT
 ------------------------------------------------------- */
 export default function TabContent({ session, orders }: Props) {
-  const [tab, setTab] = useState<'orders' | 'profile' | 'settings'>('orders')
+  const [tab, setTab] = useState<'orders' | 'library' | 'profile' | 'settings'>('orders')
 
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [showPasswordModal, setShowPasswordModal] = useState(false)
@@ -47,6 +48,15 @@ export default function TabContent({ session, orders }: Props) {
       country: addr!.country,
       orderId: addr!.orderId,
     }))
+
+  const purchasedMovies = Array.from(
+    new Map(
+      orders
+        .filter((order) => order.status === 'PAID')
+        .flatMap((order) => order.items)
+        .map((item) => [item.movie.id, item.movie])
+    ).values()
+  )
 
   const [addresses, setAddresses] = useState<Address[]>(initialAddresses)
   const [newAddress, setNewAddress] = useState({
@@ -134,33 +144,42 @@ export default function TabContent({ session, orders }: Props) {
 
             <div
               onClick={() => setTab('profile')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${
-                tab === 'profile'
-                  ? 'bg-primary/20 text-primary'
-                  : 'text-muted-foreground hover:bg-muted/50'
-              }`}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'profile'
+                ? 'bg-primary/20 text-primary'
+                : 'text-muted-foreground hover:bg-muted/50'
+                }`}
             >
               Profile
             </div>
 
             <div
               onClick={() => setTab('orders')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${
-                tab === 'orders'
-                  ? 'bg-primary/20 text-primary'
-                  : 'text-muted-foreground hover:bg-muted/50'
-              }`}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'orders'
+                ? 'bg-primary/20 text-primary'
+                : 'text-muted-foreground hover:bg-muted/50'
+                }`}
             >
               Orders
             </div>
 
+
+            <div
+              onClick={() => setTab('library')}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'library'
+                ? 'bg-primary/20 text-primary'
+                : 'text-muted-foreground hover:bg-muted/50'
+                }`}
+            >
+              My Watch List
+            </div>
+
+
             <div
               onClick={() => setTab('settings')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${
-                tab === 'settings'
-                  ? 'bg-primary/20 text-primary'
-                  : 'text-muted-foreground hover:bg-muted/50'
-              }`}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'settings'
+                ? 'bg-primary/20 text-primary'
+                : 'text-muted-foreground hover:bg-muted/50'
+                }`}
             >
               Settings
             </div>
@@ -170,6 +189,8 @@ export default function TabContent({ session, orders }: Props) {
           <main className="flex-1 py-5 px-6">
             {/* ORDERS */}
             {tab === 'orders' && <UserOrderList orders={orders} />}
+
+            {tab === 'library' && <UserMovieLibrary movies={purchasedMovies} />}
 
             {/* PROFILE */}
             {tab === 'profile' && (
