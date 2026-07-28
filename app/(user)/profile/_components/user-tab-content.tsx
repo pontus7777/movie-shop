@@ -15,6 +15,7 @@ import { AuthSession } from '@/lib/session-validation'
 import { UserMovieLibrary } from './user-movie-library'
 import { UserAddress } from './user-address'
 import { UserPhoneNumber } from './user-phone-number'
+import { Address } from './address-manager'
 
 type OrderWithItems = Prisma.OrderGetPayload<{
   include: {
