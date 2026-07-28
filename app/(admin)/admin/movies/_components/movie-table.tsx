@@ -80,7 +80,7 @@ function MovieTable({ movies, currentPage, totalPages, currentPageSize }: Props)
         </div>
         <Button
           asChild
-          className="bg-emerald-750 border-emerald-500 text-emerald-600 hover:bg-emerald-700 hover:text-emerald-100"
+          className="bg-orange-600 border-orange-500 text-white hover:bg-orange-700 hover:text-orange-50"
         >
           <Link href="/admin/movies/create">Add Movie</Link>
         </Button>
