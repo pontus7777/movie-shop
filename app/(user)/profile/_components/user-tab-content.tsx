@@ -12,6 +12,8 @@ import ChangePasswordModal from './change-password-modal'
 import Link from 'next/link'
 import { AuthSession } from '@/lib/session-validation'
 import { UserMovieLibrary } from './user-movie-library'
+import { UserAddress } from './user-address'
+import { UserPhoneNumber } from './user-phone-number'
 
 type OrderWithItems = Prisma.OrderGetPayload<{
   include: {
