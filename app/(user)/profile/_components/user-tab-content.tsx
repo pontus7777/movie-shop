@@ -189,7 +189,7 @@ export default function TabContent({ session, orders }: Props) {
           <main className="flex-1 py-5 px-6">
             {/* ORDERS */}
             {tab === 'orders' && <UserOrderList orders={orders} />}
-
+            {/* LIBRARY */}
             {tab === 'library' && <UserMovieLibrary movies={purchasedMovies} />}
 
             {/* PROFILE */}
