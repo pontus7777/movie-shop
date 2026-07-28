@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Prisma } from '@/generated/prisma/client'
 import { UserProfile } from './user-profile'
 import { UserOrderList } from './user-order-list'
