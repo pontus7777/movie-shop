@@ -40,8 +40,6 @@ import { toast } from 'sonner'
 import { Switch } from '@/components/ui/switch'
 import { useRouter } from 'next/navigation'
 
-
-
 type UserWithRelations = Prisma.UserGetPayload<{
   include: {
     orders: true
@@ -75,9 +73,7 @@ export function UserTable({ users, totalUsers, currentPage, totalPages }: UserTa
       if (!result.success) {
         toast.error(result.error)
       } else {
-        toast.success(
-          checked ? 'User marked as verified' : 'User marked as unverified'
-        )
+        toast.success(checked ? 'User marked as verified' : 'User marked as unverified')
         router.refresh()
       }
       setPendingId(null)
@@ -126,7 +122,6 @@ export function UserTable({ users, totalUsers, currentPage, totalPages }: UserTa
                   <TableCell>{user.role}</TableCell>
 
                   <TableCell>
-
                     <div className="flex items-center gap-2">
                       <Switch
                         checked={user.emailVerified}
@@ -137,7 +132,6 @@ export function UserTable({ users, totalUsers, currentPage, totalPages }: UserTa
                         {user.emailVerified ? 'Verified' : 'Not Verified'}
                       </span>
                     </div>
-
                   </TableCell>
 
                   <TableCell>{user.orders.length}</TableCell>

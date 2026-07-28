@@ -10,8 +10,7 @@ import {
 import { revalidatePath } from 'next/cache'
 
 type WishlistResult =
-  | { success: true; wishlisted: boolean }
-  | { success: false; reason: 'unauthenticated' }
+  { success: true; wishlisted: boolean } | { success: false; reason: 'unauthenticated' }
 
 async function getUserId(): Promise<string | null> {
   const session = await auth.api.getSession({ headers: await headers() })

@@ -47,7 +47,6 @@ export default function HotDealsCarousel({ movies }: Props) {
     changeSlide((index - 1 + movies.length) % movies.length)
   }, [changeSlide, index, movies.length])
 
-  // Auto slide
   useEffect(() => {
     if (movies.length <= 1) return
 
@@ -61,20 +60,21 @@ export default function HotDealsCarousel({ movies }: Props) {
   if (movies.length === 0) return null
 
   return (
-    <div className="relative overflow-hidden rounded-xl">
+    <div className="relative overflow-hidden border-y border-border bg-card shadow-lg">
       <Link href={`/movies/${movie.id}`}>
         <div
           className={`
-            relative
-            h-55
-            w-7.5xl
-            overflow-hidden
-            transition-opacity
-            duration-300
-            md:h-170
-            ${fade ? 'opacity-100' : 'opacity-0'}
-          `}
+    relative
+    h-55
+    w-full
+    overflow-hidden
+    transition-opacity
+    duration-300
+    md:h-170
+    ${fade ? 'opacity-100' : 'opacity-0'}
+  `}
         >
+          {/* Movie Image */}
           <Image
             src={movie.backdropUrl ?? '/placeholder.jpg'}
             alt={movie.title}
@@ -82,138 +82,195 @@ export default function HotDealsCarousel({ movies }: Props) {
             sizes="(max-width: 768px) 100vw, 1280px"
             priority
             className="
-              object-cover
-              transition-transform
-              duration-5000
-              hover:scale-105
-            "
+            object-cover
+            transition-transform
+            duration-[5000ms]
+            hover:scale-105
+          "
           />
 
-          {/* Overlay */}
+          {/* Image shadows ONLY */}
           <div
             className="
-              absolute
-              inset-0
-              bg-linear-to-r
-              from-black/80
-              via-black/40
-              to-transparent
-            "
+            absolute
+            inset-0
+            z-10
+            bg-linear-to-r
+            from-black/80
+            via-black/30
+            to-transparent
+          "
           />
-          {/* Hot Deals heading */}
-          <div className="absolute left-9 top-4 z-30 text-white">
-            <h2 className="text-2xl font-bold drop-shadow-lg">🏷️ Hot Deals</h2>
-            <p className="text-white text-sm drop-shadow-md">
+
+          <div
+            className="
+            absolute
+            inset-x-0
+            bottom-0
+            z-10
+            h-64
+            bg-linear-to-t
+            from-black/80
+            via-black/40
+            to-transparent
+          "
+          />
+
+          {/* Hot Deals */}
+          <div
+            className="
+            absolute
+            left-6
+            top-5
+            z-20
+            text-white
+            md:left-9
+          "
+          >
+            <h2 className="text-2xl font-bold drop-shadow-xl">🏷️ Hot Deals</h2>
+
+            <p className="text-sm text-white/80 drop-shadow-lg">
               Grab your favorite movies at the best prices
             </p>
           </div>
 
-          {/* Price badge */}
+          {/* Price */}
           <div
             className="
-              absolute
-              right-9
-              top-4
-              rounded-full
-              bg-red-600
-              px-3
-              py-1
-              text-sm
-              font-bold
-              text-white
-              shadow-lg
-            "
+            absolute
+            right-6
+            top-5
+            z-20
+            rounded-full
+            bg-red-600
+            px-3
+            py-1
+            text-sm
+            font-bold
+            text-white
+            shadow-lg
+            md:right-9
+          "
           >
             €{convertToEuro(movie.priceInCents)} ONLY
           </div>
 
-          {/* Movie info */}
+          {/* Movie Info */}
           <div
             className="
-              absolute
-              bottom-0
-              left-0
-              max-w-md
-              p-5
-              text-white
-              md:p-8
-            "
+            absolute
+            bottom-14
+            left-6
+            z-30
+            max-w-lg
+            text-white
+            md:left-9
+            md:bottom-16
+          "
           >
-            <h3 className="text-xl font-bold md:text-3xl">{movie.title}</h3>
+            <h3
+              className="
+              text-2xl
+              font-extrabold
+              leading-tight
+              drop-shadow-xl
+              md:text-4xl
+            "
+            >
+              {movie.title}
+            </h3>
 
-            <p className="mt-2 text-sm text-white">
+            <p
+              className="
+              mt-2
+              text-sm
+              text-white/85
+              drop-shadow-lg
+              md:text-base
+            "
+            >
               {movie.genres.map((g) => g.name).join(' • ') || 'No genres'}
               {' • '}⭐ {movie.imdbRating?.toFixed(1) ?? '—'}
             </p>
           </div>
+
+          {/* Navigation buttons */}
+          <button
+            onClick={(e) => {
+              e.preventDefault()
+              prev()
+            }}
+            className="
+            absolute
+            left-3
+            top-1/2
+            z-30
+            -translate-y-1/2
+            rounded-full
+            bg-black/50
+            p-2
+            text-white
+            backdrop-blur
+            transition
+            hover:bg-primary
+          "
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+
+          <button
+            onClick={(e) => {
+              e.preventDefault()
+              next()
+            }}
+            className="
+            absolute
+            right-3
+            top-1/2
+            z-30
+            -translate-y-1/2
+            rounded-full
+            bg-black/50
+            p-2
+            text-white
+            backdrop-blur
+            transition
+            hover:bg-primary
+          "
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+
+          {/* Dots */}
+          <div
+            className="
+            absolute
+            bottom-6
+            left-1/2
+            z-30
+            flex
+            -translate-x-1/2
+            gap-2
+          "
+          >
+            {movies.map((_, i) => (
+              <button
+                key={i}
+                onClick={(e) => {
+                  e.preventDefault()
+                  changeSlide(i)
+                }}
+                className={`
+                h-2
+                rounded-full
+                transition-all
+                ${i === index ? 'w-8 bg-white shadow-lg' : 'w-2 bg-white/50'}
+              `}
+              />
+            ))}
+          </div>
         </div>
       </Link>
-
-      {/* Previous */}
-      <button
-        onClick={prev}
-        className="
-          absolute
-          left-3
-          top-1/2
-          -translate-y-1/2
-          rounded-full
-          bg-black/50
-          p-2
-          text-white
-          backdrop-blur
-          transition
-          hover:bg-primary
-        "
-      >
-        <ChevronLeft className="h-5 w-5" />
-      </button>
-
-      {/* Next */}
-      <button
-        onClick={next}
-        className="
-          absolute
-          right-3
-          top-1/2
-          -translate-y-1/2
-          rounded-full
-          bg-black/50
-          p-2
-          text-white
-          backdrop-blur
-          transition
-          hover:bg-primary
-        "
-      >
-        <ChevronRight className="h-5 w-5" />
-      </button>
-
-      {/* Dots */}
-      <div
-        className="
-          absolute
-          bottom-8
-          right-1/2
-          flex
-          translate-x-1/2
-          gap-2
-        "
-      >
-        {movies.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => changeSlide(i)}
-            className={`
-              h-2
-              w-2
-              rounded-full
-              transition-all
-              ${i === index ? 'w-6 bg-white' : 'bg-white/50'}
-            `}
-          />
-        ))}
-      </div>
     </div>
   )
 }

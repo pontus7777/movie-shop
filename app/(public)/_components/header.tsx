@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useState } from 'react'
-import { ShoppingCart, Search, Menu, X, User } from 'lucide-react'
+import { ShoppingCart, Search, Menu, X, User, Film } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { ThemeModeToggle } from '../../../components/theme-mode-toggle'
@@ -48,48 +48,35 @@ export default function Header({
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7.5xl items-centre justify-between px-18 py-3">
+    <header className="sticky top-0 z-50 border-b border-border bg-card/90 backdrop-blur-md">
+      <div className="mx-auto flex max-w-7.5xl items-center justify-between px-4 py-3 sm:px-8">
         {/* Logo */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-5">
           <Logo />
 
           <Link
             href="/movies"
             className="
-      group flex items-center gap-2 px-2 py-1
-      text-sm font-medium text-foreground
-      transition-all duration-200
-      hover:text-primary
-    "
+              group flex items-center gap-2
+              text-sm font-medium text-foreground
+              transition-colors hover:text-primary
+            "
           >
-            {/* Play Circle Icon */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-primary"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <polygon points="10,8 16,12 10,16" fill="currentColor" />
-            </svg>
+            <Film className="h-5 w-5 text-primary" />
 
             <span className="relative">
               Movies
               <span
                 className="
-          absolute left-0 -bottom-0.5
-          block h-[2px] w-0 bg-primary
-          transition-all duration-300
-          group-hover:w-full
-        "
+                  absolute -bottom-1 left-0
+                  h-[2px] w-0 bg-primary
+                  transition-all duration-300
+                  group-hover:w-full
+                "
               />
             </span>
           </Link>
         </div>
-
 
         {/* Desktop */}
         <div className="hidden items-center gap-2 md:flex">
@@ -99,8 +86,11 @@ export default function Header({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search movies..."
-              className={`rounded-full border border-border bg-muted px-3 py-1.5 text-sm outline-none transition-all ${isSearchOpen ? 'mr-2 w-48 opacity-100' : 'w-0 opacity-0'
-                }`}
+              className={`
+                rounded-full border border-border bg-muted
+                text-sm outline-none transition-all duration-300
+                ${isSearchOpen ? 'mr-2 w-48 px-3 py-1.5 opacity-100' : 'w-0 px-0 opacity-0'}
+              `}
             />
 
             <Button
@@ -108,13 +98,7 @@ export default function Header({
               variant="ghost"
               size="icon"
               className="rounded-full"
-              onClick={() => {
-                if (isSearchOpen && searchQuery.trim()) {
-                  router.push(`/movies?q=${encodeURIComponent(searchQuery.trim())}&page=1`)
-                } else {
-                  setIsSearchOpen(!isSearchOpen) // ★ always toggle if no search query
-                }
-              }}
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
             >
               <Search className="h-5 w-5" />
             </Button>
@@ -126,7 +110,14 @@ export default function Header({
               <ShoppingCart className="h-5 w-5" />
 
               {cartCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-xs text-white">
+                <span
+                  className="
+                    absolute -right-1 -top-1
+                    flex h-5 min-w-5 items-center justify-center
+                    rounded-full bg-primary px-1
+                    text-[10px] font-bold text-white
+                  "
+                >
                   {cartCount > 9 ? '9+' : cartCount}
                 </span>
               )}
@@ -135,12 +126,16 @@ export default function Header({
 
           <ThemeModeToggle />
 
-          {/* Profile */}
+          {/* User */}
           {userName ? (
             <div className="flex items-center gap-3">
               <Link
                 href="/profile"
-                className="flex items-center gap-2 rounded-full px-2 py-1 transition hover:bg-muted"
+                className="
+                  flex items-center gap-2
+                  rounded-full px-2 py-1
+                  transition hover:bg-muted
+                "
               >
                 {userImage ? (
                   <Image
@@ -169,7 +164,11 @@ export default function Header({
                 <Link href="/sign-in">Sign in</Link>
               </Button>
 
-              <Button className="variant=ghost asChild bg-primary text-white hover:bg-primary/80">
+              <Button
+                variant="default"
+                className="bg-primary text-primary-foreground hover:bg-primary/80"
+                asChild
+              >
                 <Link href="/register">Register</Link>
               </Button>
             </>
@@ -178,8 +177,8 @@ export default function Header({
 
         {/* Mobile */}
         <div className="flex items-center gap-1 md:hidden">
-          <Link href="/cart" className="relative">
-            <Button variant="ghost" size="icon" className="rounded-full">
+          <Button variant="ghost" size="icon" className="relative rounded-full" asChild>
+            <Link href="/cart">
               <ShoppingCart className="h-5 w-5" />
 
               {cartCount > 0 && (
@@ -187,26 +186,8 @@ export default function Header({
                   {cartCount > 9 ? '9+' : cartCount}
                 </span>
               )}
-            </Button>
-          </Link>
-
-          {userName && (
-            <Link href="/profile">
-              {userImage ? (
-                <Image
-                  src={userImage}
-                  alt={userName}
-                  width={32}
-                  height={32}
-                  className="h-8 w-8 rounded-full object-cover"
-                />
-              ) : (
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
-                  <User className="h-4 w-4" />
-                </div>
-              )}
             </Link>
-          )}
+          </Button>
 
           <ThemeModeToggle />
 
@@ -223,7 +204,7 @@ export default function Header({
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="border-t border-white/10 px-4 py-4 md:hidden">
+        <div className="border-t border-border bg-card px-4 py-4 md:hidden">
           <div className="flex flex-col gap-2">
             <Button variant="ghost" asChild>
               <Link href="/movies">Movies</Link>
@@ -234,7 +215,10 @@ export default function Header({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search movies..."
-                className="w-full rounded-full border border-border bg-muted px-4 py-2 text-sm outline-none"
+                className="
+                  w-full rounded-full border border-border
+                  bg-muted px-4 py-2 text-sm outline-none
+                "
               />
             </form>
 
@@ -254,7 +238,7 @@ export default function Header({
                   <Link href="/sign-in">Sign in</Link>
                 </Button>
 
-                <Button className="variant=ghost asChild bg-primary text-white" >
+                <Button variant="default" className="bg-primary text-primary-foreground" asChild>
                   <Link href="/register">Register</Link>
                 </Button>
               </>

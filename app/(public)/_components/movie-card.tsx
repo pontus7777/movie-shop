@@ -30,7 +30,7 @@ export default function MovieCard({
         "
       >
         {/* Poster */}
-        <div className="relative aspect-2/3 w-full overflow-hidden">
+        <div className="relative aspect-[2/3] min-h-[300px] w-full overflow-hidden">
           <Image
             src={movie.imageUrl}
             alt={movie.title}

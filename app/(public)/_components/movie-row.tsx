@@ -14,13 +14,12 @@ type Props = {
   rowTitle?: string
   movies: MovieWithGenres[]
 }
-
 export function MovieRow({ rowTitle, movies }: Props) {
   return (
-    <section className="py-8">
-      <div className="mx-auto w-full max-w-7.5xl px-4 sm:px-18">
+    <section className="py-5 sm:py-6">
+      <div className="w-full px-4 sm:px-8">
         <div className="mb-5 flex items-center justify-between">
-          <h2 className="text-xl font-bold sm:text-2xl">{rowTitle}</h2>
+          <h2 className="text-xl font-bold tracking-tight sm:text-2xl">{rowTitle}</h2>
 
           <Link
             href="/movies"
@@ -43,13 +42,13 @@ export function MovieRow({ rowTitle, movies }: Props) {
               <CarouselItem
                 key={movie.id}
                 className="
-          basis-36.25
-          pl-4
-          sm:basis-41.25
-          md:basis-45
-          lg:basis-47.5
-          xl:basis-50
-        "
+                  basis-[48%]
+                  pl-4
+                  sm:basis-[30%]
+                  md:basis-[23%]
+                  lg:basis-[18%]
+                  xl:basis-[16.5%]
+                "
               >
                 <MovieCard movie={movie} />
               </CarouselItem>

@@ -1,68 +1,85 @@
-import { Mail, Globe } from 'lucide-react'
+import { FaInstagram, FaYoutube, FaFacebook, FaTwitter } from 'react-icons/fa'
 import Link from 'next/link'
 import Logo from './logo'
 
 export default function Footer() {
   return (
-    <footer className="border-t bg-background text-muted-foreground">
-      {/* ===== MAIN FOOTER CONTENT ===== */}
-      <div
-        className="mx-auto max-w-7.5x1 px-2 py-4 sm:px-18 sm:py-4
-      "
-      >
+    <footer className="border-t border-border bg-muted text-muted-foreground">
+      <div className="mx-auto max-w-7.5xl px-4 py-10 sm:px-8">
         <div
           className="
             grid
             grid-cols-1
             gap-8
-
             sm:grid-cols-2
-            lg:grid-cols-3
-            lg:gap-12
+            lg:grid-cols-4
+            lg:gap-16
           "
         >
-          {/* ===== BRAND SECTION ===== */}
+          {/* Brand */}
           <div className="flex flex-col gap-4">
             <Logo />
 
-            <p className="max-w-sm text-sm leading-relaxed">
-              Discover and purchase your favorite movies. Your ultimate cinema experience, online.
+            <p className="max-w-md text-sm leading-relaxed">
+              Your digital cinema library. Discover, collect, and enjoy movies anytime, anywhere.
             </p>
 
             <div className="flex items-center gap-3">
-              <a href="#" className="transition-colors hover:text-primary">
-                <Globe className="h-5 w-5" />
+              <a href="#" aria-label="Instagram" className="transition-colors hover:text-primary">
+                <FaInstagram className="h-5 w-5" />
               </a>
 
-              <a href="#" className="transition-colors hover:text-primary">
-                <Mail className="h-5 w-5" />
+              <a href="#" aria-label="Twitter" className="transition-colors hover:text-primary">
+                <FaTwitter className="h-5 w-5" />
+              </a>
+
+              <a href="#" aria-label="YouTube" className="transition-colors hover:text-primary">
+                <FaYoutube className="h-5 w-5" />
+              </a>
+
+              <a href="#" aria-label="Facebook" className="transition-colors hover:text-primary">
+                <FaFacebook className="h-5 w-5" />
               </a>
             </div>
           </div>
 
-          {/* ===== ACCOUNT ===== */}
+          {/* Movies */}
           <div className="flex flex-col gap-3">
-            <h3 className="text-foreground text-sm font-semibold uppercase tracking-wider">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
+              Movies
+            </h3>
+
+            <Link href="/movies" className="text-sm transition-colors hover:text-primary">
+              Browse Movies
+            </Link>
+          </div>
+
+          {/* Account */}
+          <div className="flex flex-col gap-3">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
               Account
             </h3>
 
             <Link href="/sign-in" className="text-sm transition-colors hover:text-primary">
               Sign In
             </Link>
-            <Link href="/register" className="text-sm hover:text-primary transition-colors">
+
+            <Link href="/register" className="text-sm transition-colors hover:text-primary">
               Register
             </Link>
+
             <Link href="/profile" className="text-sm transition-colors hover:text-primary">
               My Orders
             </Link>
+
             <Link href="/profile" className="text-sm transition-colors hover:text-primary">
               My Profile
             </Link>
           </div>
 
-          {/* ===== CONTACT ===== */}
+          {/* Contact */}
           <div className="flex flex-col gap-3">
-            <h3 className="text-foreground text-sm font-semibold uppercase tracking-wider">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
               Contact
             </h3>
 
@@ -73,13 +90,13 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* ===== BOTTOM BAR ===== */}
-      <div className="border-t">
+      {/* Bottom bar */}
+      <div className="border-t border-border/80 bg-background/20">
         <div
           className="
             mx-auto
             flex
-            max-w-9xl
+            max-w-7.5xl
             flex-col
             items-center
             gap-3
@@ -87,9 +104,7 @@ export default function Footer() {
             py-5
             text-center
             text-sm
-
-            sm:px-18
-
+            sm:px-8
             md:flex-row
             md:justify-between
             md:text-left
@@ -97,15 +112,7 @@ export default function Footer() {
         >
           <p>© 2026 CineVault. All rights reserved.</p>
 
-          <div
-            className="
-              flex
-              flex-wrap
-              justify-centre
-              gap-x-4
-              gap-y-2
-            "
-          >
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-2">
             <Link href="#" className="transition-colors hover:text-primary">
               Privacy Policy
             </Link>
