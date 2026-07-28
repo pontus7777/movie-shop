@@ -63,7 +63,7 @@ export function ReviewForm({ movieId }: ReviewFormProps) {
         <Button
           onClick={handleSubmit}
           disabled={isPending || rating === 0}
-          className="bg-purple-600 text-white hover:bg-purple-700"
+          className="bg-primary text-primary-foreground hover:opacity-90"
         >
           {isPending ? 'Submitting...' : 'Submit Review'}
         </Button>
