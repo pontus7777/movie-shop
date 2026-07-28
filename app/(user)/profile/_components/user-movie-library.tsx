@@ -34,6 +34,21 @@ export function UserMovieLibrary({ movies }: Props) {
 
     return (
         <>
+            <div className="mb-6 flex items-center justify-between border-b pb-4">
+                <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20">
+                        <PlayCircle className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                        <h1 className="text-2xl font-bold text-foreground">My Watch List</h1>
+                        <p className="text-sm text-muted-foreground">
+                            {movies.length} {movies.length === 1 ? 'movie' : 'movies'} in your library
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 {movies.map((movie) => (
                     <Link
@@ -51,14 +66,7 @@ export function UserMovieLibrary({ movies }: Props) {
                                 />
                             )}
 
-
-
-
                             {/* Hover overlay */}
-                            {/* <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-200 group-hover:bg-black/50 group-hover:opacity-100">
-                            <PlayCircle className="h-10 w-10 text-white drop-shadow-md" />
-                        </div> */}
-
                             <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-200 group-hover:bg-black/50 group-hover:opacity-100">
                                 {movie.trailerUrl ? (
                                     <button
@@ -66,7 +74,6 @@ export function UserMovieLibrary({ movies }: Props) {
                                         onClick={(e) => {
                                             e.preventDefault() // stop the Link navigation
                                             e.stopPropagation()
-                                            // window.open(movie.trailerUrl!, '_blank', 'noopener,noreferrer')
                                             setTrailerUrl(movie.trailerUrl!)
 
                                         }}
@@ -118,8 +125,6 @@ export function UserMovieLibrary({ movies }: Props) {
                     </div>
                 </div>
             )}
-
-
 
         </>
     )
