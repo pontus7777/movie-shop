@@ -111,7 +111,7 @@ export function OrdersTable({
             ))}
 
             <PaginationItem>
-              <PaginationNext href={currentPage < totalPages ? `?page=${currentPage + 1}` : '#'} />
+              <PaginationNext href={currentPage < totalPages ? `?${searchParams}&page=${currentPage + 1}` : '#'} />
             </PaginationItem>
           </PaginationContent>
         </Pagination>
