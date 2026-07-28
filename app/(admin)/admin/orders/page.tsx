@@ -16,7 +16,14 @@ type Props = {
 
 export default async function OrdersPage({ searchParams }: Props) {
   await requireAdmin()
+
   const params = await searchParams
+  const { page, ...restParams } = params
+
+  // const cleanParams = Object.fromEntries(
+  //   Object.entries(restParams).filter(([, v]) => v !== undefined)
+  // ) as Record<string, string>
+
 
   const [data, statistics] = await Promise.all([
     getOrders({
@@ -56,7 +63,10 @@ export default async function OrdersPage({ searchParams }: Props) {
         totalOrders={data.total}
         currentPage={data.currentPage}
         totalPages={data.totalPages}
-        searchParams={new URLSearchParams(params).toString()}
+        searchParams={new URLSearchParams(restParams as Record<string, string>).toString()}
+      // searchParams={new URLSearchParams(cleanParams).toString()}
+
+
       />
     </div>
   )
