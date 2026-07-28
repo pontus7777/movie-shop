@@ -34,7 +34,7 @@ export function MoviesSidebar({
   runtimeMin,
   runtimeMax,
 }: Props) {
-  const { isPending, updateParam, updateRangeParam, clearParams } = useFilterParams()
+  const { updateParam, updateRangeParam, clearParams } = useFilterParams()
   return (
     <aside className="w-full lg:w-64">
       <div className="space-y-5 rounded-xl border p-4">
@@ -64,7 +64,6 @@ export function MoviesSidebar({
           <CheckboxFilter
             items={genres}
             selected={selectedGenres.map(String)}
-            disabled={isPending}
             onChange={(id) => updateParam('genre', id, !selectedGenres.includes(Number(id)))}
           />
         </FilterSection>
@@ -73,7 +72,6 @@ export function MoviesSidebar({
           <CheckboxFilter
             items={directors}
             selected={selectedDirectors}
-            disabled={isPending}
             onChange={(id) => updateParam('director', id, !selectedDirectors.includes(id))}
           />
         </FilterSection>
@@ -82,7 +80,6 @@ export function MoviesSidebar({
           <CheckboxFilter
             items={actors}
             selected={selectedActors}
-            disabled={isPending}
             onChange={(id) => updateParam('actor', id, !selectedActors.includes(id))}
           />
         </FilterSection>
