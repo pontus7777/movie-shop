@@ -56,6 +56,32 @@ export const auth = betterAuth({
     },
   },
   user: {
+    additionalFields: {
+      mobileNumber: {
+        type: 'string',
+        required: false,
+        input: true, // lets the client send this value on update
+      },
+      address: {
+        type: 'string',
+        required: false,
+        input: true,
+      },
+    },
+
+    changeEmail: {
+      enabled: true,
+      async sendChangeEmailConfirmation({ user, newEmail, url, token }) {
+        // sent to the OLD email to confirm the change
+        await sendEmail(
+          user.email,
+          'Confirm your email change',
+          `Click to confirm changing your email to ${newEmail}: ${url}`,
+          `<h1>Confirm email change</h1><p>Click to confirm changing your email to ${newEmail}.</p><a href="${url}">Confirm</a>`,
+        )
+      },
+    },
+
     deleteUser: {
       enabled: true,
     },

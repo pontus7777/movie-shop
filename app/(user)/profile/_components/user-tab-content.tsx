@@ -7,7 +7,6 @@ import { UserOrderList } from './user-order-list'
 import { DeleteUserAccountButton } from './delete-account-button'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
-import AddressManager, { Address } from './address-manager'
 import ChangeEmailModal from './change-email-modal'
 import ChangePasswordModal from './change-password-modal'
 import Link from 'next/link'
@@ -228,22 +227,16 @@ export default function TabContent({ session, orders }: Props) {
                 {/* Phone */}
                 <div>
                   <p className="text-sm text-muted-foreground">Phone Number</p>
-                  <p className="font-normal">Not added</p>
-                  <button className="text-sm  text-red-400 hover:text-red-300 mt-1">
-                    Add Phone Number
-                  </button>
+                  <p className="font-normal">{session.user.mobileNumber ?? 'Not added'}</p>
+                  <UserPhoneNumber user={session.user} />
                 </div>
 
                 {/* Address Book */}
+                {/* Address */}
                 <div>
-                  <p className="text-sm text-muted-foreground mb-2">Addresses</p>
-                  <AddressManager
-                    addresses={addresses}
-                    onAdd={addAddress}
-                    onDelete={deleteAddress}
-                    newAddress={newAddress}
-                    setNewAddress={setNewAddress}
-                  />
+                  <p className="text-sm text-muted-foreground">Address</p>
+                  <p className="font-normal whitespace-pre-line">{session.user.address ?? 'Not added'}</p>
+                  <UserAddress user={session.user} />
                 </div>
               </div>
             )}
