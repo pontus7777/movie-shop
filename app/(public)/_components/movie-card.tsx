@@ -35,6 +35,7 @@ export default function MovieCard({
             src={movie.imageUrl}
             alt={movie.title}
             fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 220px"
             className="object-cover transition-transform duration-500 group-hover:scale-110"
           />
           {/* Deal badge */}

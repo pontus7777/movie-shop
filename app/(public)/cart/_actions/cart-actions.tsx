@@ -21,7 +21,7 @@ async function getUserSession() {
 
 function revalidateCart() {
   revalidatePath('/cart')
-  revalidatePath('/movies')
+  // revalidatePath('/movies')
 }
 
 export async function addToCart(movieId: string) {
