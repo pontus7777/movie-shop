@@ -8,31 +8,59 @@ export default async function Home() {
 
   return (
     <main className="bg-background text-foreground">
-      <section className="border-b px-2 py-4 text-center">
-        <h1 className="mb-2 text-1xl font-extrabold md:text-2xl">
+      {/* Page intro */}
+      <section
+        className="
+    px-4
+    pt-8
+    pb-5
+    text-center
+    sm:px-8
+  "
+      >
+        <h1
+          className="
+      text-2xl
+      font-bold
+      tracking-tight
+      sm:text-3xl
+    "
+        >
           Find Your Next <span className="text-primary">Favorite Movie</span>
         </h1>
 
-        <p className="text-muted-foreground">Stay updated with what everyone&apos;s watching</p>
+        <p className="mt-2 text-sm text-muted-foreground sm:text-base">
+          Explore new releases, popular picks, and timeless classics.
+        </p>
       </section>
 
-      <section className="relative h-55 w-full overflow-hidden md:h-170">
-        {/* Fullscreen Carousel */}
+      {/* Hero carousel */}
+      <section
+        className="
+      relative
+      h-[45vh]
+      min-h-80
+      w-full
+      overflow-hidden
+      sm:h-[55vh]
+      lg:h-[65vh]
+    "
+      >
         <HotDealsCarousel movies={cheapestMovies} />
-
-        {/* Gradient overlay for readability */}
-        <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/40 via-black/20 to-black/60" />
       </section>
 
-      {mostPurchasedMovies.length > 0 && (
-        <MovieRow rowTitle="🔥 Most Purchased Movies" movies={mostPurchasedMovies} />
-      )}
+      {/* Movie rows */}
+      <div className="space-y-2 py-10">
+        {mostPurchasedMovies.length > 0 && (
+          <MovieRow rowTitle="🔥 Most Purchased Movies" movies={mostPurchasedMovies} />
+        )}
 
-      <MovieRow rowTitle="Most Recent Movies" movies={recentMovies} />
+        <MovieRow rowTitle="Most Recent Movies" movies={recentMovies} />
 
-      <MovieRow rowTitle="Popular Movies" movies={popularMovies} />
+        <MovieRow rowTitle="Popular Movies" movies={popularMovies} />
 
-      <MovieRow rowTitle="Oldest Movies" movies={oldestMovies} />
+        <MovieRow rowTitle="Oldest Movies" movies={oldestMovies} />
+      </div>
     </main>
   )
 }

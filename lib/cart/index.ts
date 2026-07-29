@@ -55,31 +55,14 @@ export async function getCart(): Promise<CartData> {
   }
 }
 
-// import { headers } from 'next/headers'
+export async function getCartCount(session: Awaited<ReturnType<typeof auth.api.getSession>>) {
+  if (session) {
+    const cart = await getDatabaseCart(session.user.id)
 
-// import { auth } from '@/lib/auth'
+    return cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0
+  }
 
-// export * from './cookie-cart'
-// export * from './db-cart'
-// export * from './merge-cart'
+  const cookieCart = await getCookieCart()
 
-// import { getCookieCart } from './cookie-cart'
-// import { getDatabaseCart } from './db-cart'
-
-// export async function getCart(): Promise<Record<string, number>> {
-//   const session = await auth.api.getSession({
-//     headers: await headers(),
-//   })
-
-//   if (!session) {
-//     return getCookieCart()
-//   }
-
-//   const cart = await getDatabaseCart(session.user.id)
-
-//   if (!cart) {
-//     return {}
-//   }
-
-//   return Object.fromEntries(cart.items.map((item) => [item.movieId, item.quantity]))
-// }
+  return Object.values(cookieCart).reduce((sum, quantity) => sum + quantity, 0)
+}

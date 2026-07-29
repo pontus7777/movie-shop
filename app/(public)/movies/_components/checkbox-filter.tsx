@@ -28,10 +28,7 @@ export const CheckboxFilter = memo(function CheckboxFilter({
             key={value}
             className="hover:bg-muted flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5"
           >
-            <Checkbox
-              checked={selectedSet.has(value)}
-              onCheckedChange={() => onChange(value)}
-            />
+            <Checkbox checked={selectedSet.has(value)} onCheckedChange={() => onChange(value)} />
 
             <span className="text-sm">{item.name}</span>
           </label>

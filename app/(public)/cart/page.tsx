@@ -13,7 +13,6 @@ import { convertToEuro } from '@/lib/priceUtils'
 import { getMovieImageSrc } from '@/lib/image-utils'
 import { getEffectivePriceInCents, isMovieOnSale } from '@/lib/pricing'
 import { Badge } from '@/components/ui/badge'
-// import { requireAuth } from '@/lib/session-validation'
 
 export default async function CartPage() {
   const cart = await getCart()
@@ -75,6 +74,7 @@ export default async function CartPage() {
                             'use server'
                             await removeFromCart(movieId, true)
                           }}
+                          cartChange={-1}
                           toastMessage="Removed one movie"
                         >
                           <Minus className="h-4 w-4" />
@@ -87,6 +87,7 @@ export default async function CartPage() {
                           variant="outline"
                           movieId={item.movie.id}
                           action={addToCart}
+                          cartChange={1}
                           toastMessage="Added one movie"
                         >
                           <Plus className="h-4 w-4" />
@@ -104,6 +105,7 @@ export default async function CartPage() {
                         variant="ghost"
                         movieId={item.movie.id}
                         action={removeFromCart}
+                        cartChange={-item.quantity}
                         toastMessage="Removed from cart"
                       >
                         <Trash className="h-4 w-4" />
@@ -144,11 +146,12 @@ export default async function CartPage() {
               <CartActionButton
                 className="w-full"
                 variant="destructive"
+                movieId=""
                 action={async () => {
                   'use server'
                   await clearCart()
                 }}
-                movieId=""
+                cartChange={-cart.items.reduce((total, item) => total + item.quantity, 0)}
                 toastMessage="Successfully cleared cart!"
               >
                 Clear Cart

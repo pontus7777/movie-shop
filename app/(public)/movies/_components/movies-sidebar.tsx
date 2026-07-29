@@ -36,7 +36,7 @@ export function MoviesSidebar({
 }: Props) {
   const { updateParam, updateRangeParam, clearParams } = useFilterParams()
   return (
-    <aside className="w-full lg:w-64">
+    <aside className="w-full">
       <div className="space-y-5 rounded-xl border p-4">
         <div className="flex justify-between">
           <h2 className="font-semibold">Filters</h2>
