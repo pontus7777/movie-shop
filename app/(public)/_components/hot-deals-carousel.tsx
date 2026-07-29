@@ -64,15 +64,26 @@ export default function HotDealsCarousel({ movies }: Props) {
       <Link href={`/movies/${movie.id}`}>
         <div
           className={`
-    relative
-    h-55
-    w-full
-    overflow-hidden
-    transition-opacity
-    duration-300
-    md:h-170
-    ${fade ? 'opacity-100' : 'opacity-0'}
-  `}
+            relative
+            h-55
+            w-7.5xl
+            w-full
+            overflow-hidden
+            transition-opacity
+            duration-300
+            md:h-170
+            ${fade ? 'opacity-100' : 'opacity-0'}
+          `}
+        //         className={`
+        //   relative
+        //   h-55
+        //   w-full
+        //   overflow-hidden
+        //   transition-opacity
+        //   duration-300
+        //   md:h-170
+        //   ${fade ? 'opacity-100' : 'opacity-0'}
+        // `}
         >
           {/* Movie Image */}
           <Image
