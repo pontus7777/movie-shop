@@ -14,9 +14,13 @@ import EmailVerfication from '@/components/email/templates/email-verification'
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: 'postgresql' }),
   baseURL: process.env['BETTER_AUTH_URL'],
-  // trustedOrigins: [process.env['BETTER_AUTH_URL'], process.env['LAN_ORIGIN']].filter(
-  //   Boolean,
-  // ) as string[],
+  trustedOrigins: [
+    process.env['BETTER_AUTH_URL'],
+    process.env['LAN_ORIGIN'],
+    process.env.VERCEL_ENV === 'preview' ? `https://${process.env.VERCEL_URL}` : null,
+  ].filter(
+    Boolean,
+  ) as string[],
 
   emailAndPassword: {
     enabled: true,
@@ -56,6 +60,32 @@ export const auth = betterAuth({
     },
   },
   user: {
+    additionalFields: {
+      mobileNumber: {
+        type: 'string',
+        required: false,
+        input: true, // lets the client send this value on update
+      },
+      address: {
+        type: 'string',
+        required: false,
+        input: true,
+      },
+    },
+
+    changeEmail: {
+      enabled: true,
+      async sendChangeEmailConfirmation({ user, newEmail, url, token }) {
+        // sent to the OLD email to confirm the change
+        await sendEmail(
+          user.email,
+          'Confirm your email change',
+          `Click to confirm changing your email to ${newEmail}: ${url}`,
+          `<h1>Confirm email change</h1><p>Click to confirm changing your email to ${newEmail}.</p><a href="${url}">Confirm</a>`,
+        )
+      },
+    },
+
     deleteUser: {
       enabled: true,
     },

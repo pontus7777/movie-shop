@@ -12,6 +12,7 @@ import { Eye, Mail, MoreHorizontal, Printer, XCircle } from 'lucide-react'
 import { useState } from 'react'
 import { OrderDetailsDialog } from './order-details-dialog'
 import { OrderWithDetails } from '../_types/order'
+import { OrderCancelDialog } from './order-cancel-dialog'
 
 type Props = {
   order: OrderWithDetails
@@ -19,7 +20,7 @@ type Props = {
 
 export function OrderActions({ order }: Props) {
   const [open, setOpen] = useState(false)
-
+  const [cancelOpen, setCancelOpen] = useState(false)
   return (
     <>
       <DropdownMenu>
@@ -35,7 +36,9 @@ export function OrderActions({ order }: Props) {
             View Details
           </DropdownMenuItem>
           {order.status !== 'CANCELLED' && (
-            <DropdownMenuItem className="text-red-600">
+            <DropdownMenuItem className="text-red-600"
+              onClick={() => setCancelOpen(true)}
+            >
               <XCircle className="mr-2 size-4" />
               Cancel Order
             </DropdownMenuItem>
@@ -53,6 +56,8 @@ export function OrderActions({ order }: Props) {
       </DropdownMenu>
 
       <OrderDetailsDialog order={order} open={open} onOpenChange={setOpen} />
+      <OrderCancelDialog orderId={order.id} open={cancelOpen} onOpenChange={setCancelOpen} />
+
     </>
   )
 }

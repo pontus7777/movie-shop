@@ -14,6 +14,9 @@ import { headers } from 'next/headers'
 import { isMovieInWishlist } from '@/lib/wishlist'
 import { isMovieOnSale } from '@/lib/pricing'
 import { ReviewSection } from './_components/review-section'
+import { isMoviePurchased } from '@/lib/purchases'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 export default async function MovieDetailsPage(props: PageProps<'/movies/[movieId]'>) {
   const params = await props.params
@@ -72,20 +75,21 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
   })
 
   const isWishlisted = session ? await isMovieInWishlist(session.user.id, movie.id) : false
+  const hasPurchased = session ? await isMoviePurchased(session.user.id, movie.id) : false
 
   const userReview = session
     ? await prisma.review.findUnique({
-        where: {
-          userId_movieId: {
-            userId: session.user.id,
-            movieId: movie.id,
-          },
+      where: {
+        userId_movieId: {
+          userId: session.user.id,
+          movieId: movie.id,
         },
-        select: {
-          rating: true,
-          comment: true,
-        },
-      })
+      },
+      select: {
+        rating: true,
+        comment: true,
+      },
+    })
     : null
 
   return (
@@ -196,16 +200,26 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
           <div className="mx-auto flex w-fit items-center gap-3 rounded-xl border border-white/10 bg-white/3 p-3 sm:mx-0">
             <span className="text-1.5xl font-bold text-primary">€{displayPrice}</span>
 
-            <CartActionButton
-              movieId={movie.id}
-              action={addToCart}
-              toastMessage="Added to cart!"
-              disabled={!movie.stock}
-              size="lg"
-              className="bg-primary px-4 text-white hover:bg-primary"
-            >
-              {movie.stock ? 'Add to cart' : 'Out of stock'}
-            </CartActionButton>
+            {hasPurchased ? (
+              <Button
+                asChild
+                size="lg"
+                className="bg-primary px-4 text-white hover:bg-primary"
+              >
+                <Link href={`/profile?tab=library&play=${movie.id}`}>Watch Now</Link>
+              </Button>
+            ) : (
+              <CartActionButton
+                movieId={movie.id}
+                action={addToCart}
+                toastMessage="Added to cart!"
+                disabled={!movie.stock}
+                size="lg"
+                className="bg-primary px-4 text-white hover:bg-primary"
+              >
+                {movie.stock ? 'Add to cart' : 'Out of stock'}
+              </CartActionButton>
+            )}
 
             <WishlistButton
               movieId={movie.id}

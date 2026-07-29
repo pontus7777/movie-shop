@@ -42,12 +42,28 @@ export async function addToDatabaseWishlist(userId: string, movieId: string) {
   })
 }
 
+//DELETE SINGLE MOVIE
 export async function removeFromDatabaseWishlist(userId: string, movieId: string) {
   const wishlist = await prisma.wishlist.findUnique({ where: { userId } })
   if (!wishlist) return
 
   return prisma.wishlistItem.deleteMany({
     where: { wishlistId: wishlist.id, movieId },
+  })
+}
+
+//DELETE MULTIBLE MOVIES AT ONCE
+export async function removeMoviesFromWishlist(userId: string, movieIds: string[]) {
+  if (movieIds.length === 0) return
+
+  const wishlist = await prisma.wishlist.findUnique({ where: { userId } })
+  if (!wishlist) return
+
+  return prisma.wishlistItem.deleteMany({
+    where: {
+      wishlistId: wishlist.id,
+      movieId: { in: movieIds },
+    },
   })
 }
 

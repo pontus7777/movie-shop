@@ -1,5 +1,6 @@
 'use client'
 
+import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { Prisma } from '@/generated/prisma/client'
 import { UserProfile } from './user-profile'
@@ -7,12 +8,14 @@ import { UserOrderList } from './user-order-list'
 import { DeleteUserAccountButton } from './delete-account-button'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
-import AddressManager, { Address } from './address-manager'
 import ChangeEmailModal from './change-email-modal'
 import ChangePasswordModal from './change-password-modal'
 import Link from 'next/link'
 import { AuthSession } from '@/lib/session-validation'
 import { UserMovieLibrary } from './user-movie-library'
+import { UserAddress } from './user-address'
+import { UserPhoneNumber } from './user-phone-number'
+import { Address } from './address-manager'
 
 type OrderWithItems = Prisma.OrderGetPayload<{
   include: {
@@ -29,7 +32,21 @@ type Props = {
    MAIN TAB CONTENT
 ------------------------------------------------------- */
 export default function TabContent({ session, orders }: Props) {
-  const [tab, setTab] = useState<'orders' | 'library' | 'profile' | 'settings'>('orders')
+
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
+  const playMovieId = searchParams.get('play')
+
+  // const [tab, setTab] = useState<'orders' | 'library' | 'profile' | 'settings'>('orders')
+  const tab = (searchParams.get('tab') as 'orders' | 'library' | 'profile' | 'settings') || 'orders'
+
+  function setTab(newTab: string) {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('tab', newTab)
+    router.push(`${pathname}?${params.toString()}`)
+  }
+
 
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [showPasswordModal, setShowPasswordModal] = useState(false)
@@ -189,10 +206,14 @@ export default function TabContent({ session, orders }: Props) {
 
           {/* RIGHT CONTENT */}
           <main className="flex-1 py-5 px-6">
+
+            {/* LIBRARY */}
+            {tab === 'library' && (
+              <UserMovieLibrary movies={purchasedMovies} autoPlayMovieId={playMovieId} />
+            )}
+
             {/* ORDERS */}
             {tab === 'orders' && <UserOrderList orders={orders} />}
-            {/* LIBRARY */}
-            {tab === 'library' && <UserMovieLibrary movies={purchasedMovies} />}
 
             {/* PROFILE */}
             {tab === 'profile' && (
@@ -230,22 +251,16 @@ export default function TabContent({ session, orders }: Props) {
                 {/* Phone */}
                 <div>
                   <p className="text-sm text-muted-foreground">Phone Number</p>
-                  <p className="font-normal">Not added</p>
-                  <button className="text-sm  text-red-400 hover:text-red-300 mt-1">
-                    Add Phone Number
-                  </button>
+                  <p className="font-normal">{session.user.mobileNumber ?? 'Not added'}</p>
+                  <UserPhoneNumber user={session.user} />
                 </div>
 
                 {/* Address Book */}
+                {/* Address */}
                 <div>
-                  <p className="text-sm text-muted-foreground mb-2">Addresses</p>
-                  <AddressManager
-                    addresses={addresses}
-                    onAdd={addAddress}
-                    onDelete={deleteAddress}
-                    newAddress={newAddress}
-                    setNewAddress={setNewAddress}
-                  />
+                  <p className="text-sm text-muted-foreground">Address</p>
+                  <p className="font-normal whitespace-pre-line">{session.user.address ?? 'Not added'}</p>
+                  <UserAddress user={session.user} />
                 </div>
               </div>
             )}

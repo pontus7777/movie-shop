@@ -3,10 +3,11 @@ import { Movie } from '@/generated/prisma/client'
 import Image from 'next/image'
 import { PlayCircle, X } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 type Props = {
-  movies: Movie[]
+    movies: Movie[]
+    autoPlayMovieId?: string | null
 }
 
 // Extracts the YouTube video ID from common URL formats
@@ -15,8 +16,26 @@ function getYoutubeEmbedUrl(url: string): string | null {
   return match ? `https://www.youtube.com/embed/${match[1]}?autoplay=1` : null
 }
 
-export function UserMovieLibrary({ movies }: Props) {
-  const [trailerUrl, setTrailerUrl] = useState<string | null>(null)
+export function UserMovieLibrary({ movies, autoPlayMovieId }: Props) {
+
+    const [trailerUrl, setTrailerUrl] = useState<string | null>(() => {
+        if (!autoPlayMovieId) return null
+        const movie = movies.find((m) => m.id === autoPlayMovieId)
+        return movie?.trailerUrl ?? null
+    })
+
+
+    if (movies.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-16 text-center">
+                <PlayCircle className="h-10 w-10 text-muted-foreground mb-3" />
+                <p className="font-medium text-foreground">No movies yet</p>
+                <p className="text-sm text-muted-foreground mt-1 mb-4">
+                    Movies you`ve purchased will appear here.
+                </p>
+            </div>
+        )
+    }
 
   if (movies.length === 0) {
     return (
