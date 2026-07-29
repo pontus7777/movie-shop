@@ -36,15 +36,16 @@ export default async function Home() {
 
       {/* Hero carousel */}
       <section
-        className="
-      relative
-      h-[45vh]
-      min-h-80
-      w-full
-      overflow-hidden
-      sm:h-[55vh]
-      lg:h-[65vh]
-    "
+        className="relative h-55 w-full overflow-hidden md:h-170"
+      //     className="
+      //   relative
+      //   h-[45vh]
+      //   min-h-80
+      //   w-full
+      //   overflow-hidden
+      //   sm:h-[55vh]
+      //   lg:h-[65vh]
+      // "
       >
         <HotDealsCarousel movies={cheapestMovies} />
       </section>
