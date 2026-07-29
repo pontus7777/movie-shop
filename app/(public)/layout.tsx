@@ -3,26 +3,21 @@ import '@/app/globals.css'
 import Footer from '@/app/(public)/_components/footer'
 import Header from '@/app/(public)/_components/header/header'
 
-import { getCart } from '@/lib/cart'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { CartProvider } from './_components/cart-provider'
+import { getCartCount } from '@/lib/cart'
 
 export default async function UserLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const cart = await getCart()
-
-  const cartCount = cart.items.reduce(
-    (sum, item) => sum + item.quantity,
-    0,
-  )
-
   const session = await auth.api.getSession({
     headers: await headers(),
   })
+
+  const cartCount = await getCartCount(session)
 
   return (
     <CartProvider initialCount={cartCount}>

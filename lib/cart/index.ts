@@ -54,3 +54,15 @@ export async function getCart(): Promise<CartData> {
     })),
   }
 }
+
+export async function getCartCount(session: Awaited<ReturnType<typeof auth.api.getSession>>) {
+  if (session) {
+    const cart = await getDatabaseCart(session.user.id)
+
+    return cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0
+  }
+
+  const cookieCart = await getCookieCart()
+
+  return Object.values(cookieCart).reduce((sum, quantity) => sum + quantity, 0)
+}
