@@ -30,36 +30,13 @@ export default function MovieCard({
         "
       >
         {/* Poster */}
-        <div className="relative aspect-[2/3] min-h-[300px] w-full overflow-hidden">
+        <div className="relative aspect-2/3 min-h-75 w-full overflow-hidden">
           <Image
             src={movie.imageUrl}
             alt={movie.title}
             fill
-            sizes="
-              (max-width: 640px) 140px,
-              (max-width: 1024px) 180px,
-              220px
-            "
-            className="
-              object-cover
-              transition-transform
-              duration-500
-              group-hover:scale-110
-            "
+            className="object-cover transition-transform duration-500 group-hover:scale-110"
           />
-
-          {/* Dark gradient */}
-          <div
-            className="
-              absolute
-              inset-0
-              bg-linear-to-t
-              from-black/90
-              via-black/20
-              to-transparent
-            "
-          />
-
           {/* Deal badge */}
           {showDealBadge && (
             <div
@@ -102,40 +79,6 @@ export default function MovieCard({
           >
             <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
             {movie.imdbRating ? movie.imdbRating.toFixed(1) : '—'}
-          </div>
-
-          {/* Bottom info overlay */}
-          <div
-            className="
-              absolute
-              bottom-0
-              left-0
-              right-0
-              p-3
-              text-white
-            "
-          >
-            <h3
-              className="
-                truncate
-                text-sm
-                font-bold
-                sm:text-base
-              "
-            >
-              {movie.title}
-            </h3>
-
-            <p
-              className="
-                mt-1
-                line-clamp-1
-                text-xs
-                text-white/70
-              "
-            >
-              {movie.genres.length ? movie.genres.map((g) => g.name).join(' • ') : 'No genres'}
-            </p>
           </div>
         </div>
       </article>
