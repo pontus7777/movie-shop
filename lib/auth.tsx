@@ -14,9 +14,13 @@ import EmailVerfication from '@/components/email/templates/email-verification'
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: 'postgresql' }),
   baseURL: process.env['BETTER_AUTH_URL'],
-  // trustedOrigins: [process.env['BETTER_AUTH_URL'], process.env['LAN_ORIGIN']].filter(
-  //   Boolean,
-  // ) as string[],
+  trustedOrigins: [
+    process.env['BETTER_AUTH_URL'],
+    process.env['LAN_ORIGIN'],
+    process.env.VERCEL_ENV === 'preview' ? `https://${process.env.VERCEL_URL}` : null,
+  ].filter(
+    Boolean,
+  ) as string[],
 
   emailAndPassword: {
     enabled: true,
