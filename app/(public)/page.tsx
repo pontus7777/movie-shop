@@ -16,7 +16,7 @@ export default async function Home() {
         <p className="text-muted-foreground">Stay updated with what everyone&apos;s watching</p>
       </section>
 
-      <section className="relative h-[63vh] w-7x1 overflow-hidden">
+      <section className="relative h-55 w-full overflow-hidden md:h-170">
         {/* Fullscreen Carousel */}
         <HotDealsCarousel movies={cheapestMovies} />
 
