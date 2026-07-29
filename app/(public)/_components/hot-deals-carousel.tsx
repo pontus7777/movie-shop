@@ -67,7 +67,7 @@ export default function HotDealsCarousel({ movies }: Props) {
           className={`
             relative
             h-55
-            w-7.5xl
+            w-full
             overflow-hidden
             transition-opacity
             duration-300
