@@ -16,6 +16,7 @@ import { UserMovieLibrary } from './user-movie-library'
 import { UserAddress } from './user-address'
 import { UserPhoneNumber } from './user-phone-number'
 import { Address } from './address-manager'
+import { UserWishlist } from './user-wishlist'
 
 type OrderWithItems = Prisma.OrderGetPayload<{
   include: {
@@ -24,14 +25,19 @@ type OrderWithItems = Prisma.OrderGetPayload<{
   }
 }>
 
+type WishlistItemType = Prisma.WishlistItemGetPayload<{
+  include: { movie: true }
+}>
+
 type Props = {
   session: AuthSession
   orders: OrderWithItems[]
+  wishlistItems: WishlistItemType[]
 }
 /* -------------------------------------------------------
    MAIN TAB CONTENT
 ------------------------------------------------------- */
-export default function TabContent({ session, orders }: Props) {
+export default function TabContent({ session, orders, wishlistItems }: Props) {
 
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -39,7 +45,7 @@ export default function TabContent({ session, orders }: Props) {
   const playMovieId = searchParams.get('play')
 
   // const [tab, setTab] = useState<'orders' | 'library' | 'profile' | 'settings'>('orders')
-  const tab = (searchParams.get('tab') as 'orders' | 'library' | 'profile' | 'settings') || 'orders'
+  const tab = (searchParams.get('tab') as 'orders' | 'library' | 'wishlist' | 'profile' | 'settings') || 'orders'
 
   function setTab(newTab: string) {
     const params = new URLSearchParams(searchParams.toString())
@@ -161,44 +167,50 @@ export default function TabContent({ session, orders }: Props) {
 
             <div
               onClick={() => setTab('profile')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${
-                tab === 'profile'
-                  ? 'bg-primary/20 text-primary'
-                  : 'text-muted-foreground hover:bg-muted/50'
-              }`}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'profile'
+                ? 'bg-primary/20 text-primary'
+                : 'text-muted-foreground hover:bg-muted/50'
+                }`}
             >
               Profile
             </div>
 
             <div
               onClick={() => setTab('orders')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${
-                tab === 'orders'
-                  ? 'bg-primary/20 text-primary'
-                  : 'text-muted-foreground hover:bg-muted/50'
-              }`}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'orders'
+                ? 'bg-primary/20 text-primary'
+                : 'text-muted-foreground hover:bg-muted/50'
+                }`}
             >
               Orders
             </div>
 
             <div
               onClick={() => setTab('library')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${
-                tab === 'library'
-                  ? 'bg-primary/20 text-primary'
-                  : 'text-muted-foreground hover:bg-muted/50'
-              }`}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'library'
+                ? 'bg-primary/20 text-primary'
+                : 'text-muted-foreground hover:bg-muted/50'
+                }`}
             >
               My Library
             </div>
 
             <div
+              onClick={() => setTab('wishlist')}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'wishlist'
+                ? 'bg-primary/20 text-primary'
+                : 'text-muted-foreground hover:bg-muted/50'
+                }`}
+            >
+              My Wishlist
+            </div>
+
+            <div
               onClick={() => setTab('settings')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${
-                tab === 'settings'
-                  ? 'bg-primary/20 text-primary'
-                  : 'text-muted-foreground hover:bg-muted/50'
-              }`}
+              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'settings'
+                ? 'bg-primary/20 text-primary'
+                : 'text-muted-foreground hover:bg-muted/50'
+                }`}
             >
               Settings
             </div>
@@ -264,6 +276,15 @@ export default function TabContent({ session, orders }: Props) {
                 </div>
               </div>
             )}
+
+
+
+            {/* WISHLIST */}
+            {tab === 'wishlist' &&
+              <UserWishlist items={wishlistItems} />
+            }
+
+
 
             {/* SETTINGS */}
             {tab === 'settings' && (
