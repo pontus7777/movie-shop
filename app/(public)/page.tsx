@@ -39,7 +39,7 @@ export default async function Home() {
         className="
       relative
       h-[45vh]
-      min-h-[320px]
+      min-h-80
       w-full
       overflow-hidden
       sm:h-[55vh]

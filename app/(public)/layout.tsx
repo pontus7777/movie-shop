@@ -22,13 +22,9 @@ export default async function UserLayout({
   return (
     <CartProvider initialCount={cartCount}>
       <div className="flex min-h-screen w-full flex-col">
-        <Header
-          userName={session?.user.name ?? null}
-        />
+        <Header userName={session?.user.name ?? null} />
 
-        <main className="flex-1 overflow-x-hidden">
-          {children}
-        </main>
+        <main className="flex-1 overflow-x-hidden">{children}</main>
 
         <Footer />
       </div>

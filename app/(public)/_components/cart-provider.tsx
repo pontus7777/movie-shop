@@ -1,11 +1,6 @@
 'use client'
 
-import {
-  createContext,
-  useContext,
-  useState,
-} from 'react'
-
+import { createContext, useContext, useState } from 'react'
 
 type CartContextType = {
   cartCount: number
@@ -13,9 +8,7 @@ type CartContextType = {
   resetCartCount: () => void
 }
 
-
 const CartContext = createContext<CartContextType | null>(null)
-
 
 export function CartProvider({
   children,
@@ -26,18 +19,13 @@ export function CartProvider({
 }) {
   const [cartCount, setCartCount] = useState(initialCount)
 
-
   function updateCartCount(amount: number) {
-    setCartCount((count) =>
-      Math.max(0, count + amount),
-    )
+    setCartCount((count) => Math.max(0, count + amount))
   }
-
 
   function resetCartCount() {
     setCartCount(0)
   }
-
 
   return (
     <CartContext.Provider
@@ -52,14 +40,11 @@ export function CartProvider({
   )
 }
 
-
 export function useCart() {
   const context = useContext(CartContext)
 
   if (!context) {
-    throw new Error(
-      'useCart must be used inside CartProvider',
-    )
+    throw new Error('useCart must be used inside CartProvider')
   }
 
   return context

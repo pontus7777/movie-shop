@@ -18,10 +18,7 @@ type Props = {
   userImage?: string | null
 }
 
-export default function Header({
-  userName,
-  userImage,
-}: Props) {
+export default function Header({ userName, userImage }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
@@ -59,7 +56,6 @@ export default function Header({
           </Link>
         </div>
 
-
         <div className="hidden items-center gap-2 md:flex">
           <SearchButton />
 
@@ -67,12 +63,8 @@ export default function Header({
 
           <ThemeModeToggle />
 
-          <UserActions
-            userName={userName}
-            userImage={userImage}
-          />
+          <UserActions userName={userName} userImage={userImage} />
         </div>
-
 
         <div className="flex items-center gap-1 md:hidden">
           <CartButton />
@@ -83,24 +75,14 @@ export default function Header({
             variant="ghost"
             size="icon"
             className="rounded-full"
-            onClick={() => setMobileOpen(v => !v)}
+            onClick={() => setMobileOpen((v) => !v)}
           >
-            {mobileOpen ? (
-              <X />
-            ) : (
-              <Menu />
-            )}
+            {mobileOpen ? <X /> : <Menu />}
           </Button>
         </div>
       </div>
 
-
-      {mobileOpen && (
-        <MobileMenu
-          userName={userName}
-          userImage={userImage}
-        />
-      )}
+      {mobileOpen && <MobileMenu userName={userName} userImage={userImage} />}
     </header>
   )
 }

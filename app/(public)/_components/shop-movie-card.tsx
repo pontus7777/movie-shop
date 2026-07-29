@@ -8,13 +8,7 @@ import { getMovieImageSrc } from '@/lib/image-utils'
 import { convertToEuro } from '@/lib/priceUtils'
 import { getEffectivePriceInCents, isMovieOnSale } from '@/lib/pricing'
 
-import type {
-  Crew,
-  CrewOnMovie,
-  Genre,
-  Movie,
-  MovieKeyword,
-} from '@/generated/prisma/client'
+import type { Crew, CrewOnMovie, Genre, Movie, MovieKeyword } from '@/generated/prisma/client'
 
 export type MovieWithRelations = Movie & {
   genres: Genre[]
@@ -28,11 +22,7 @@ type Props = {
   isWishlisted: boolean
 }
 
-export default function ShopMovieCard({
-  movie,
-  quantity,
-  isWishlisted,
-}: Props) {
+export default function ShopMovieCard({ movie, quantity, isWishlisted }: Props) {
   const onSale = isMovieOnSale(movie)
   const effectivePrice = getEffectivePriceInCents(movie)
 
@@ -58,7 +48,7 @@ export default function ShopMovieCard({
         aria-label={`View ${movie.title}`}
       />
 
-      <div className="relative aspect-[2/3] overflow-hidden">
+      <div className="relative aspect-2/3 overflow-hidden">
         <Image
           src={getMovieImageSrc(movie.imageUrl)}
           alt={movie.title}
@@ -77,7 +67,7 @@ export default function ShopMovieCard({
           "
         />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/65 via-black/15 to-transparent" />
 
         <div className="absolute left-1.5 top-1.5 z-20 sm:left-3 sm:top-3">
           <WishlistButton
@@ -148,9 +138,7 @@ export default function ShopMovieCard({
             </h3>
 
             <div className="flex shrink-0 items-baseline gap-1">
-              <span className="text-xs font-bold sm:text-sm">
-                €{convertToEuro(effectivePrice)}
-              </span>
+              <span className="text-xs font-bold sm:text-sm">€{convertToEuro(effectivePrice)}</span>
 
               {onSale && (
                 <span className="text-[10px] text-white/60 line-through sm:text-xs">
@@ -173,10 +161,7 @@ export default function ShopMovieCard({
           sm:p-2
         "
       >
-        <MovieCartButton
-          movieId={movie.id}
-          initialQuantity={quantity}
-        />
+        <MovieCartButton movieId={movie.id} initialQuantity={quantity} />
       </div>
     </article>
   )

@@ -13,10 +13,7 @@ type Props = {
   initialQuantity: number
 }
 
-export function MovieCartButton({
-  movieId,
-  initialQuantity,
-}: Props) {
+export function MovieCartButton({ movieId, initialQuantity }: Props) {
   const [quantity, setQuantity] = useState(initialQuantity)
   const [loading, setLoading] = useState(false)
 
@@ -60,11 +57,7 @@ export function MovieCartButton({
 
   if (quantity === 0) {
     return (
-      <Button
-        className="h-7 w-full text-[11px] sm:h-8 sm:text-xs"
-        onClick={add}
-        disabled={loading}
-      >
+      <Button className="h-7 w-full text-[11px] sm:h-8 sm:text-xs" onClick={add} disabled={loading}>
         <ShoppingCart className="mr-1 h-3 w-3" />
         Add
       </Button>
@@ -73,11 +66,7 @@ export function MovieCartButton({
 
   return (
     <div className="flex gap-1">
-      <Button
-        className="h-7 flex-1 sm:h-8"
-        onClick={remove}
-        disabled={loading}
-      >
+      <Button className="h-7 flex-1 sm:h-8" onClick={remove} disabled={loading}>
         <Minus className="h-3 w-3" />
       </Button>
 
@@ -85,11 +74,7 @@ export function MovieCartButton({
         {quantity}
       </div>
 
-      <Button
-        className="h-7 flex-1 sm:h-8"
-        onClick={add}
-        disabled={loading}
-      >
+      <Button className="h-7 flex-1 sm:h-8" onClick={add} disabled={loading}>
         <Plus className="h-3 w-3" />
       </Button>
     </div>
