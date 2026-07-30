@@ -241,6 +241,7 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
               <CartActionButton
                 movieId={movie.id}
                 action={addToCart}
+                cartChange={1}
                 toastMessage="Added to cart!"
                 disabled={!movie.stock}
                 size="lg"
