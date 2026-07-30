@@ -11,9 +11,9 @@ import { isMovieOnSale } from '@/lib/pricing'
 import Image from 'next/image'
 import { Trash, ShoppingCart, Heart } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
+import { useCart } from '@/app/(public)/_components/cart-provider'
 
 type WishlistItem = {
     movie: {
@@ -33,17 +33,18 @@ type Props = {
 
 export function UserWishlist({ items }: Props) {
 
-    const router = useRouter()
-    const [isPending, startTransition] = useTransition()
-    const [pendingMovieId, setPendingMovieId] = useState<string | null>(null)
+    const [, startTransition] = useTransition()
 
+    const { updateCartCount } = useCart()
+    const [pendingMovieId, setPendingMovieId] = useState<string | null>(null)
+    const [localItems, setLocalItems] = useState(items)
 
     function handleAddToCart(movieId: string) {
         setPendingMovieId(movieId)
         startTransition(async () => {
             await addToCart(movieId)
+            updateCartCount(1)
             toast.success('Added to cart')
-            router.refresh()
             setPendingMovieId(null)
         })
     }
@@ -52,14 +53,14 @@ export function UserWishlist({ items }: Props) {
         setPendingMovieId(movieId)
         startTransition(async () => {
             await removeFromWishlist(movieId)
+            setLocalItems((prev) => prev.filter((i) => i.movie.id !== movieId))
             toast.success('Removed from wishlist')
-            router.refresh()
             setPendingMovieId(null)
         })
     }
 
 
-    if (items.length === 0) {
+    if (localItems.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-16 text-center">
                 <Heart className="h-10 w-10 text-muted-foreground mb-3" />
@@ -80,7 +81,7 @@ export function UserWishlist({ items }: Props) {
 
     return (
         <div className="grid gap-4 md:grid-cols-2">
-            {items.map((item) => {
+            {localItems.map((item) => {
                 const onSale = isMovieOnSale(item.movie)
                 const isThisPending = pendingMovieId === item.movie.id
 
@@ -131,20 +132,6 @@ export function UserWishlist({ items }: Props) {
                                     >
                                         <Trash className="h-4 w-4" />
                                     </Button>
-
-
-                                    {/* <form action={async () => { await addToCart.bind(null, item.movie.id) }}>
-                                        <Button size="sm" type="submit">
-                                            <ShoppingCart className="mr-1 h-4 w-4" />
-                                            Add to cart
-                                        </Button>
-                                    </form>
-
-                                    <form action={async () => { await removeFromWishlist.bind(null, item.movie.id) }}>
-                                        <Button size="icon" variant="ghost" type="submit">
-                                            <Trash className="h-4 w-4" />
-                                        </Button>
-                                    </form> */}
                                 </div>
                             </div>
                         </CardContent>

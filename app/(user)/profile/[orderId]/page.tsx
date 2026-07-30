@@ -3,6 +3,9 @@ import prisma from '@/lib/prisma'
 import { requireAuth } from '@/lib/session-validation'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
+import { ChevronLeft } from 'lucide-react'
+
 
 export default async function UserOrderDetailsPage(props: PageProps<'/profile/[orderId]'>) {
   const params = await props.params
@@ -23,6 +26,14 @@ export default async function UserOrderDetailsPage(props: PageProps<'/profile/[o
 
   return (
     <div className="space-y-6">
+
+      <Link
+        href="/profile"
+        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+      >
+        <ChevronLeft className="h-4 w-4" />
+        Back to Profile
+      </Link>
       <h1 className="text-3xl font-bold">Order details # {params.orderId}</h1>
 
       <div className="space-y-4">
