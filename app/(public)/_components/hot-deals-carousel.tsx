@@ -66,7 +66,6 @@ export default function HotDealsCarousel({ movies }: Props) {
           className={`
             relative
             h-55
-            w-7.5xl
             w-full
             overflow-hidden
             transition-opacity
@@ -74,16 +73,6 @@ export default function HotDealsCarousel({ movies }: Props) {
             md:h-170
             ${fade ? 'opacity-100' : 'opacity-0'}
           `}
-        //         className={`
-        //   relative
-        //   h-55
-        //   w-full
-        //   overflow-hidden
-        //   transition-opacity
-        //   duration-300
-        //   md:h-170
-        //   ${fade ? 'opacity-100' : 'opacity-0'}
-        // `}
         >
           {/* Movie Image */}
           <Image
@@ -95,7 +84,7 @@ export default function HotDealsCarousel({ movies }: Props) {
             className="
             object-cover
             transition-transform
-            duration-[5000ms]
+            duration-5000
             hover:scale-105
           "
           />

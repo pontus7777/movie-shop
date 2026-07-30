@@ -12,6 +12,7 @@ import { SearchButton } from './search-button'
 import { UserActions } from './user-actions'
 import { MobileMenu } from './mobile-menu'
 import Logo from '../logo'
+import { WishlistHeaderButton } from './wishlist-button'
 
 type Props = {
   userName?: string | null
@@ -61,6 +62,8 @@ export default function Header({ userName, userImage }: Props) {
 
           <CartButton />
 
+          <WishlistHeaderButton userName={userName} />
+
           <ThemeModeToggle />
 
           <UserActions userName={userName} userImage={userImage} />
@@ -68,6 +71,8 @@ export default function Header({ userName, userImage }: Props) {
 
         <div className="flex items-center gap-1 md:hidden">
           <CartButton />
+
+          {/* <WishlistHeaderButton userName={userName} /> */}
 
           <ThemeModeToggle />
 
