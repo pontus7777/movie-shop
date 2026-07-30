@@ -1,6 +1,6 @@
 import '@/app/globals.css'
-import { UserPageHeader } from './_components/user-header'
 import { requireAuth } from '@/lib/session-validation'
+import Header from '@/app/(public)/_components/header/header'
 
 export default async function UserPagesLayout({ children }: { children: React.ReactNode }) {
   await requireAuth()
@@ -9,7 +9,7 @@ export default async function UserPagesLayout({ children }: { children: React.Re
     <div className="bg-background flex min-h-screen w-full">
       <main className="flex flex-1 flex-col">
         {/* Header */}
-        <UserPageHeader />
+        <Header />
 
         {/* Page content */}
         <div className="flex-1 px-6 py-8">{children}</div>
