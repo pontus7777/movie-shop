@@ -20,7 +20,8 @@ export default async function UserLayout({
   const cartCount = await getCartCount(session)
 
   return (
-    <CartProvider initialCount={cartCount}>
+    <>
+      {/* <CartProvider initialCount={cartCount}> */}
       <div className="flex min-h-screen w-full flex-col">
         <Header userName={session?.user.name ?? null} />
 
@@ -28,6 +29,7 @@ export default async function UserLayout({
 
         <Footer />
       </div>
-    </CartProvider>
+      {/* </CartProvider> */}
+    </>
   )
 }
