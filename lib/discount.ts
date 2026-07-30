@@ -23,34 +23,65 @@ export async function getBestDiscountTier(totalQuantity: number) {
   return tiers[0] ?? null
 }
 
-export async function calculateCartTotals(
-  items: {
-    movie: {
-      priceInCents: number
-      salePriceInCents: number | null
-      saleStartsAt: Date | null
-      saleEndsAt: Date | null
-    }
-    quantity: number
-  }[],
-): Promise<CartTotals> {
+export type CartItemForPricing = {
+  movie: {
+    priceInCents: number
+    salePriceInCents: number | null
+    saleStartsAt: Date | null
+    saleEndsAt: Date | null
+  }
+  quantity: number
+}
+
+export type CartTotalsInCents = {
+  totalQuantity: number
+  subtotalInCents: number
+  discountPercentage: number
+  discountAmountInCents: number
+  totalInCents: number
+}
+
+// Cents-based totals, kept in integer cents throughout. Anything that persists
+// a price (orders, order items) must go through this — not the EUR-based
+// calculateCartTotals below, which uses floating point and is display-only.
+export async function calculateCartTotalsInCents(
+  items: CartItemForPricing[],
+): Promise<CartTotalsInCents> {
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0)
 
-  const subtotal = items.reduce(
-    (sum, item) => sum + convertToEuro(getEffectivePriceInCents(item.movie)) * item.quantity,
+  const subtotalInCents = items.reduce(
+    (sum, item) => sum + getEffectivePriceInCents(item.movie) * item.quantity,
     0,
   )
 
   const bestTier = await getBestDiscountTier(totalQuantity)
   const discountPercentage = bestTier?.percentageOff ?? 0
-  const discountAmount = subtotal * (discountPercentage / 100)
-  const total = subtotal - discountAmount
+  const discountAmountInCents = Math.round(subtotalInCents * (discountPercentage / 100))
+  const totalInCents = subtotalInCents - discountAmountInCents
 
   return {
     totalQuantity,
-    subtotal,
+    subtotalInCents,
     discountPercentage,
-    discountAmount,
-    total,
+    discountAmountInCents,
+    totalInCents,
+  }
+}
+
+export async function calculateCartTotals(items: CartItemForPricing[]): Promise<CartTotals> {
+  const {
+    totalQuantity,
+    subtotalInCents,
+    discountPercentage,
+    discountAmountInCents,
+    totalInCents,
+  } = await calculateCartTotalsInCents(items)
+
+  return {
+    totalQuantity,
+    subtotal: convertToEuro(subtotalInCents),
+    discountPercentage,
+    discountAmount: convertToEuro(discountAmountInCents),
+    total: convertToEuro(totalInCents),
   }
 }

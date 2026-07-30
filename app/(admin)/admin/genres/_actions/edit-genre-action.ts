@@ -2,7 +2,7 @@
 
 import prisma from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session-validation'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, updateTag } from 'next/cache'
 import { z } from 'zod'
 
 const editGenreSchema = z.object({
@@ -26,6 +26,7 @@ export async function editGenre(values: z.infer<typeof editGenreSchema>) {
   })
 
   revalidatePath('/admin/genres')
+  updateTag('movies')
 
   return {
     ...updatedGenre,

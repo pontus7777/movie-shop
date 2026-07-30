@@ -8,7 +8,7 @@ import { headers } from 'next/headers'
 import { CartProvider } from './_components/cart-provider'
 import { getCartCount } from '@/lib/cart'
 
-export default async function UserLayout({
+export default async function PublicLayout({
   children,
 }: Readonly<{
   children: React.ReactNode

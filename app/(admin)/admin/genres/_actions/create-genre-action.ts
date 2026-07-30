@@ -2,7 +2,7 @@
 
 import prisma from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session-validation'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, updateTag } from 'next/cache'
 import { z } from 'zod'
 
 const createGenreSchema = z.object({
@@ -23,6 +23,7 @@ export async function createGenre(values: z.infer<typeof createGenreSchema>) {
     })
 
     revalidatePath(`/admin/genres`)
+    updateTag('movies')
     return newGenre
   } catch (error) {
     console.log('Error creating a genre', error)
