@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
 import { DeleteMovieBtn } from './_components/delete-movie-btn'
+import { deleteMovie } from '../_actions/delete-movie-action'
 import { getMovieImageSrc } from '@/lib/image-utils'
 import { convertToEuro } from '@/lib/priceUtils'
 import { requireAdmin } from '@/lib/session-validation'
@@ -78,17 +79,7 @@ export default async function MovieDetailsPage(props: PageProps<'/admin/movies/[
             </Link>
           </Button>
 
-          <DeleteMovieBtn
-            action={async () => {
-              'use server'
-
-              await prisma.movie.delete({
-                where: {
-                  id: movie.id,
-                },
-              })
-            }}
-          />
+          <DeleteMovieBtn action={deleteMovie.bind(null, movie.id)} />
         </div>
       </div>
 

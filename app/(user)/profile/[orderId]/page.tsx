@@ -1,12 +1,23 @@
 import { convertToEuro } from '@/lib/priceUtils'
 import prisma from '@/lib/prisma'
+import { requireAuth } from '@/lib/session-validation'
 import Image from 'next/image'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
 
 
 export default async function UserOrderDetailsPage(props: PageProps<'/profile/[orderId]'>) {
   const params = await props.params
+  const session = await requireAuth()
+
+  const order = await prisma.order.findFirst({
+    where: { id: params.orderId, userId: session.user.id },
+  })
+
+  if (!order) {
+    notFound()
+  }
 
   const orderItems = await prisma.orderItem.findMany({
     where: { orderId: params.orderId },

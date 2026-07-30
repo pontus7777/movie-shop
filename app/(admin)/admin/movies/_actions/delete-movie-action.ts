@@ -5,14 +5,13 @@ import { revalidatePath, updateTag } from 'next/cache'
 import prisma from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session-validation'
 
-export async function deleteCrew(crewId: string) {
+export async function deleteMovie(id: string) {
   await requireAdmin()
-  await prisma.crew.delete({
-    where: {
-      id: crewId,
-    },
+
+  await prisma.movie.delete({
+    where: { id },
   })
 
-  revalidatePath('/admin/crew')
+  revalidatePath('/admin/movies')
   updateTag('movies')
 }

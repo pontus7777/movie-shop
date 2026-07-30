@@ -1,3 +1,5 @@
+export const MOVIES_PAGE_SIZE = 18
+
 export function getArrayParam(param: string | string[] | undefined) {
   if (!param) return []
   return Array.isArray(param) ? param : [param]

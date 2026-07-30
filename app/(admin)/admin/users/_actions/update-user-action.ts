@@ -1,9 +1,7 @@
 'use server'
 
-import { auth } from '@/lib/auth'
 import prisma from '@/lib/prisma'
-import { headers } from 'next/headers'
-import { redirect } from 'next/navigation'
+import { checkAdminAccess } from '@/lib/session-validation'
 import { z } from 'zod'
 
 const UpdateUserSchema = z.object({
@@ -12,14 +10,9 @@ const UpdateUserSchema = z.object({
 })
 
 export async function updateUser(values: z.infer<typeof UpdateUserSchema>) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
-
-  if (!session) redirect('/sign-in')
-
-  if (session.user.role !== 'admin') {
-    return { success: false, error: 'Unauthorized' }
+  const access = await checkAdminAccess()
+  if (!access.authorized) {
+    return { success: false, error: access.error }
   }
 
   const data = UpdateUserSchema.parse(values)

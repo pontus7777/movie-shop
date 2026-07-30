@@ -1,7 +1,7 @@
 'use server'
 
 import { z } from 'zod'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, updateTag } from 'next/cache'
 
 import prisma from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session-validation'
@@ -22,6 +22,7 @@ export async function createCrew(values: z.infer<typeof createCrewSchema>) {
   })
 
   revalidatePath('/admin/crew')
+  updateTag('movies')
 
   return newCrew
 }

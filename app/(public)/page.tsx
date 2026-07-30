@@ -1,6 +1,12 @@
+import type { Metadata } from 'next'
 import HotDealsCarousel from '@/app/(public)/_components/hot-deals-carousel'
 import { MovieRow } from '@/app/(public)/_components/movie-row'
 import { getHomepageMovies } from '@/app/(public)/_queries/movie-queries'
+
+export const metadata: Metadata = {
+  title: 'Movie Shop – Find Your Next Favorite Movie',
+  description: 'Explore new releases, popular picks, timeless classics, and hot deals.',
+}
 
 export default async function Home() {
   const { cheapestMovies, recentMovies, popularMovies, oldestMovies, mostPurchasedMovies } =

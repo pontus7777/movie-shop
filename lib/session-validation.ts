@@ -26,3 +26,13 @@ export async function requireAdmin() {
 
   return session
 }
+
+export async function checkAdminAccess() {
+  const session = await requireAuth()
+
+  if (session.user.role !== 'admin') {
+    return { authorized: false as const, error: 'Unauthorized' }
+  }
+
+  return { authorized: true as const, session }
+}

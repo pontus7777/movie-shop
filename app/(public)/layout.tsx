@@ -6,7 +6,7 @@ import Header from '@/app/(public)/_components/header/header'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 
-export default async function UserLayout({
+export default async function PublicLayout({
   children,
 }: Readonly<{
   children: React.ReactNode

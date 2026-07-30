@@ -1,6 +1,6 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, updateTag } from 'next/cache'
 import { z } from 'zod'
 
 import prisma from '@/lib/prisma'
@@ -80,6 +80,7 @@ export async function createMovie(values: z.infer<typeof createMovieSchema>) {
     })
 
     revalidatePath(`/admin/movies`)
+    updateTag('movies')
     return newMovie
   } catch (error) {
     console.log('Error creating a movie', error)

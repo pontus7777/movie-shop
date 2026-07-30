@@ -1,9 +1,7 @@
 'use server'
 
 import prisma from '@/lib/prisma'
-import { redirect } from 'next/navigation'
-import { headers } from 'next/headers'
-import { auth } from '@/lib/auth'
+import { checkAdminAccess } from '@/lib/session-validation'
 import { z } from 'zod'
 
 const DeleteSchema = z.object({
@@ -11,14 +9,9 @@ const DeleteSchema = z.object({
 })
 
 export async function deleteUser(data: z.infer<typeof DeleteSchema>) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
-
-  if (!session) redirect('/sign-in')
-
-  if (session.user.role !== 'admin') {
-    return { success: false, error: 'Unauthorized' }
+  const access = await checkAdminAccess()
+  if (!access.authorized) {
+    return { success: false, error: access.error }
   }
 
   const parsed = DeleteSchema.safeParse(data)

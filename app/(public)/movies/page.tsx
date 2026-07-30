@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 
+import type { Metadata } from 'next'
 import { headers } from 'next/headers'
 
 import { auth } from '@/lib/auth'
@@ -13,16 +14,28 @@ import { MoviesSidebar } from './_components/movies-sidebar'
 import { MobileMoviesFilters } from './_components/mobile-movies-filters'
 
 import { buildMovieWhere } from './_lib/movie-filters'
-import { getArrayParam, getStringParam } from './_lib/movie-query-helpers'
+import { MOVIES_PAGE_SIZE, getArrayParam, getStringParam } from './_lib/movie-query-helpers'
 
 import { getMovieSidebarData } from './_lib/get-movie-sidebar-data'
 import { getMovies } from './_lib/get-movies'
 import { getMovieCount } from './_lib/get-movie-count'
 
+export async function generateMetadata(props: PageProps<'/movies'>): Promise<Metadata> {
+  const params = await props.searchParams
+  const q = getStringParam(params.q)
+
+  return {
+    title: q ? `Search results for "${q}" – Movies` : 'Movies',
+    description: q
+      ? `Browse movies matching "${q}".`
+      : 'Browse and filter our full catalog of movies by genre, director, actor, year, and runtime.',
+  }
+}
+
 export default async function MoviesPage(props: PageProps<'/movies'>) {
   const params = await props.searchParams
 
-  const pageSize = 18
+  const pageSize = MOVIES_PAGE_SIZE
   const page = Number(params.page) || 1
   const skip = (page - 1) * pageSize
 

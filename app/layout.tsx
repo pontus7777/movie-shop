@@ -18,7 +18,12 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
+const siteUrl =
+  process.env['BETTER_AUTH_URL'] ??
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: 'Movie Shop App',
   description: 'Shop made by group Charlie',
 }

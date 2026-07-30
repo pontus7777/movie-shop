@@ -8,6 +8,8 @@ import prisma from '@/lib/prisma'
 
 import { checkoutSchema, type CheckoutInput } from '@/lib/validations/checkout'
 import { removeMoviesFromWishlist } from '@/lib/wishlist'
+import { calculateCartTotalsInCents } from '@/lib/discount'
+import { getEffectivePriceInCents } from '@/lib/pricing'
 
 export async function checkout(input: CheckoutInput) {
   // Validate input on the server as well
@@ -46,10 +48,10 @@ export async function checkout(input: CheckoutInput) {
     throw new Error('Your cart is empty.')
   }
 
-  // Calculate order total
-  const total = cart.items.reduce((sum, item) => {
-    return sum + item.movie.priceInCents * item.quantity
-  }, 0)
+  // Calculate order total — same sale price + bulk discount logic the
+  // checkout page shows the customer, kept in integer cents to avoid
+  // floating point drift in stored prices.
+  const { totalInCents } = await calculateCartTotalsInCents(cart.items)
 
   // Fake payment delay
   // await new Promise((resolve) => setTimeout(resolve, 1500))
@@ -64,7 +66,7 @@ export async function checkout(input: CheckoutInput) {
     const createdOrder = await tx.order.create({
       data: {
         userId: session.user.id,
-        total,
+        total: totalInCents,
         status: 'PAID',
         paymentMethod: data.paymentMethod,
       },
@@ -85,13 +87,14 @@ export async function checkout(input: CheckoutInput) {
       },
     })
 
-    // Create order items
+    // Create order items — store the effective (sale) price at purchase time,
+    // not the movie's list price, so order history reflects what was charged.
     await tx.orderItem.createMany({
       data: cart.items.map((item) => ({
         orderId: createdOrder.id,
         movieId: item.movieId,
         quantity: item.quantity,
-        priceInCents: item.movie.priceInCents,
+        priceInCents: getEffectivePriceInCents(item.movie),
       })),
     })
 

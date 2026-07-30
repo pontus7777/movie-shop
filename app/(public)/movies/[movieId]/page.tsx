@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { getMovieImageSrc } from '@/lib/image-utils'
 import prisma from '@/lib/prisma'
 import Image from 'next/image'
@@ -17,6 +18,33 @@ import { ReviewSection } from './_components/review-section'
 import { isMoviePurchased } from '@/lib/purchases'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+
+export async function generateMetadata(
+  props: PageProps<'/movies/[movieId]'>,
+): Promise<Metadata> {
+  const { movieId } = await props.params
+
+  const movie = await prisma.movie.findUnique({
+    where: { id: movieId },
+    select: { title: true, description: true, imageUrl: true },
+  })
+
+  if (!movie) {
+    return { title: 'Movie not found' }
+  }
+
+  const posterSrc = getMovieImageSrc(movie.imageUrl)
+
+  return {
+    title: movie.title,
+    description: movie.description,
+    openGraph: {
+      title: movie.title,
+      description: movie.description,
+      images: [{ url: posterSrc }],
+    },
+  }
+}
 
 export default async function MovieDetailsPage(props: PageProps<'/movies/[movieId]'>) {
   const params = await props.params
@@ -112,6 +140,7 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
               src={posterSrc}
               alt=""
               fill
+              sizes="100vw"
               className="scale-110 object-cover opacity-40 blur-2xl"
               priority
             />

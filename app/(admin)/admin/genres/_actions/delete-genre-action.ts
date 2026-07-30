@@ -2,7 +2,7 @@
 
 import prisma from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session-validation'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, updateTag } from 'next/cache'
 
 export async function deleteGenre(id: number) {
   await requireAdmin()
@@ -11,4 +11,5 @@ export async function deleteGenre(id: number) {
   })
 
   revalidatePath('/admin/genres')
+  updateTag('movies')
 }

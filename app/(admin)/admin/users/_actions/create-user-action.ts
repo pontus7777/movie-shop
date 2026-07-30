@@ -2,7 +2,7 @@
 
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import { redirect } from 'next/navigation'
+import { checkAdminAccess } from '@/lib/session-validation'
 import { z } from 'zod'
 
 const AddUserSchema = z.object({
@@ -14,14 +14,9 @@ const AddUserSchema = z.object({
 
 export async function createUser(values: z.infer<typeof AddUserSchema>) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    })
-
-    if (!session) redirect('/sign-in')
-
-    if (session.user.role !== 'admin') {
-      return { success: false, error: 'Unauthorized' }
+    const access = await checkAdminAccess()
+    if (!access.authorized) {
+      return { success: false, error: access.error }
     }
 
     const data = AddUserSchema.parse(values)

@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma'
+import { cached } from '@/lib/cache'
 
 const movieInclude = {
   genres: true,
@@ -10,7 +11,9 @@ function sortByIds<T extends { id: string }>(ids: string[], items: T[]) {
     .filter((item): item is T => item !== undefined)
 }
 
-export async function getHomepageMovies() {
+export const getHomepageMovies = cached(fetchHomepageMovies, ['homepage-movies'], ['movies'], 300)
+
+async function fetchHomepageMovies() {
   const [cheapestMoviesRaw, recentMovies, popularMovies, oldestMovies, mostPurchasedGroups] =
     await Promise.all([
       prisma.movie.findMany({
