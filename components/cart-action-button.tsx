@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { Button } from './ui/button'
 import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
 import { useCart } from '@/app/(public)/_components/cart-provider'
 
 type Props = React.ComponentProps<typeof Button> & {
@@ -14,7 +13,6 @@ type Props = React.ComponentProps<typeof Button> & {
 }
 
 function CartActionButton({ movieId, toastMessage, action, cartChange = 0, ...props }: Props) {
-  const router = useRouter()
   const { updateCartCount } = useCart()
   const [loading, setLoading] = useState(false)
 
@@ -29,7 +27,6 @@ function CartActionButton({ movieId, toastMessage, action, cartChange = 0, ...pr
       }
 
       toast.success(toastMessage)
-      router.refresh()
     } catch {
       toast.error('Cart update failed')
     } finally {
