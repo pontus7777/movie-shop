@@ -17,6 +17,7 @@ import { UserAddress } from './user-address'
 import { UserPhoneNumber } from './user-phone-number'
 import { Address } from './address-manager'
 import { UserWishlist } from './user-wishlist'
+import { LayoutDashboard } from 'lucide-react'
 
 type OrderWithItems = Prisma.OrderGetPayload<{
   include: {
@@ -154,9 +155,10 @@ export default function TabContent({ session, orders, wishlistItems }: Props) {
                 <div className="my-2 border-t" />
                 <Link
                   href="/admin"
-                  className="px-3 py-2 rounded-lg text-muted-foreground hover:bg-muted/50"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-muted-foreground hover:bg-muted/50"
                 >
-                  Dashboard
+                  <LayoutDashboard className="h-4 w-4 shrink-0" />
+                  <span className="truncate">Dashboard</span>
                 </Link>
               </>
             )}
