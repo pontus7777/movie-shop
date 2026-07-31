@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { User } from 'lucide-react'
+import { Loader2, LogOut, User } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { authClient } from '@/lib/auth-client'
@@ -80,8 +80,18 @@ export function UserActions({ userName, userImage }: Props) {
         <span className="hidden text-sm font-medium lg:block">{userName}</span>
       </Link>
 
-      <Button variant="ghost" onClick={signOut} disabled={loading}>
-        {loading ? 'Signing out...' : 'Sign out'}
+      <Button variant="ghost" onClick={signOut} disabled={loading} className="gap-2">
+        {loading ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Signing out...
+          </>
+        ) : (
+          <>
+            <LogOut className="h-4 w-4" />
+            {/* Sign out */}
+          </>
+        )}
       </Button>
     </div>
   )

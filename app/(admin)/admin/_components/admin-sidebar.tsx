@@ -9,6 +9,9 @@ import {
   Clapperboard,
   Percent,
   Plus,
+  Loader2,
+  LogOut,
+  User,
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -194,14 +197,27 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={goToProfile}>Profile</DropdownMenuItem>
+            <DropdownMenuItem onClick={goToProfile}>
+              <User className="h-4 w-4" />
+              Profile
+            </DropdownMenuItem>
 
             <DropdownMenuItem
               onClick={handleSignOut}
               disabled={signingOut}
               className="text-destructive focus:text-destructive"
             >
-              {signingOut ? 'Signing out...' : 'Sign out'}
+              {signingOut ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Signing out...
+                </>
+              ) : (
+                <>
+                  <LogOut className="h-4 w-4" />
+                  Sign out
+                </>
+              )}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
