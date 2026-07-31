@@ -22,9 +22,8 @@ export function UserActions({ userName, userImage }: Props) {
   async function signOut() {
     try {
       setLoading(true)
-
       await authClient.signOut()
-
+      router.refresh()
       router.replace('/')
     } finally {
       setLoading(false)

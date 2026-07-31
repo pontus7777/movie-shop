@@ -13,13 +13,20 @@ import { UserActions } from './user-actions'
 import { MobileMenu } from './mobile-menu'
 import Logo from '../logo'
 import { WishlistHeaderButton } from './wishlist-button'
+import { authClient } from '@/lib/auth-client'
 
 type Props = {
   userName?: string | null
   userImage?: string | null
 }
 
-export default function Header({ userName, userImage }: Props) {
+// export default function Header({ userName, userImage }: Props) {
+export default function Header() {
+
+  const { data: session } = authClient.useSession()
+  const userName = session?.user.name ?? null
+  const userImage = session?.user.image ?? null
+
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
