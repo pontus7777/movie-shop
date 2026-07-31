@@ -12,6 +12,7 @@ import { authClient } from '@/lib/auth-client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import Link from 'next/link'
+import { UserPlus } from 'lucide-react'
 
 const formSchema = z
   .object({
@@ -157,7 +158,8 @@ function RegisterForm() {
             <form.Subscribe selector={(state) => state.isSubmitting}>
               {(isSubmitting) => (
                 <Field orientation="horizontal">
-                  <Button type="submit" disabled={isSubmitting}>
+                  <Button type="submit" disabled={isSubmitting} className="gap-2">
+                    <UserPlus className="h-4 w-4" />
                     Register
                   </Button>
                 </Field>
