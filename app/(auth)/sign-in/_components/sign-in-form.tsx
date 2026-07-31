@@ -11,6 +11,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field
 import { Input } from '@/components/ui/input'
 import { authClient } from '@/lib/auth-client'
 import { mergeCurrentUserCart } from '../../_actions/merge-cart'
+import { Loader2, LogIn } from 'lucide-react'
 
 const formSchema = z.object({
   email: z.email(),
@@ -140,8 +141,20 @@ function SignInForm() {
           <form.Subscribe selector={(state) => state.isSubmitting}>
             {(isSubmitting) => (
               <Field orientation="horizontal">
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? 'Signing in...' : 'Sign in'}
+                <Button type="submit" disabled={isSubmitting} className="gap-2">
+                  {isSubmitting ?
+                    (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Signing in...
+                      </>
+                    ) : (
+                      <>
+                        <LogIn className="h-4 w-4" />
+                        Sign in
+                      </>
+                    )
+                  }
                 </Button>
               </Field>
             )}
