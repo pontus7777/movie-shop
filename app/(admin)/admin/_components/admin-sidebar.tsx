@@ -89,14 +89,13 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
   const [signingOut, setSigningOut] = useState(false)
 
   async function handleSignOut() {
+    console.log('sign out clicked')
     setSigningOut(true)
-
     await authClient.signOut()
-
     setSigningOut(false)
-
-    router.push('/')
     router.refresh()
+    router.push('/')
+
   }
 
   function goToProfile() {
