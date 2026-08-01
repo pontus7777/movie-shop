@@ -49,45 +49,47 @@ export function OrdersTable({
         </CardDescription>
       </CardHeader>
       <CardContent className="p-0">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Order</TableHead>
-              <TableHead>Customer</TableHead>
-              <TableHead>Total</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Payment</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead className="text-right">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-
-          <TableBody>
-            {orders.map((order) => (
-              <TableRow key={order.id}>
-                <TableCell> {order.id.slice(0, 8)}</TableCell>
-
-                <TableCell>{order.user.name}</TableCell>
-
-                <TableCell> ${(order.total / 100).toFixed(2)}</TableCell>
-
-                <TableCell>
-                  <span className="rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-700">
-                    {order.status}
-                  </span>
-                </TableCell>
-
-                <TableCell>{order.paymentMethod}</TableCell>
-
-                <TableCell> {new Date(order.createdAt).toLocaleDateString('SE-sv')}</TableCell>
-
-                <TableCell className="text-right">
-                  <OrderActions order={order} />
-                </TableCell>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Order</TableHead>
+                <TableHead>Customer</TableHead>
+                <TableHead>Total</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="hidden md:table-cell">Payment</TableHead>
+                <TableHead className="hidden lg:table-cell">Date</TableHead>
+                <TableHead className="text-right">Action</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+
+            <TableBody>
+              {orders.map((order) => (
+                <TableRow key={order.id}>
+                  <TableCell> {order.id.slice(0, 8)}</TableCell>
+
+                  <TableCell>{order.user.name}</TableCell>
+
+                  <TableCell> ${(order.total / 100).toFixed(2)}</TableCell>
+
+                  <TableCell>
+                    <span className="rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-700">
+                      {order.status}
+                    </span>
+                  </TableCell>
+
+                  <TableCell className="hidden md:table-cell">{order.paymentMethod}</TableCell>
+
+                  <TableCell className="hidden lg:table-cell"> {new Date(order.createdAt).toLocaleDateString('SE-sv')}</TableCell>
+
+                  <TableCell className="text-right">
+                    <OrderActions order={order} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </CardContent>
 
       <CardFooter>
