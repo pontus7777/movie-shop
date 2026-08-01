@@ -129,7 +129,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
               return (
                 <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton asChild isActive={active}>
-                    <Link href={item.href}>
+                    <Link href={item.href} >
                       <Icon />
                       <span>{item.title}</span>
                     </Link>
@@ -146,7 +146,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
-                <Link href="/admin/movies/create">
+                <Link href="/admin/movies/create" >
                   <Plus />
                   <span>Add Movie</span>
                 </Link>

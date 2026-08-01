@@ -147,15 +147,16 @@ export default function TabContent({ session, orders, wishlistItems }: Props) {
 
       {/* MAIN */}
       <div className="mx-auto max-w-10xl">
-        <div className="flex min-h-225">
+        <div className="flex flex-col md:flex-row min-h-225">
+
           {/* SIDEBAR */}
-          <aside className="w-52 border-r py-5 px-3 flex flex-col gap-3">
+          <aside className="w-full md:w-52 border-b md:border-b-0 md:border-r py-3 md:py-5 px-3 flex flex-row md:flex-col gap-2 md:gap-3 overflow-x-auto">
             {session.user.role === 'admin' && (
               <>
-                <div className="my-2 border-t" />
+                <div className="hidden md:block my-2 border-t" />
                 <Link
                   href="/admin"
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-muted-foreground hover:bg-muted/50"
+                  className="flex shrink-0 items-center gap-2 px-3 py-2 rounded-lg text-muted-foreground hover:bg-muted/50"
                 >
                   <LayoutDashboard className="h-4 w-4 shrink-0" />
                   <span className="truncate">Dashboard</span>
@@ -163,13 +164,13 @@ export default function TabContent({ session, orders, wishlistItems }: Props) {
               </>
             )}
 
-            <p className="px-2 mb-2 text-[11px] uppercase tracking-widest text-muted-foreground">
+            <p className="hidden md:block px-2 mb-2 text-[11px] uppercase tracking-widest text-muted-foreground">
               Account
             </p>
 
             <div
               onClick={() => setTab('profile')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'profile'
+              className={`shrink-0 px-3 py-2 rounded-lg cursor-pointer whitespace-nowrap ${tab === 'profile'
                 ? 'bg-primary/20 text-primary'
                 : 'text-muted-foreground hover:bg-muted/50'
                 }`}
@@ -179,7 +180,7 @@ export default function TabContent({ session, orders, wishlistItems }: Props) {
 
             <div
               onClick={() => setTab('orders')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'orders'
+              className={`shrink-0 px-3 py-2 rounded-lg cursor-pointer whitespace-nowrap ${tab === 'orders'
                 ? 'bg-primary/20 text-primary'
                 : 'text-muted-foreground hover:bg-muted/50'
                 }`}
@@ -189,7 +190,7 @@ export default function TabContent({ session, orders, wishlistItems }: Props) {
 
             <div
               onClick={() => setTab('library')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'library'
+              className={`shrink-0 px-3 py-2 rounded-lg cursor-pointer whitespace-nowrap ${tab === 'library'
                 ? 'bg-primary/20 text-primary'
                 : 'text-muted-foreground hover:bg-muted/50'
                 }`}
@@ -199,7 +200,7 @@ export default function TabContent({ session, orders, wishlistItems }: Props) {
 
             <div
               onClick={() => setTab('wishlist')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'wishlist'
+              className={`shrink-0 px-3 py-2 rounded-lg cursor-pointer whitespace-nowrap ${tab === 'wishlist'
                 ? 'bg-primary/20 text-primary'
                 : 'text-muted-foreground hover:bg-muted/50'
                 }`}
@@ -209,7 +210,7 @@ export default function TabContent({ session, orders, wishlistItems }: Props) {
 
             <div
               onClick={() => setTab('settings')}
-              className={`px-3 py-2 rounded-lg cursor-pointer ${tab === 'settings'
+              className={`shrink-0 px-3 py-2 rounded-lg cursor-pointer whitespace-nowrap ${tab === 'settings'
                 ? 'bg-primary/20 text-primary'
                 : 'text-muted-foreground hover:bg-muted/50'
                 }`}
@@ -219,7 +220,7 @@ export default function TabContent({ session, orders, wishlistItems }: Props) {
           </aside>
 
           {/* RIGHT CONTENT */}
-          <main className="flex-1 py-5 px-6">
+          <main className="flex-1 py-5 px-6 md:px-6 min-w-0">
 
             {/* LIBRARY */}
             {tab === 'library' && (
