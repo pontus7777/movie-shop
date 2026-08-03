@@ -10,7 +10,7 @@ import { nextCookies } from 'better-auth/next-js'
 import { sendEmail } from './email'
 import { render, toPlainText } from 'react-email'
 import EmailVerfication from '@/components/email/templates/email-verification'
-import { createAuthMiddleware } from 'better-auth/api'
+import { APIError, createAuthMiddleware } from 'better-auth/api'
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: 'postgresql' }),
@@ -30,7 +30,10 @@ export const auth = betterAuth({
           })
 
           if (existingUser?.isDeactivated) {
-            throw new Error('This account has been deactivated.')
+            // throw new Error('This account has been deactivated.')
+            throw new APIError('FORBIDDEN', {
+              message: 'This account has been deactivated.',
+            })
           }
         }
       }
