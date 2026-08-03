@@ -3,14 +3,9 @@
 import prisma from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session-validation'
 import { revalidatePath, updateTag } from 'next/cache'
-import { z } from 'zod'
+import { createGenreSchema, type CreateGenreInput } from '@/lib/validations/genre'
 
-const createGenreSchema = z.object({
-  name: z.string().min(1),
-  description: z.string().min(1),
-})
-
-export async function createGenre(values: z.infer<typeof createGenreSchema>) {
+export async function createGenre(values: CreateGenreInput) {
   await requireAdmin()
   const data = createGenreSchema.parse(values)
 

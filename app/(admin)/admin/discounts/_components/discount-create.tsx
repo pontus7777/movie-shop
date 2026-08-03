@@ -18,14 +18,8 @@ import {
 } from '@/components/ui/dialog'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { z } from 'zod'
 import { createDiscountTier } from '../_actions/discount-actions'
-
-const formSchema = z.object({
-  minQuantity: z.number().int().min(1, 'Must be at least 1'),
-  percentageOff: z.number().int().min(1, 'Must be at least 1%').max(100, 'Cannot exceed 100%'),
-  active: z.boolean(),
-})
+import { discountTierSchema } from '@/lib/validations/discount'
 
 export function CreateDiscountTierButton() {
   const router = useRouter()
@@ -39,8 +33,8 @@ export function CreateDiscountTierButton() {
       active: true,
     },
     validators: {
-      onSubmit: formSchema,
-      onBlur: formSchema,
+      onSubmit: discountTierSchema,
+      onBlur: discountTierSchema,
     },
     onSubmit: async ({ value }) => {
       setLoading(true)
@@ -94,7 +88,7 @@ export function CreateDiscountTierButton() {
           <FieldGroup>
             <form.Field name="minQuantity">
               {(field) => {
-                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+                const isInvalid = !field.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>Minimum quantity</FieldLabel>
@@ -106,6 +100,7 @@ export function CreateDiscountTierButton() {
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(Number(e.target.value))}
+                      aria-invalid={isInvalid}
                     />
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
@@ -115,7 +110,7 @@ export function CreateDiscountTierButton() {
 
             <form.Field name="percentageOff">
               {(field) => {
-                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+                const isInvalid = !field.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>Discount percentage</FieldLabel>
@@ -128,6 +123,7 @@ export function CreateDiscountTierButton() {
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(Number(e.target.value))}
+                      aria-invalid={isInvalid}
                     />
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>

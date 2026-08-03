@@ -1,14 +1,47 @@
 'use client'
 
 import { useState } from 'react'
+import { useForm } from '@tanstack/react-form'
+import { toast } from 'sonner'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { editGenre } from '../_actions/edit-genre-action'
 import { Genre } from '@/generated/prisma/client'
+import { editGenreSchema } from '@/lib/validations/genre'
+
+const editGenreFieldsSchema = editGenreSchema.pick({ name: true, description: true })
 
 export function EditGenreMenuItem({ id, name, description }: Genre) {
   const [open, setOpen] = useState(false)
+
+  const form = useForm({
+    defaultValues: {
+      name,
+      description,
+    },
+    validators: {
+      onSubmit: editGenreFieldsSchema,
+      onBlur: editGenreFieldsSchema,
+    },
+    onSubmit: async ({ value }) => {
+      try {
+        await editGenre({
+          id,
+          name: value.name,
+          description: value.description,
+        })
+
+        toast.success('Genre updated')
+        setOpen(false)
+      } catch {
+        toast.error('Failed to update genre')
+      }
+    },
+  })
 
   return (
     <>
@@ -24,33 +57,75 @@ export function EditGenreMenuItem({ id, name, description }: Genre) {
       </DropdownMenuItem>
 
       {/* Modal */}
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog
+        open={open}
+        onOpenChange={(next) => {
+          setOpen(next)
+          if (!next) form.reset()
+        }}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Genre</DialogTitle>
           </DialogHeader>
 
           <form
-            action={async (formData) => {
-              await editGenre({
-                id: Number(formData.get('id')),
-                name: String(formData.get('name')),
-                description: String(formData.get('description')),
-              })
-
-              setOpen(false)
+            onSubmit={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              form.handleSubmit()
             }}
             className="space-y-4"
           >
-            <input type="hidden" name="id" value={id} />
+            <FieldGroup>
+              <form.Field name="name">
+                {(field) => {
+                  const isInvalid = !field.state.meta.isValid
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                      <Input
+                        id={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        aria-invalid={isInvalid}
+                      />
+                      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                    </Field>
+                  )
+                }}
+              </form.Field>
 
-            <input name="name" defaultValue={name} className="w-full border p-2" />
+              <form.Field name="description">
+                {(field) => {
+                  const isInvalid = !field.state.meta.isValid
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>Description</FieldLabel>
+                      <Textarea
+                        id={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        aria-invalid={isInvalid}
+                      />
+                      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                    </Field>
+                  )
+                }}
+              </form.Field>
+            </FieldGroup>
 
-            <textarea name="description" defaultValue={description} className="w-full border p-2" />
-
-            <Button type="submit" className="w-full">
-              Save Changes
-            </Button>
+            <DialogFooter>
+              <form.Subscribe selector={(state) => state.isSubmitting}>
+                {(isSubmitting) => (
+                  <Button type="submit" className="w-full" disabled={isSubmitting}>
+                    {isSubmitting ? 'Saving…' : 'Save Changes'}
+                  </Button>
+                )}
+              </form.Subscribe>
+            </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>

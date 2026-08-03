@@ -2,20 +2,15 @@
 
 import prisma from '@/lib/prisma'
 import { checkAdminAccess } from '@/lib/session-validation'
-import { z } from 'zod'
+import { updateUserSchema, type UpdateUserInput } from '@/lib/validations/user'
 
-const UpdateUserSchema = z.object({
-  id: z.string(),
-  name: z.string().min(1).max(32, 'Title must be less than 32 characters'),
-})
-
-export async function updateUser(values: z.infer<typeof UpdateUserSchema>) {
+export async function updateUser(values: UpdateUserInput) {
   const access = await checkAdminAccess()
   if (!access.authorized) {
     return { success: false, error: access.error }
   }
 
-  const data = UpdateUserSchema.parse(values)
+  const data = updateUserSchema.parse(values)
 
   if (!data) {
     return { success: false, error: 'Invalid data' }

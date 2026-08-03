@@ -41,8 +41,6 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
 
     onSubmit: async ({ value }) => {
       try {
-        toast.success('Order placed successfully!')
-
         await checkout(value)
       } catch (error) {
         if (isRedirectError(error)) {
@@ -83,10 +81,10 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
             {textFields.map(([name, label]) => (
               <form.Field key={name} name={name}>
                 {(field) => {
-                  const invalid = field.state.meta.isTouched && !field.state.meta.isValid
+                  const isInvalid = !field.state.meta.isValid
 
                   return (
-                    <Field data-invalid={invalid}>
+                    <Field data-invalid={isInvalid}>
                       <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
 
                       <Input
@@ -95,10 +93,10 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
                         value={field.state.value}
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
-                        aria-invalid={invalid}
+                        aria-invalid={isInvalid}
                       />
 
-                      {invalid && <FieldError errors={field.state.meta.errors} />}
+                      {isInvalid && <FieldError errors={field.state.meta.errors} />}
                     </Field>
                   )
                 }}
@@ -110,10 +108,10 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
             </h3>
             <form.Field name="paymentMethod">
               {(field) => {
-                const invalid = field.state.meta.isTouched && !field.state.meta.isValid
+                const isInvalid = !field.state.meta.isValid
 
                 return (
-                  <Field data-invalid={invalid}>
+                  <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>Payment Method</FieldLabel>
 
                     <select
@@ -124,6 +122,7 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
                       onChange={(e) =>
                         field.handleChange(e.target.value as 'CARD' | 'PAYPAL' | 'SWISH')
                       }
+                      aria-invalid={isInvalid}
                     >
                       <option value="CARD">Credit Card</option>
 
@@ -132,7 +131,7 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
                       <option value="SWISH">Swish</option>
                     </select>
 
-                    {invalid && <FieldError errors={field.state.meta.errors} />}
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
                 )
               }}
@@ -144,10 +143,10 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
                   <>
                     <form.Field name="cardNumber">
                       {(field) => {
-                        const invalid = field.state.meta.isTouched && !field.state.meta.isValid
+                        const isInvalid = !field.state.meta.isValid
 
                         return (
-                          <Field data-invalid={invalid}>
+                          <Field data-invalid={isInvalid}>
                             <FieldLabel htmlFor={field.name}>Card Number</FieldLabel>
 
                             <Input
@@ -167,9 +166,10 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
                               inputMode="numeric"
                               maxLength={19}
                               autoComplete="cc-number"
+                              aria-invalid={isInvalid}
                             />
 
-                            {invalid && <FieldError errors={field.state.meta.errors} />}
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
                           </Field>
                         )
                       }}
@@ -178,10 +178,10 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <form.Field name="expiry">
                         {(field) => {
-                          const invalid = field.state.meta.isTouched && !field.state.meta.isValid
+                          const isInvalid = !field.state.meta.isValid
 
                           return (
-                            <Field data-invalid={invalid}>
+                            <Field data-invalid={isInvalid}>
                               <FieldLabel htmlFor={field.name}>Expiry</FieldLabel>
 
                               <Input
@@ -201,9 +201,10 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
                                 inputMode="numeric"
                                 maxLength={5}
                                 autoComplete="cc-exp"
+                                aria-invalid={isInvalid}
                               />
 
-                              {invalid && <FieldError errors={field.state.meta.errors} />}
+                              {isInvalid && <FieldError errors={field.state.meta.errors} />}
                             </Field>
                           )
                         }}
@@ -211,9 +212,9 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
 
                       <form.Field name="cvv">
                         {(field) => {
-                          const invalid = field.state.meta.isTouched && !field.state.meta.isValid
+                          const isInvalid = !field.state.meta.isValid
                           return (
-                            <Field data-invalid={invalid}>
+                            <Field data-invalid={isInvalid}>
                               <FieldLabel htmlFor={field.name}>CVV</FieldLabel>
 
                               <Input
@@ -227,8 +228,9 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
                                 inputMode="numeric"
                                 maxLength={3}
                                 autoComplete="cc-csc"
+                                aria-invalid={isInvalid}
                               />
-                              {invalid && <FieldError errors={field.state.meta.errors} />}
+                              {isInvalid && <FieldError errors={field.state.meta.errors} />}
                             </Field>
                           )
                         }}

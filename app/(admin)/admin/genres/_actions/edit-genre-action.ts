@@ -3,15 +3,9 @@
 import prisma from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session-validation'
 import { revalidatePath, updateTag } from 'next/cache'
-import { z } from 'zod'
+import { editGenreSchema, type EditGenreInput } from '@/lib/validations/genre'
 
-const editGenreSchema = z.object({
-  id: z.number().transform((val) => Number(val)),
-  name: z.string().min(1),
-  description: z.string().min(1),
-})
-
-export async function editGenre(values: z.infer<typeof editGenreSchema>) {
+export async function editGenre(values: EditGenreInput) {
   await requireAdmin()
   const data = editGenreSchema.parse(values)
 

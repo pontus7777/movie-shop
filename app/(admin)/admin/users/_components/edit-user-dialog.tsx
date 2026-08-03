@@ -12,14 +12,15 @@ import {
 } from '@/components/ui/dialog'
 
 import { Button } from '@/components/ui/button'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
 import { updateUser } from '../_actions/update-user-action'
 import { useRouter } from 'next/navigation'
-import { z } from 'zod'
 import { useForm } from '@tanstack/react-form'
+import { updateUserSchema } from '@/lib/validations/user'
 
-const formSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(32, 'Name must be less than 32 characters'),
-})
+const editUserNameSchema = updateUserSchema.pick({ name: true })
+
 type Props = {
   open: boolean
   onOpenChange: (v: boolean) => void
@@ -36,8 +37,8 @@ export function EditUserDialog({ open, onOpenChange, user }: Props) {
       name: user.name,
     },
     validators: {
-      onSubmit: formSchema,
-      onChange: formSchema,
+      onSubmit: editUserNameSchema,
+      onBlur: editUserNameSchema,
     },
 
     onSubmit: async ({ value, formApi }) => {
@@ -79,23 +80,39 @@ export function EditUserDialog({ open, onOpenChange, user }: Props) {
           }}
           className="space-y-4 py-4"
         >
-          <form.Field name="name">
-            {(field) => (
-              <input
-                className="w-full rounded border p-2"
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-              />
-            )}
-          </form.Field>
+          <FieldGroup>
+            <form.Field name="name">
+              {(field) => {
+                const isInvalid = !field.state.meta.isValid
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                    <Input
+                      id={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                    />
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                  </Field>
+                )
+              }}
+            </form.Field>
+          </FieldGroup>
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
 
-            <Button type="submit">Save</Button>
+            <form.Subscribe selector={(state) => state.isSubmitting}>
+              {(isSubmitting) => (
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? 'Saving…' : 'Save'}
+                </Button>
+              )}
+            </form.Subscribe>
           </DialogFooter>
         </form>
       </DialogContent>

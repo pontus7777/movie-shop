@@ -1,18 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useForm } from '@tanstack/react-form'
 import { toast } from 'sonner'
 import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from '@/components/ui/alert-dialog'
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
 import { createCrew } from '../_actions/create-crew-action'
+import { createCrewSchema } from '@/lib/validations/crew'
 
 type Props = {
   open: boolean
@@ -20,49 +22,85 @@ type Props = {
 }
 
 export function CreateCrewDialog({ open, onOpenChange }: Props) {
-  const [name, setName] = useState('')
-  const [loading, setLoading] = useState(false)
+  const form = useForm({
+    defaultValues: {
+      name: '',
+    },
+    validators: {
+      onSubmit: createCrewSchema,
+      onBlur: createCrewSchema,
+    },
+    onSubmit: async ({ value, formApi }) => {
+      try {
+        await createCrew(value)
 
-  async function handleSubmit() {
-    try {
-      setLoading(true)
-
-      await createCrew({ name })
-
-      toast.success('Crew created')
-      onOpenChange(false)
-      setName('')
-    } catch {
-      toast.error('Failed to create crew')
-    } finally {
-      setLoading(false)
-    }
-  }
+        toast.success('Crew created')
+        formApi.reset()
+        onOpenChange(false)
+      } catch {
+        toast.error('Failed to create crew')
+      }
+    },
+  })
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Create Crew</AlertDialogTitle>
-          <AlertDialogDescription>Fill in the crew member details.</AlertDialogDescription>
-        </AlertDialogHeader>
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        onOpenChange(next)
+        if (!next) form.reset()
+      }}
+    >
+      <DialogContent>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            form.handleSubmit()
+          }}
+          className="space-y-4"
+        >
+          <DialogHeader>
+            <DialogTitle>Create Crew</DialogTitle>
+            <DialogDescription>Fill in the crew member details.</DialogDescription>
+          </DialogHeader>
 
-        <div className="space-y-4 py-4">
-          <input
-            className="w-full border rounded p-2"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
+          <FieldGroup>
+            <form.Field name="name">
+              {(field) => {
+                const isInvalid = !field.state.meta.isValid
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                    <Input
+                      id={field.name}
+                      placeholder="Name"
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                    />
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                  </Field>
+                )
+              }}
+            </form.Field>
+          </FieldGroup>
 
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleSubmit} disabled={loading}>
-            {loading ? 'Saving…' : 'Save'}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
+            <form.Subscribe selector={(state) => state.isSubmitting}>
+              {(isSubmitting) => (
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? 'Saving…' : 'Save'}
+                </Button>
+              )}
+            </form.Subscribe>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   )
 }

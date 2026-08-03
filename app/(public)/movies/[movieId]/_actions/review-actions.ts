@@ -4,23 +4,22 @@ import prisma from '@/lib/prisma'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { revalidatePath } from 'next/cache'
+import { z } from 'zod'
 
-type CreateReviewInput = {
-  movieId: string
-  rating: number
-  comment?: string
-}
+const createReviewSchema = z.object({
+  movieId: z.string().min(1),
+  rating: z.number().int().min(1, 'Rating must be between 1 and 5.').max(5, 'Rating must be between 1 and 5.'),
+  comment: z.string().max(2000).optional(),
+})
+
+type CreateReviewInput = z.infer<typeof createReviewSchema>
 
 type ReviewActionResult = {
   success: boolean
   message: string
 }
 
-export async function createReview({
-  movieId,
-  rating,
-  comment,
-}: CreateReviewInput): Promise<ReviewActionResult> {
+export async function createReview(input: CreateReviewInput): Promise<ReviewActionResult> {
   const session = await auth.api.getSession({
     headers: await headers(),
   })
@@ -32,12 +31,16 @@ export async function createReview({
     }
   }
 
-  if (rating < 1 || rating > 5) {
+  const parsed = createReviewSchema.safeParse(input)
+
+  if (!parsed.success) {
     return {
       success: false,
-      message: 'Rating must be between 1 and 5.',
+      message: parsed.error.issues[0]?.message ?? 'Invalid review data.',
     }
   }
+
+  const { movieId, rating, comment } = parsed.data
 
   const purchase = await prisma.orderItem.findFirst({
     where: {

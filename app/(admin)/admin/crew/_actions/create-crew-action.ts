@@ -1,17 +1,12 @@
 'use server'
 
-import { z } from 'zod'
 import { revalidatePath, updateTag } from 'next/cache'
 
 import prisma from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session-validation'
+import { createCrewSchema, type CreateCrewInput } from '@/lib/validations/crew'
 
-const createCrewSchema = z.object({
-  name: z.string().min(1),
-  movieIds: z.array(z.string()).optional(),
-})
-
-export async function createCrew(values: z.infer<typeof createCrewSchema>) {
+export async function createCrew(values: CreateCrewInput) {
   await requireAdmin()
   const data = createCrewSchema.parse(values)
 
