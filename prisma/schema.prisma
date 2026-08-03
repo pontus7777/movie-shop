@@ -29,6 +29,8 @@ model User {
   banReason  String?
   banExpires DateTime?
 
+  // Custom deactivation fields
+  isDeactivated Boolean   @default(false)
   deactivatedAt DateTime?
 
   sessions Session[]
