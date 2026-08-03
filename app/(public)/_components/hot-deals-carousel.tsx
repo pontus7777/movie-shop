@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import { convertToEuro } from '@/lib/priceUtils'
+import placeHolder from '@/public/file.svg'
 
 type CarouselMovie = {
   id: string
@@ -76,7 +77,7 @@ export default function HotDealsCarousel({ movies }: Props) {
         >
           {/* Movie Image */}
           <Image
-            src={movie.backdropUrl ?? '/placeholder.jpg'}
+            src={movie.backdropUrl ?? placeHolder.src}
             alt={movie.title}
             fill
             sizes="(max-width: 768px) 100vw, 1280px"
