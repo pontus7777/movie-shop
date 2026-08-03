@@ -19,10 +19,20 @@ export type UpdateUserInput = z.infer<typeof updateUserSchema>
 //========================================
 // Update user verification schema
 //========================================
-
 export const updateUserVerificationSchema = z.object({
   id: z.string(),
   emailVerified: z.boolean(),
 })
 
 export type UpdateUserVerificationInput = z.infer<typeof updateUserVerificationSchema>
+
+/**
+ * =================================
+ * Delete user schema
+ * =========================
+ */
+export const deleteUserSchema = z.object({
+  id: z.string(),
+})
+
+export type DeleteUserInput = z.infer<typeof deleteUserSchema>
