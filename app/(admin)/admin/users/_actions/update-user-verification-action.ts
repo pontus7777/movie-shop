@@ -2,24 +2,27 @@
 
 import prisma from '@/lib/prisma'
 import { checkAdminAccess } from '@/lib/session-validation'
-import { z } from 'zod'
+import {
+  updateUserVerificationSchema,
+  type UpdateUserVerificationInput,
+} from '@/lib/validations/user'
 
-const UpdateVerificationSchema = z.object({
-  id: z.string(),
-  emailVerified: z.boolean(),
-})
-
-export async function updateUserVerification(values: z.infer<typeof UpdateVerificationSchema>) {
+export async function updateUserVerification(values: UpdateUserVerificationInput) {
   const access = await checkAdminAccess()
+
   if (!access.authorized) {
     return { success: false, error: access.error }
   }
 
-  const data = UpdateVerificationSchema.parse(values)
+  const parsed = updateUserVerificationSchema.safeParse(values)
+
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0]?.message ?? 'Invalid data.' }
+  }
 
   await prisma.user.update({
-    where: { id: data.id },
-    data: { emailVerified: data.emailVerified },
+    where: { id: parsed.data.id },
+    data: { emailVerified: parsed.data.emailVerified },
   })
 
   return { success: true }
