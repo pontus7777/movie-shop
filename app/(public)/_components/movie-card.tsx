@@ -1,8 +1,9 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { Star } from 'lucide-react'
 import { MovieWithGenres } from './movie-row'
 import { convertToEuro } from '@/lib/priceUtils'
+import { getMovieImageSrc } from '@/lib/image-utils'
+import { PosterImage } from './poster-image'
 
 export default function MovieCard({
   movie,
@@ -11,8 +12,6 @@ export default function MovieCard({
   movie: MovieWithGenres
   showDealBadge?: boolean
 }) {
-  if (!movie.imageUrl) return null
-
   return (
     <Link href={`/movies/${movie.id}`} className="block">
       <article
@@ -31,10 +30,9 @@ export default function MovieCard({
       >
         {/* Poster */}
         <div className="relative aspect-2/3 min-h-75 w-full overflow-hidden">
-          <Image
-            src={movie.imageUrl}
+          <PosterImage
+            src={getMovieImageSrc(movie.imageUrl)}
             alt={movie.title}
-            fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 220px"
             className="object-cover transition-transform duration-500 group-hover:scale-110"
           />
