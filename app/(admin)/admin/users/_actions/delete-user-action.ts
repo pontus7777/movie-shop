@@ -23,10 +23,9 @@ export async function deleteUser(data: DeleteUserInput) {
   }
 
   try {
-    await prisma.user.delete({
-      where: {
-        id: parsed.data.id,
-      },
+    await prisma.user.update({
+      where: { id: parsed.data.id },
+      data: { deactivatedAt: new Date() },
     })
 
     return {
