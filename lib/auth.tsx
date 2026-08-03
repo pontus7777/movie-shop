@@ -10,9 +10,33 @@ import { nextCookies } from 'better-auth/next-js'
 import { sendEmail } from './email'
 import { render, toPlainText } from 'react-email'
 import EmailVerfication from '@/components/email/templates/email-verification'
+import { createAuthMiddleware } from 'better-auth/api'
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: 'postgresql' }),
+
+
+  //Add hooks to deactivate users and block sign-in attempts by deactivated users
+  hooks: {
+    before: createAuthMiddleware(async (ctx) => {
+      // Block sign-in attempts by deactivated users
+      if (ctx.path.startsWith('/sign-in')) {
+        const body = ctx.body as { email?: string }
+
+        if (body?.email) {
+          const existingUser = await prisma.user.findUnique({
+            where: { email: body.email },
+            select: { isDeactivated: true },
+          })
+
+          if (existingUser?.isDeactivated) {
+            throw new Error('This account has been deactivated.')
+          }
+        }
+      }
+    }),
+  },
+
   baseURL: process.env['BETTER_AUTH_URL'],
   trustedOrigins: [
     process.env['BETTER_AUTH_URL'],
