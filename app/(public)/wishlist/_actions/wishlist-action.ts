@@ -1,6 +1,7 @@
 'use server'
 
 import { headers } from 'next/headers'
+import { z } from 'zod'
 import { auth } from '@/lib/auth'
 import {
   addToDatabaseWishlist,
@@ -9,8 +10,11 @@ import {
 } from '@/lib/wishlist'
 import { revalidatePath } from 'next/cache'
 
+const movieIdSchema = z.string().min(1)
+
 type WishlistResult =
-  { success: true; wishlisted: boolean } | { success: false; reason: 'unauthenticated' }
+  | { success: true; wishlisted: boolean }
+  | { success: false; reason: 'unauthenticated' | 'invalid' }
 
 async function getUserId(): Promise<string | null> {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -18,31 +22,43 @@ async function getUserId(): Promise<string | null> {
 }
 
 export async function addToWishlist(movieId: string): Promise<WishlistResult> {
+  const parsed = movieIdSchema.safeParse(movieId)
+  if (!parsed.success) {
+    return { success: false, reason: 'invalid' }
+  }
   const userId = await getUserId()
   if (!userId) {
     return { success: false, reason: 'unauthenticated' }
   }
-  await addToDatabaseWishlist(userId, movieId)
+  await addToDatabaseWishlist(userId, parsed.data)
   revalidatePath('/wishlist')
   return { success: true, wishlisted: true }
 }
 
 export async function removeFromWishlist(movieId: string): Promise<WishlistResult> {
+  const parsed = movieIdSchema.safeParse(movieId)
+  if (!parsed.success) {
+    return { success: false, reason: 'invalid' }
+  }
   const userId = await getUserId()
   if (!userId) {
     return { success: false, reason: 'unauthenticated' }
   }
-  await removeFromDatabaseWishlist(userId, movieId)
+  await removeFromDatabaseWishlist(userId, parsed.data)
   revalidatePath('/wishlist')
   return { success: true, wishlisted: false }
 }
 
 export async function toggleWishlist(movieId: string): Promise<WishlistResult> {
+  const parsed = movieIdSchema.safeParse(movieId)
+  if (!parsed.success) {
+    return { success: false, reason: 'invalid' }
+  }
   const userId = await getUserId()
   if (!userId) {
     return { success: false, reason: 'unauthenticated' }
   }
-  const result = await toggleDatabaseWishlist(userId, movieId)
+  const result = await toggleDatabaseWishlist(userId, parsed.data)
   // Also revalidate /movies since ShopMovieCard's heart button lives there
   revalidatePath('/wishlist')
   revalidatePath('/movies')

@@ -71,7 +71,7 @@ function SignInForm() {
         <FieldGroup>
           <form.Field name="email">
             {(field) => {
-              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+              const isInvalid = !field.state.meta.isValid
 
               return (
                 <Field data-invalid={isInvalid}>
@@ -92,7 +92,7 @@ function SignInForm() {
 
           <form.Field name="password">
             {(field) => {
-              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+              const isInvalid = !field.state.meta.isValid
 
               return (
                 <Field data-invalid={isInvalid}>
@@ -114,7 +114,7 @@ function SignInForm() {
 
           <form.Field name="rememberMe">
             {(field) => {
-              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+              const isInvalid = !field.state.meta.isValid
 
               return (
                 <Field data-invalid={isInvalid} orientation="horizontal">

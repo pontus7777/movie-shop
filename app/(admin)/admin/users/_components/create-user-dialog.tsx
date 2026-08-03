@@ -20,18 +20,13 @@ import {
 } from '@/components/ui/select'
 import { createUser } from '../_actions/create-user-action'
 import { Button } from '@/components/ui/button'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
 import { useRouter } from 'next/navigation'
-import { z } from 'zod'
 import { useForm } from '@tanstack/react-form'
+import { createUserSchema, type CreateUserInput } from '@/lib/validations/user'
 
-const formSchema = z.object({
-  name: z.string().min(2),
-  email: z.string().email(),
-  password: z.string().min(8),
-  role: z.enum(['user', 'admin']),
-})
-
-type FormValues = z.infer<typeof formSchema>
+type FormValues = CreateUserInput
 
 type Props = {
   open: boolean
@@ -40,33 +35,17 @@ type Props = {
 
 export function CreateUserDialog({ open, onOpenChange }: Props) {
   const router = useRouter()
-  const defaultValues: FormValues = {
-    name: '',
-    email: '',
-    password: '',
-    role: 'user',
-  }
-  const validate = (values: FormValues) => {
-    const result = formSchema.safeParse(values)
 
-    if (!result.success) {
-      return result.error.format()
-    }
-
-    return undefined
-  }
   const form = useForm({
-    defaultValues,
-
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      role: 'user',
+    } as FormValues,
     validators: {
-      onChange: ({ value }) => validate(value),
-      onSubmit: ({ value }) => {
-        const result = formSchema.safeParse(value)
-        if (!result.success) {
-          return result.error.format()
-        }
-        return undefined
-      },
+      onSubmit: createUserSchema,
+      onBlur: createUserSchema,
     },
     onSubmit: async ({ value, formApi }) => {
       const result = await createUser(value)
@@ -84,7 +63,13 @@ export function CreateUserDialog({ open, onOpenChange }: Props) {
   })
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog
+      open={open}
+      onOpenChange={(next) => {
+        onOpenChange(next)
+        if (!next) form.reset()
+      }}
+    >
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Create User</AlertDialogTitle>
@@ -99,70 +84,104 @@ export function CreateUserDialog({ open, onOpenChange }: Props) {
           }}
           className="space-y-4"
         >
-          <form.Field name="name">
-            {(field) => (
-              <input
-                className="w-full rounded border p-2"
-                placeholder="Name"
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-              />
-            )}
-          </form.Field>
+          <FieldGroup>
+            <form.Field name="name">
+              {(field) => {
+                const isInvalid = !field.state.meta.isValid
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                    <Input
+                      id={field.name}
+                      placeholder="Name"
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                    />
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                  </Field>
+                )
+              }}
+            </form.Field>
 
-          <form.Field name="email">
-            {(field) => (
-              <div>
-                <input
-                  className="w-full rounded border p-2"
-                  placeholder="email@email.com"
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
+            <form.Field name="email">
+              {(field) => {
+                const isInvalid = !field.state.meta.isValid
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                    <Input
+                      id={field.name}
+                      placeholder="email@email.com"
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                    />
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                  </Field>
+                )
+              }}
+            </form.Field>
 
-                {field.state.meta.errors?.length > 0 && (
-                  <p className="text-red-500 text-sm">{field.state.meta.errors[0]}</p>
-                )}
-              </div>
-            )}
-          </form.Field>
+            <form.Field name="password">
+              {(field) => {
+                const isInvalid = !field.state.meta.isValid
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                    <Input
+                      id={field.name}
+                      placeholder="Password"
+                      type="password"
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                    />
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                  </Field>
+                )
+              }}
+            </form.Field>
 
-          <form.Field name="password">
-            {(field) => (
-              <input
-                className="w-full rounded border p-2"
-                placeholder="Password"
-                type="password"
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-              />
-            )}
-          </form.Field>
+            <form.Field name="role">
+              {(field) => {
+                const isInvalid = !field.state.meta.isValid
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>Role</FieldLabel>
+                    <Select
+                      value={field.state.value}
+                      onValueChange={(value) => field.setValue(value as FormValues['role'])}
+                    >
+                      <SelectTrigger id={field.name} className="w-full" aria-invalid={isInvalid}>
+                        <SelectValue />
+                      </SelectTrigger>
 
-          <form.Field name="role">
-            {(field) => (
-              <Select
-                value={field.state.value}
-                onValueChange={(value) => field.setValue(value as FormValues['role'])}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-
-                <SelectContent>
-                  <SelectItem value="user">User</SelectItem>
-                  <SelectItem value="admin">Admin</SelectItem>
-                </SelectContent>
-              </Select>
-            )}
-          </form.Field>
+                      <SelectContent>
+                        <SelectItem value="user">User</SelectItem>
+                        <SelectItem value="admin">Admin</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                  </Field>
+                )
+              }}
+            </form.Field>
+          </FieldGroup>
 
           <AlertDialogFooter>
             <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
 
-            <Button type="submit">Create</Button>
+            <form.Subscribe selector={(state) => state.isSubmitting}>
+              {(isSubmitting) => (
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? 'Creating…' : 'Create'}
+                </Button>
+              )}
+            </form.Subscribe>
           </AlertDialogFooter>
         </form>
       </AlertDialogContent>

@@ -12,45 +12,14 @@ import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { z } from 'zod'
 import { CrewCommandSelector } from '../../_components/crew-command-selector'
 import { createMovie } from '../../_actions/create-movie-action'
+import { createMovieSchema } from '@/lib/validations/movie'
 
 type Props = {
   crewMembers: Crew[]
   genres: Omit<Genre, 'description'>[]
 }
-
-const formSchema = z.object({
-  title: z.string().min(1).max(32),
-  description: z.string().min(1).max(1000),
-  price: z
-    .string()
-    .refine((val) => /^\d+(\.\d{1,2})?$/.test(val), 'Price must be a valid number like 21.29'),
-  releaseYear: z.number().min(0).max(9999),
-  stock: z.boolean(),
-  runtime: z.number().min(10),
-  imageUrl: z.string(),
-  salePrice: z
-    .string()
-    .refine(
-      (val) => val === '' || /^\d+(\.\d{1,2})?$/.test(val),
-      'Sale price must be a valid number like 4.99, or empty',
-    ),
-  saleStartsAt: z.string(), // datetime-local input, empty string = no sale scheduled
-  saleEndsAt: z.string(),
-
-  crew: z
-    .array(
-      z.object({
-        id: z.string(),
-        role: z.enum(['ACTOR', 'DIRECTOR']),
-      }),
-    )
-    .min(1, 'Select at least one crew member'),
-
-  genreIds: z.array(z.number()).min(1, 'Select at least one genre'),
-})
 
 function CreateMovieForm({ crewMembers, genres }: Props) {
   const router = useRouter()
@@ -73,8 +42,8 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
       saleEndsAt: '',
     },
     validators: {
-      onSubmit: formSchema,
-      onBlur: formSchema,
+      onSubmit: createMovieSchema,
+      onBlur: createMovieSchema,
     },
     onSubmit: async ({ value }) => {
       setLoading(true)
@@ -106,7 +75,7 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
       <FieldGroup>
         <form.Field name="title">
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = !field.state.meta.isValid
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Title</FieldLabel>
@@ -115,6 +84,7 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -123,7 +93,7 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
         </form.Field>
         <form.Field name="description">
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = !field.state.meta.isValid
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Description</FieldLabel>
@@ -133,6 +103,7 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
                   className="h-35"
+                  aria-invalid={isInvalid}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -140,22 +111,27 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
           }}
         </form.Field>
         <form.Field name="imageUrl">
-          {(field) => (
-            <Field>
-              <FieldLabel htmlFor={field.name}>Image URL</FieldLabel>
-              <Input
-                id={field.name}
-                placeholder="https://picsum.photos/300/450"
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-              />
-            </Field>
-          )}
+          {(field) => {
+            const isInvalid = !field.state.meta.isValid
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Image URL</FieldLabel>
+                <Input
+                  id={field.name}
+                  placeholder="https://picsum.photos/300/450"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            )
+          }}
         </form.Field>
         <form.Field name="price">
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = !field.state.meta.isValid
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Price</FieldLabel>
@@ -165,6 +141,7 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -173,7 +150,7 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
         </form.Field>
         <form.Field name="salePrice">
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = !field.state.meta.isValid
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Sale price (optional)</FieldLabel>
@@ -184,6 +161,7 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -191,36 +169,46 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
           }}
         </form.Field>
         <form.Field name="saleStartsAt">
-          {(field) => (
-            <Field>
-              <FieldLabel htmlFor={field.name}>Sale starts</FieldLabel>
-              <Input
-                id={field.name}
-                type="datetime-local"
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-              />
-            </Field>
-          )}
+          {(field) => {
+            const isInvalid = !field.state.meta.isValid
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Sale starts</FieldLabel>
+                <Input
+                  id={field.name}
+                  type="datetime-local"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            )
+          }}
         </form.Field>
         <form.Field name="saleEndsAt">
-          {(field) => (
-            <Field>
-              <FieldLabel htmlFor={field.name}>Sale ends</FieldLabel>
-              <Input
-                id={field.name}
-                type="datetime-local"
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-              />
-            </Field>
-          )}
+          {(field) => {
+            const isInvalid = !field.state.meta.isValid
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Sale ends</FieldLabel>
+                <Input
+                  id={field.name}
+                  type="datetime-local"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            )
+          }}
         </form.Field>
         <form.Field name="releaseYear">
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = !field.state.meta.isValid
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Release year</FieldLabel>
@@ -229,6 +217,7 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(Number(e.target.value))}
+                  aria-invalid={isInvalid}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -250,7 +239,7 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
         </form.Field>
         <form.Field name="runtime">
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = !field.state.meta.isValid
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Runtime</FieldLabel>
@@ -259,6 +248,7 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(Number(e.target.value))}
+                  aria-invalid={isInvalid}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -267,7 +257,7 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
         </form.Field>
         <form.Field name="crew">
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = !field.state.meta.isValid
             return (
               <Field data-invalid={isInvalid}>
                 <CrewCommandSelector
@@ -282,7 +272,7 @@ function CreateMovieForm({ crewMembers, genres }: Props) {
         </form.Field>
         <form.Field name="genreIds">
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = !field.state.meta.isValid
             return (
               <Field data-invalid={isInvalid}>
                 <GenreSelector

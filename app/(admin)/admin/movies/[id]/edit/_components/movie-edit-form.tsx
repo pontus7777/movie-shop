@@ -3,7 +3,6 @@
 import { useForm } from '@tanstack/react-form'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { z } from 'zod'
 
 import { Crew, Genre } from '@/generated/prisma/client'
 
@@ -18,46 +17,7 @@ import { Save } from 'lucide-react'
 
 import { editMovie } from '../../../_actions/edit-movie-action'
 import { CrewCommandSelector } from '../../../_components/crew-command-selector'
-
-const editFormSchema = z
-  .object({
-    title: z.string().min(1).max(50),
-    description: z.string().min(1).max(1000),
-    price: z
-      .string()
-      .refine((val) => /^\d+(\.\d{1,2})?$/.test(val), 'Price must be a valid number like 21.29'),
-
-    salePrice: z
-      .string()
-      .refine(
-        (val) => val === '' || /^\d+(\.\d{1,2})?$/.test(val),
-        'Sale price must be a valid number like 4.99, or empty',
-      ),
-    saleStartsAt: z.string(),
-    saleEndsAt: z.string(),
-
-    releaseYear: z.number().min(0).max(9999),
-    stock: z.boolean(),
-    runtime: z.number().min(10),
-    imageUrl: z.string(),
-
-    // NEW: crew with roles
-    crew: z.array(
-      z.object({
-        id: z.string(),
-        role: z.enum(['ACTOR', 'DIRECTOR']),
-      }),
-    ),
-
-    genreIds: z.array(z.number()),
-  })
-  .refine(
-    (data) => {
-      if (!data.saleStartsAt || !data.saleEndsAt) return true
-      return new Date(data.saleEndsAt) > new Date(data.saleStartsAt)
-    },
-    { message: 'Sale end date must be after the start date', path: ['saleEndsAt'] },
-  )
+import { editMovieFormSchema } from '@/lib/validations/movie'
 
 type EditMovieProps = {
   movie: {
@@ -123,43 +83,50 @@ export function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
     },
 
     validators: {
-      onSubmit: editFormSchema,
-      onBlur: editFormSchema,
+      onSubmit: editMovieFormSchema,
+      onBlur: editMovieFormSchema,
     },
 
     onSubmit: async ({ value, formApi }) => {
-      const updatedMovie = await editMovie({
-        ...value,
-        id: movie.id,
-      })
+      try {
+        const updatedMovie = await editMovie({
+          ...value,
+          id: movie.id,
+        })
 
-      formApi.reset({
-        title: updatedMovie.title,
-        description: updatedMovie.description,
-        price: (updatedMovie.priceInCents / 100).toFixed(2),
-        releaseYear: updatedMovie.releaseYear,
-        stock: updatedMovie.stock,
-        runtime: updatedMovie.runtime,
-        imageUrl: updatedMovie.imageUrl ?? '',
+        formApi.reset({
+          title: updatedMovie.title,
+          description: updatedMovie.description,
+          price: (updatedMovie.priceInCents / 100).toFixed(2),
+          releaseYear: updatedMovie.releaseYear,
+          stock: updatedMovie.stock,
+          runtime: updatedMovie.runtime,
+          imageUrl: updatedMovie.imageUrl ?? '',
 
-        salePrice:
-          updatedMovie.salePriceInCents != null
-            ? (updatedMovie.salePriceInCents / 100).toFixed(2)
-            : '',
-        saleStartsAt: toDatetimeLocalValue(updatedMovie.saleStartsAt),
-        saleEndsAt: toDatetimeLocalValue(updatedMovie.saleEndsAt),
+          salePrice:
+            updatedMovie.salePriceInCents != null
+              ? (updatedMovie.salePriceInCents / 100).toFixed(2)
+              : '',
+          saleStartsAt: toDatetimeLocalValue(updatedMovie.saleStartsAt),
+          saleEndsAt: toDatetimeLocalValue(updatedMovie.saleEndsAt),
 
-        crew: updatedMovie.credits.map((credit) => ({
-          id: credit.crew.id,
-          role: credit.role,
-        })),
+          crew: updatedMovie.credits.map((credit) => ({
+            id: credit.crew.id,
+            role: credit.role,
+          })),
 
-        genreIds: updatedMovie.genres.map((genre) => genre.id),
-      })
+          genreIds: updatedMovie.genres.map((genre) => genre.id),
+        })
 
-      toast.success('Movie updated successfully')
-      router.push(`/admin/movies/${updatedMovie.id}`)
-      router.refresh()
+        toast.success('Movie updated successfully')
+        router.push(`/admin/movies/${updatedMovie.id}`)
+        router.refresh()
+      } catch (err) {
+        console.log(err)
+        toast.error('Failed to update movie', {
+          position: 'bottom-center',
+        })
+      }
     },
   })
 
@@ -176,7 +143,7 @@ export function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
         {/* TITLE */}
         <form.Field name="title">
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = !field.state.meta.isValid
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Title</FieldLabel>
@@ -185,6 +152,7 @@ export function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -195,7 +163,7 @@ export function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
         {/* DESCRIPTION */}
         <form.Field name="description">
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = !field.state.meta.isValid
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Description</FieldLabel>
@@ -205,6 +173,7 @@ export function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
                   className="h-35"
+                  aria-invalid={isInvalid}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -215,7 +184,7 @@ export function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
         {/* PRICE */}
         <form.Field name="price">
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = !field.state.meta.isValid
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Price (€)</FieldLabel>
@@ -223,7 +192,9 @@ export function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
                   id={field.name}
                   type="text"
                   value={field.state.value}
+                  onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -234,7 +205,7 @@ export function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
         {/* SALE PRICE */}
         <form.Field name="salePrice">
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = !field.state.meta.isValid
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Sale price (€, optional)</FieldLabel>
@@ -243,7 +214,9 @@ export function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
                   type="text"
                   placeholder="e.g. 4.99"
                   value={field.state.value}
+                  onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -254,7 +227,7 @@ export function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
         {/* SALE STARTS */}
         <form.Field name="saleStartsAt">
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = !field.state.meta.isValid
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Sale starts</FieldLabel>
@@ -264,6 +237,7 @@ export function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -274,7 +248,7 @@ export function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
         {/* SALE ENDS */}
         <form.Field name="saleEndsAt">
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+            const isInvalid = !field.state.meta.isValid
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Sale ends</FieldLabel>
@@ -284,6 +258,7 @@ export function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -293,77 +268,100 @@ export function EditMovieForm({ movie, crewMembers, genres }: EditMovieProps) {
 
         {/* IMAGE URL */}
         <form.Field name="imageUrl">
-          {(field) => (
-            <Field>
-              <FieldLabel htmlFor={field.name}>Image URL</FieldLabel>
-              <Input
-                id={field.name}
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-              />
-            </Field>
-          )}
+          {(field) => {
+            const isInvalid = !field.state.meta.isValid
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Image URL</FieldLabel>
+                <Input
+                  id={field.name}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            )
+          }}
         </form.Field>
 
         {/* RELEASE YEAR */}
         <form.Field name="releaseYear">
-          {(field) => (
-            <Field>
-              <FieldLabel htmlFor={field.name}>Release Year</FieldLabel>
-              <Input
-                id={field.name}
-                type="number"
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(Number(e.target.value))}
-              />
-            </Field>
-          )}
+          {(field) => {
+            const isInvalid = !field.state.meta.isValid
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Release Year</FieldLabel>
+                <Input
+                  id={field.name}
+                  type="number"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(Number(e.target.value))}
+                  aria-invalid={isInvalid}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            )
+          }}
         </form.Field>
 
         {/* RUNTIME */}
         <form.Field name="runtime">
-          {(field) => (
-            <Field>
-              <FieldLabel htmlFor={field.name}>Runtime (minutes)</FieldLabel>
-              <Input
-                id={field.name}
-                type="number"
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(Number(e.target.value))}
-              />
-            </Field>
-          )}
+          {(field) => {
+            const isInvalid = !field.state.meta.isValid
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Runtime (minutes)</FieldLabel>
+                <Input
+                  id={field.name}
+                  type="number"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(Number(e.target.value))}
+                  aria-invalid={isInvalid}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            )
+          }}
         </form.Field>
 
         {/* CREW — Command Palette */}
         <form.Field name="crew">
-          {(field) => (
-            <Field>
-              <FieldLabel>Crew</FieldLabel>
-              <CrewCommandSelector
-                crew={crewMembers}
-                value={field.state.value}
-                onChange={field.handleChange}
-              />
-            </Field>
-          )}
+          {(field) => {
+            const isInvalid = !field.state.meta.isValid
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel>Crew</FieldLabel>
+                <CrewCommandSelector
+                  crew={crewMembers}
+                  value={field.state.value}
+                  onChange={field.handleChange}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            )
+          }}
         </form.Field>
 
         {/* GENRES */}
         <form.Field name="genreIds">
-          {(field) => (
-            <Field>
-              <GenreSelector
-                title="Genres"
-                genres={genres}
-                value={field.state.value}
-                onChange={field.handleChange}
-              />
-            </Field>
-          )}
+          {(field) => {
+            const isInvalid = !field.state.meta.isValid
+            return (
+              <Field data-invalid={isInvalid}>
+                <GenreSelector
+                  title="Genres"
+                  genres={genres}
+                  value={field.state.value}
+                  onChange={field.handleChange}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            )
+          }}
         </form.Field>
 
         {/* STOCK */}

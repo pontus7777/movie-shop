@@ -3,23 +3,16 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { checkAdminAccess } from '@/lib/session-validation'
-import { z } from 'zod'
+import { createUserSchema, type CreateUserInput } from '@/lib/validations/user'
 
-const AddUserSchema = z.object({
-  name: z.string().min(2),
-  email: z.email(),
-  password: z.string().min(8),
-  role: z.enum(['user', 'admin']),
-})
-
-export async function createUser(values: z.infer<typeof AddUserSchema>) {
+export async function createUser(values: CreateUserInput) {
   try {
     const access = await checkAdminAccess()
     if (!access.authorized) {
       return { success: false, error: access.error }
     }
 
-    const data = AddUserSchema.parse(values)
+    const data = createUserSchema.parse(values)
 
     const result = await auth.api.createUser({
       headers: await headers(),

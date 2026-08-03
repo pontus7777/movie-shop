@@ -3,18 +3,7 @@
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { requireAdmin } from '@/lib/session-validation'
-import { z } from 'zod'
-
-const discountTierSchema = z.object({
-  minQuantity: z.number().int('Must be a whole number').min(1, 'Must be at least 1'),
-  percentageOff: z
-    .number()
-    .int('Must be a whole number')
-    .min(1, 'Must be at least 1%')
-    .max(100, 'Cannot exceed 100%'),
-  active: z.boolean().default(true),
-})
-type DiscountTierInput = z.infer<typeof discountTierSchema>
+import { discountTierSchema, type DiscountTierInput } from '@/lib/validations/discount'
 
 export async function createDiscountTier(input: DiscountTierInput) {
   await requireAdmin()
