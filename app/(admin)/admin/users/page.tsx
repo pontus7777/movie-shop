@@ -1,6 +1,7 @@
 import { requireAdmin } from '@/lib/session-validation'
 import { UsersPageClient } from './_components/users-page-client'
 import { getUserStats, getUsers } from './lib/queries'
+import { isSuperAdmin } from '@/lib/constants'
 
 type Props = {
   searchParams: Promise<{
@@ -27,5 +28,11 @@ export default async function UsersPage({ searchParams }: Props) {
     }),
   ])
 
-  return (<UsersPageClient stats={stats} usersData={{ ...usersData, currentAdminId: session.user.id }} />)
+  return (<UsersPageClient
+    stats={stats}
+    usersData={{
+      ...usersData,
+      currentAdminId: session.user.id,
+      isCurrentUserSuperAdmin: isSuperAdmin(session.user.email),
+    }} />)
 }
