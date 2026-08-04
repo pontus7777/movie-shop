@@ -58,7 +58,7 @@ export default async function Home() {
 
       {/* Movie rows */}
       <div className="space-y-2 py-10">
-        {mostPurchasedMovies.length > 0 && (
+        {mostPurchasedMovies && mostPurchasedMovies.length > 0 && (
           <MovieRow rowTitle="🔥 Most Purchased Movies" movies={mostPurchasedMovies} />
         )}
 
