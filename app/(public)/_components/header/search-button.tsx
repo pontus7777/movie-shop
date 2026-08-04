@@ -1,16 +1,24 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Search } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
 export function SearchButton() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const currentQuery = searchParams.get('q') ?? ''
 
-  const [open, setOpen] = useState(false)
-  const [query, setQuery] = useState('')
+  const [open, setOpen] = useState(Boolean(currentQuery))
+  const [query, setQuery] = useState(currentQuery)
+  const [syncedQuery, setSyncedQuery] = useState(currentQuery)
+
+  if (currentQuery !== syncedQuery) {
+    setSyncedQuery(currentQuery)
+    setQuery(currentQuery)
+  }
 
   function submit(e: React.FormEvent) {
     e.preventDefault()

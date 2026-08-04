@@ -161,11 +161,13 @@ export default function HotDealsCarousel({ movies }: Props) {
             className="
             absolute
             bottom-14
-            left-6
-            z-30
+            left-14
+            right-14
+            z-20
             max-w-lg
             text-white
             md:left-9
+            md:right-auto
             md:bottom-16
           "
           >

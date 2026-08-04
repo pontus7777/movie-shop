@@ -227,7 +227,9 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
           <Separator className="my-2" />
 
           <div className="mx-auto flex w-fit items-center gap-3 rounded-xl border border-white/10 bg-white/3 p-3 sm:mx-0">
-            <span className="text-1.5xl font-bold text-primary">€{displayPrice}</span>
+            {!hasPurchased && (
+              <span className="text-1.5xl font-bold text-primary">€{displayPrice}</span>
+            )}
 
             {hasPurchased ? (
               <Button
@@ -259,7 +261,7 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
             />
           </div>
 
-          {onSale && movie.saleEndsAt && (
+          {!hasPurchased && onSale && movie.saleEndsAt && (
             <p className="text-muted-foreground text-center text-xs sm:text-left">
               Sale ends {movie.saleEndsAt.toLocaleString()}
             </p>

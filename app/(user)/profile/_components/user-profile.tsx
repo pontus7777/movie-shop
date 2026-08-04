@@ -72,7 +72,7 @@ export function UserProfile({ user }: Props) {
   return (
     <button
       onClick={() => setIsEditing(true)}
-      className="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+      className="flex items-center gap-1.5 rounded-lg bg-secondary px-3 py-1.5 text-sm text-secondary-foreground hover:bg-secondary/80 transition-colors"
     >
       <Pencil className="h-3.5 w-3.5" />
       Edit Profile Name

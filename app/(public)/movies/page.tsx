@@ -98,11 +98,10 @@ export default async function MoviesPage(props: PageProps<'/movies'>) {
           <div>
             <h1 className="text-2xl font-bold">Movies</h1>
 
-            {(filters.q || hasActiveFilters) && (
-              <p className="mt-1 text-sm text-muted-foreground">
-                {total} {total === 1 ? 'movie' : 'movies'} found
-              </p>
-            )}
+            <p className="mt-1 text-sm text-muted-foreground">
+              {total} {total === 1 ? 'movie' : 'movies'}
+              {filters.q || hasActiveFilters ? ' found' : ''}
+            </p>
           </div>
 
           <div className="lg:hidden">
@@ -153,7 +152,6 @@ export default async function MoviesPage(props: PageProps<'/movies'>) {
                 sm:grid-cols-3
                 md:grid-cols-4
                 lg:grid-cols-5
-                2xl:grid-cols-6
               "
             >
               {movies.length > 0 ? (

@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
-import { Menu, Film } from 'lucide-react'
+import { usePathname } from 'next/navigation'
+import { Suspense, useState } from 'react'
+import { Menu, Film, Search } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { ThemeModeToggle } from '@/components/theme-mode-toggle'
@@ -13,7 +14,6 @@ import { SearchButton } from './search-button'
 import { UserActions } from './user-actions'
 import { MobileMenu } from './mobile-menu'
 import Logo from '../logo'
-import { WishlistHeaderButton } from './wishlist-button'
 import { authClient } from '@/lib/auth-client'
 
 export default function Header() {
@@ -21,6 +21,9 @@ export default function Header() {
   const { data: session } = authClient.useSession()
   const userName = session?.user.name ?? null
   const userImage = session?.user.image ?? null
+
+  const pathname = usePathname()
+  const isMoviesActive = pathname.startsWith('/movies')
 
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -49,10 +52,16 @@ export default function Header() {
 
           <Link
             href="/movies"
-            className="
+            className={`
               flex items-center gap-2
+              border-b-2 py-1.5
               text-sm font-medium
-            "
+              transition-colors
+              ${isMoviesActive
+                ? 'border-primary text-primary'
+                : 'border-transparent text-foreground hover:border-primary hover:text-primary'
+              }
+            `}
           >
             <Film className="h-5 w-5 text-primary" />
             Movies
@@ -60,11 +69,17 @@ export default function Header() {
         </div>
 
         <div className="hidden items-center gap-2 md:flex">
-          <SearchButton />
+          <Suspense
+            fallback={
+              <Button variant="ghost" size="icon" className="rounded-full" aria-label="Search" disabled>
+                <Search className="h-5 w-5" />
+              </Button>
+            }
+          >
+            <SearchButton />
+          </Suspense>
 
           <CartButton />
-
-          <WishlistHeaderButton userName={userName} />
 
           <ThemeModeToggle />
 

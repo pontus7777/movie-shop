@@ -17,8 +17,6 @@ import { UserPhoneNumber } from './user-phone-number'
 import { UserWishlist } from './user-wishlist'
 import {
   LayoutDashboard,
-  Camera,
-  Trash2,
   Pencil,
   User,
   ShoppingBag,
@@ -26,7 +24,6 @@ import {
   Heart,
   Settings,
 } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
@@ -48,7 +45,7 @@ type Props = {
 }
 
 const editTriggerClass =
-  'flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors'
+  'flex items-center gap-1.5 rounded-lg bg-secondary px-3 py-1.5 text-sm text-secondary-foreground hover:bg-secondary/80 transition-colors'
 
 const accountNavItems = [
   { tab: 'profile', label: 'Profile', icon: User },
@@ -91,9 +88,9 @@ export default function TabContent({ session, orders, wishlistItems }: Props) {
   )
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex min-h-screen flex-col bg-background">
       {/* HEADER */}
-      <div className="border-b bg-card px-6 py-4">
+      <div className="border-b bg-card px-6 py-4 shrink-0">
         <div className="mx-auto max-w-10xl flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-lg font-semibold text-white">
             {session.user.name.charAt(0).toUpperCase() ?? '?'}
@@ -110,8 +107,8 @@ export default function TabContent({ session, orders, wishlistItems }: Props) {
       </div>
 
       {/* MAIN */}
-      <div className="mx-auto max-w-10xl">
-        <div className="flex flex-col md:flex-row min-h-225">
+      <div className="mx-auto flex w-full max-w-10xl flex-1 flex-col">
+        <div className="flex flex-1 flex-col md:flex-row">
 
           {/* SIDEBAR */}
           <aside className="w-full shrink-0 bg-card md:w-56 border-b md:border-b-0 md:border-r py-3 md:py-5 px-3 flex flex-row md:flex-col gap-1 overflow-x-auto">
@@ -164,77 +161,65 @@ export default function TabContent({ session, orders, wishlistItems }: Props) {
 
             {/* PROFILE */}
             {tab === 'profile' && (
-              <Card className="max-w-2xl">
-                <CardContent className="space-y-6">
-                  {/* Profile Picture */}
-                  <div className="flex items-center gap-4">
-                    <Avatar className="h-16 w-16">
-                      <AvatarFallback className="bg-primary text-2xl font-semibold text-white">
-                        {session.user.name?.charAt(0).toUpperCase() ?? '?'}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex gap-2">
-                      <button className={editTriggerClass}>
-                        <Camera className="h-3.5 w-3.5" />
-                        Change Picture
-                      </button>
-                      <button className={editTriggerClass}>
-                        <Trash2 className="h-3.5 w-3.5" />
-                        Remove Picture
-                      </button>
-                    </div>
+              <div className="max-w-2xl space-y-6">
+                {/* Profile Picture */}
+                <div className="flex items-center gap-4">
+                  <Avatar className="h-16 w-16">
+                    <AvatarFallback className="bg-primary text-2xl font-semibold text-white">
+                      {session.user.name?.charAt(0).toUpperCase() ?? '?'}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+
+                <Separator />
+
+                {/* Name */}
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Name</p>
+                    <p className="font-medium">{session.user.name}</p>
                   </div>
+                  <UserProfile user={session.user} />
+                </div>
 
-                  <Separator />
+                <Separator />
 
-                  {/* Name */}
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Name</p>
-                      <p className="font-medium">{session.user.name}</p>
-                    </div>
-                    <UserProfile user={session.user} />
+                {/* Email */}
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Email</p>
+                    <p className="font-medium">{session.user.email}</p>
                   </div>
+                  <button className={editTriggerClass} onClick={() => setShowEmailModal(true)}>
+                    <Pencil className="h-3.5 w-3.5" />
+                    Change Email
+                  </button>
+                </div>
 
-                  <Separator />
+                <Separator />
 
-                  {/* Email */}
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Email</p>
-                      <p className="font-medium">{session.user.email}</p>
-                    </div>
-                    <button className={editTriggerClass} onClick={() => setShowEmailModal(true)}>
-                      <Pencil className="h-3.5 w-3.5" />
-                      Change Email
-                    </button>
+                {/* Phone */}
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Phone Number</p>
+                    <p className="font-medium">{session.user.mobileNumber ?? 'Not added'}</p>
                   </div>
+                  <UserPhoneNumber user={session.user} />
+                </div>
 
-                  <Separator />
+                <Separator />
 
-                  {/* Phone */}
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Phone Number</p>
-                      <p className="font-medium">{session.user.mobileNumber ?? 'Not added'}</p>
-                    </div>
-                    <UserPhoneNumber user={session.user} />
+                {/* Address */}
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Address</p>
+                    <p className="font-medium whitespace-pre-line">
+                      {session.user.address ?? 'Not added'}
+                    </p>
                   </div>
-
-                  <Separator />
-
-                  {/* Address */}
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Address</p>
-                      <p className="font-medium whitespace-pre-line">
-                        {session.user.address ?? 'Not added'}
-                      </p>
-                    </div>
-                    <UserAddress user={session.user} />
-                  </div>
-                </CardContent>
-              </Card>
+                  <UserAddress user={session.user} />
+                </div>
+              </div>
             )}
 
 
@@ -254,7 +239,7 @@ export default function TabContent({ session, orders, wishlistItems }: Props) {
                   <p className="text-sm text-muted-foreground mb-3">
                     Manage your password and account security.
                   </p>
-                  <Button variant="outline" onClick={() => setShowPasswordModal(true)}>
+                  <Button variant="secondary" onClick={() => setShowPasswordModal(true)}>
                     Change Password
                   </Button>
                 </div>

@@ -1,4 +1,3 @@
-import { MovieWithRelations } from '@/app/(public)/_components/shop-movie-card'
 import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
 import Link from 'next/link'
@@ -61,7 +60,7 @@ export default async function Page({
       </div>
       <div className="hidden md:block">
         <MovieTable
-          movies={movies as unknown as MovieWithRelations[]}
+          movies={movies}
           currentPage={currentPage}
           totalPages={totalPages}
           currentPageSize={currentPageSize}

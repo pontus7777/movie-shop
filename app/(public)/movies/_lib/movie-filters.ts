@@ -32,6 +32,51 @@ export function buildMovieWhere(params: MovieFilterParams): Prisma.MovieWhereInp
   const runtimeMin = params.runtimeMin ? Number(params.runtimeMin) : undefined
   const runtimeMax = params.runtimeMax ? Number(params.runtimeMax) : undefined
 
+  // IMPORTANT:
+  // Every selected genre must exist on the movie, and a selected director
+  // filter and a selected actor filter must both hold — each needs its own
+  // entry here rather than sharing a `credits` key, since a plain object
+  // literal would let the second `credits` spread silently overwrite the first.
+  const andConditions: Prisma.MovieWhereInput[] = [
+    ...genreIds.map((id) => ({
+      genres: {
+        some: {
+          id,
+        },
+      },
+    })),
+
+    ...(directorIds.length > 0
+      ? [
+          {
+            credits: {
+              some: {
+                role: 'DIRECTOR' as const,
+                crewId: {
+                  in: directorIds,
+                },
+              },
+            },
+          },
+        ]
+      : []),
+
+    ...(actorIds.length > 0
+      ? [
+          {
+            credits: {
+              some: {
+                role: 'ACTOR' as const,
+                crewId: {
+                  in: actorIds,
+                },
+              },
+            },
+          },
+        ]
+      : []),
+  ]
+
   return {
     stock: true,
 
@@ -68,38 +113,6 @@ export function buildMovieWhere(params: MovieFilterParams): Prisma.MovieWhereInp
         }
       : {}),
 
-    // IMPORTANT:
-    // Every selected genre must exist on the movie
-    ...(genreIds.length > 0 && {
-      AND: genreIds.map((id) => ({
-        genres: {
-          some: {
-            id,
-          },
-        },
-      })),
-    }),
-
-    ...(directorIds.length > 0 && {
-      credits: {
-        some: {
-          role: 'DIRECTOR',
-          crewId: {
-            in: directorIds,
-          },
-        },
-      },
-    }),
-
-    ...(actorIds.length > 0 && {
-      credits: {
-        some: {
-          role: 'ACTOR',
-          crewId: {
-            in: actorIds,
-          },
-        },
-      },
-    }),
+    ...(andConditions.length > 0 && { AND: andConditions }),
   }
 }

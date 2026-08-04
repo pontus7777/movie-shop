@@ -40,7 +40,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-type MovieWithRelations = Prisma.MovieGetPayload<{
+export type MovieWithRelations = Prisma.MovieGetPayload<{
   include: {
     genres: true
     credits: {

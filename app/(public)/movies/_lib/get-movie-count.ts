@@ -1,11 +1,7 @@
 import { Prisma } from '@/generated/prisma/client'
 
 import prisma from '@/lib/prisma'
-import { cached } from '@/lib/cache'
-
-function stableStringify(obj: unknown) {
-  return JSON.stringify(obj, Object.keys(obj as object).sort())
-}
+import { cached, stableStringify } from '@/lib/cache'
 
 export function getMovieCount(where: Prisma.MovieWhereInput) {
   return cached(
