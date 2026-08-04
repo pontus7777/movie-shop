@@ -1,31 +1,25 @@
-import { unstable_cache } from 'next/cache'
 import prisma from '@/lib/prisma'
 import { Prisma } from '@/generated/prisma/client'
-import { movieInclude } from './movie-include'
-import { MovieWithRelations } from '../../_components/shop-movie-card'
+import { cached, stableStringify } from '@/lib/cache'
+import { movieCardSelect } from './movie-card-select'
 
-export async function getMovies(where: Prisma.MovieWhereInput, skip: number, take: number) {
-  return getCachedMovies(JSON.stringify(where), skip, take)
+export function getMovies(where: Prisma.MovieWhereInput, skip: number, take: number) {
+  return cached(
+    () => {
+      console.log('🔥 MOVIES DATABASE HIT')
+
+      return prisma.movie.findMany({
+        where,
+        orderBy: {
+          popularity: 'desc',
+        },
+        skip,
+        take,
+        select: movieCardSelect,
+      })
+    },
+    ['movies', stableStringify(where), String(skip), String(take)],
+    ['movies'],
+    300,
+  )()
 }
-
-const getCachedMovies = unstable_cache(
-  async (whereString: string, skip: number, take: number) => {
-    console.log('🔥 MOVIES DATABASE HIT')
-
-    const where = JSON.parse(whereString)
-
-    return prisma.movie.findMany({
-      where,
-      orderBy: {
-        popularity: 'desc',
-      },
-      skip,
-      take,
-      include: movieInclude,
-    }) as Promise<MovieWithRelations[]>
-  },
-  ['movies'],
-  {
-    revalidate: 300,
-  },
-)

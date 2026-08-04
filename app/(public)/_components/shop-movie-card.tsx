@@ -7,17 +7,14 @@ import { WishlistButton } from '@/app/(public)/wishlist/_components/wishlist-but
 import { getMovieImageSrc } from '@/lib/image-utils'
 import { convertToEuro } from '@/lib/priceUtils'
 import { getEffectivePriceInCents, isMovieOnSale } from '@/lib/pricing'
+import { movieCardSelect } from '@/app/(public)/movies/_lib/movie-card-select'
 
-import type { Crew, CrewOnMovie, Genre, Movie, MovieKeyword } from '@/generated/prisma/client'
+import type { Prisma } from '@/generated/prisma/client'
 
-export type MovieWithRelations = Movie & {
-  genres: Genre[]
-  keywords: MovieKeyword[]
-  credits: (CrewOnMovie & { crew: Crew })[]
-}
+export type MovieCardData = Prisma.MovieGetPayload<{ select: typeof movieCardSelect }>
 
 type Props = {
-  movie: MovieWithRelations
+  movie: MovieCardData
   quantity: number
   isWishlisted: boolean
 }
@@ -124,13 +121,14 @@ export default function ShopMovieCard({ movie, quantity, isWishlisted }: Props) 
             sm:p-3
           "
         >
-          <div className="flex items-end justify-between gap-2">
+          <div className="flex items-start justify-between gap-2">
             <h3
               className="
                 flex-1
-                truncate
+                line-clamp-2
                 text-xs
                 font-bold
+                leading-tight
                 sm:text-sm
               "
             >

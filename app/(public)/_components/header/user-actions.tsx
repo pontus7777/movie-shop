@@ -2,9 +2,16 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Loader2, LogOut, User } from 'lucide-react'
+import { Heart, Loader2, LogOut, User, UserRound } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { authClient } from '@/lib/auth-client'
 
 import { useState } from 'react'
@@ -49,53 +56,94 @@ export function UserActions({ userName, userImage, expanded = false }: Props) {
     )
   }
 
-  return (
-    <div className="flex items-center gap-3">
-      <Link
-        href="/profile"
-        className="
-          flex items-center gap-2
-          rounded-full px-2 py-1
-          transition hover:bg-muted
-        "
-      >
-        {userImage ? (
-          <Image
-            src={userImage}
-            alt={userName}
-            width={32}
-            height={32}
-            className="h-8 w-8 rounded-full object-cover"
-          />
-        ) : (
-          <div
-            className="
-              flex h-8 w-8 items-center justify-center
-              rounded-full bg-muted
-            "
-          >
-            <User className="h-4 w-4" />
-          </div>
-        )}
-
-        <span className={expanded ? 'text-sm font-medium' : 'hidden text-sm font-medium lg:block'}>
-          {userName}
-        </span>
-      </Link>
-
-      <Button variant="ghost" onClick={signOut} disabled={loading} className="gap-2">
-        {loading ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" />
-            Signing out...
-          </>
-        ) : (
-          <>
-            <LogOut className="h-4 w-4" />
-            {expanded && 'Sign out'}
-          </>
-        )}
-      </Button>
+  const avatar = userImage ? (
+    <Image
+      src={userImage}
+      alt={userName}
+      width={32}
+      height={32}
+      className="h-8 w-8 rounded-full object-cover"
+    />
+  ) : (
+    <div
+      className="
+        flex h-8 w-8 items-center justify-center
+        rounded-full bg-muted
+      "
+    >
+      <User className="h-4 w-4" />
     </div>
+  )
+
+  if (expanded) {
+    return (
+      <div className="flex items-center gap-3">
+        <Link
+          href="/profile"
+          className="
+            flex items-center gap-2
+            rounded-full px-2 py-1
+            transition hover:bg-muted
+          "
+        >
+          {avatar}
+          <span className="text-sm font-medium">{userName}</span>
+        </Link>
+
+        <Button variant="ghost" onClick={signOut} disabled={loading} className="gap-2">
+          {loading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Signing out...
+            </>
+          ) : (
+            <>
+              <LogOut className="h-4 w-4" />
+              Sign out
+            </>
+          )}
+        </Button>
+      </div>
+    )
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          className="
+            flex items-center gap-2
+            rounded-full px-2 py-1
+            transition hover:bg-muted
+          "
+        >
+          {avatar}
+          <span className="hidden text-sm font-medium lg:block">{userName}</span>
+        </button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent align="end" className="w-48">
+        <DropdownMenuItem asChild>
+          <Link href="/profile">
+            <UserRound className="h-4 w-4" />
+            Profile
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem asChild>
+          <Link href="/wishlist">
+            <Heart className="h-4 w-4" />
+            Wishlist
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem variant="destructive" onSelect={signOut} disabled={loading}>
+          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogOut className="h-4 w-4" />}
+          {loading ? 'Signing out...' : 'Sign out'}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }

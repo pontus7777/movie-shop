@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { BookHeart, Film, Search } from 'lucide-react'
+import { Heart, Film, Search } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -64,7 +64,7 @@ export function MobileMenu({ userName, userImage, onNavigate }: Props) {
       {userName && (
         <Button variant="ghost" asChild className="justify-start">
           <Link href="/wishlist">
-            <BookHeart className="h-5 w-5" />
+            <Heart className="h-5 w-5" />
             Wishlist
           </Link>
         </Button>

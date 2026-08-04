@@ -28,7 +28,7 @@ type Props = {
 }
 const CURRENT_YEAR = new Date().getFullYear()
 
-const ALL_SECTIONS = ['genres', 'directors', 'actors', 'year', 'runtime']
+const DEFAULT_OPEN_SECTIONS = ['genres']
 
 function FilterChip({ label, onRemove }: { label: string; onRemove: () => void }) {
   return (
@@ -75,6 +75,16 @@ export function MoviesSidebar({
   const selectedGenreItems = genres.filter((g) => selectedGenres.includes(g.id))
   const selectedDirectorItems = directors.filter((d) => selectedDirectors.includes(d.id))
   const selectedActorItems = actors.filter((a) => selectedActors.includes(a.id))
+
+  const defaultOpenSections = Array.from(
+    new Set([
+      ...DEFAULT_OPEN_SECTIONS,
+      ...(selectedDirectors.length ? ['directors'] : []),
+      ...(selectedActors.length ? ['actors'] : []),
+      ...(hasYearFilter ? ['year'] : []),
+      ...(hasRuntimeFilter ? ['runtime'] : []),
+    ]),
+  )
 
   return (
     <aside className="w-full">
@@ -155,7 +165,7 @@ export function MoviesSidebar({
           </div>
         )}
 
-        <Accordion type="multiple" defaultValue={ALL_SECTIONS}>
+        <Accordion type="multiple" defaultValue={defaultOpenSections}>
           <FilterSection title="Genres" value="genres">
             <CheckboxFilter
               items={genres}
@@ -169,6 +179,8 @@ export function MoviesSidebar({
               items={directors}
               selected={selectedDirectors}
               onChange={(id) => updateParam('director', id, !selectedDirectors.includes(id))}
+              searchable
+              searchPlaceholder="Search directors..."
             />
           </FilterSection>
 
@@ -177,6 +189,8 @@ export function MoviesSidebar({
               items={actors}
               selected={selectedActors}
               onChange={(id) => updateParam('actor', id, !selectedActors.includes(id))}
+              searchable
+              searchPlaceholder="Search actors..."
             />
           </FilterSection>
 

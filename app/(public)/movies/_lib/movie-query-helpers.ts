@@ -1,4 +1,4 @@
-export const MOVIES_PAGE_SIZE = 18
+export const MOVIES_PAGE_SIZE = 20
 
 export function getArrayParam(param: string | string[] | undefined) {
   if (!param) return []
