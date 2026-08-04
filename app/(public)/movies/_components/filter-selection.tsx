@@ -1,32 +1,32 @@
 import { ReactNode } from 'react'
+import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 
 export function FilterSection({
   title,
+  value,
   children,
   scroll = true,
 }: {
   title: string
+  value: string
   children: ReactNode
   scroll?: boolean
 }) {
   return (
-    <section className="space-y-2">
-      <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+    <AccordionItem value={value}>
+      <AccordionTrigger className="text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:no-underline">
         {title}
-      </h3>
+      </AccordionTrigger>
 
-      {scroll ? (
-        <div
-          className="
-            flex gap-2 overflow-x-auto pb-2
-            lg:block lg:max-h-56 lg:space-y-1.5 lg:overflow-y-auto lg:overflow-x-hidden lg:pb-0
-          "
-        >
-          {children}
-        </div>
-      ) : (
-        children
-      )}
-    </section>
+      <AccordionContent>
+        {scroll ? (
+          <div className="max-h-56 space-y-1.5 overflow-y-auto overflow-x-hidden pr-1">
+            {children}
+          </div>
+        ) : (
+          children
+        )}
+      </AccordionContent>
+    </AccordionItem>
   )
 }

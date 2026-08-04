@@ -119,6 +119,7 @@ export default async function MoviesPage(props: PageProps<'/movies'>) {
                   yearTo={filters.yearTo}
                   runtimeMin={filters.runtimeMin}
                   runtimeMax={filters.runtimeMax}
+                  showHeading={false}
                 />
               </MobileMoviesFilters>
             </Suspense>

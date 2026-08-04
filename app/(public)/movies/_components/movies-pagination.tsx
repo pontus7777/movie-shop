@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -22,6 +23,44 @@ type MoviesPaginationProps = {
   yearTo?: string
   runtimeMin?: string
   runtimeMax?: string
+}
+
+const SIBLING_COUNT = 1
+
+/** Always shows first/last page, the current page, and one sibling on
+ * each side, collapsing the rest into a single ellipsis per side. */
+function getPageWindow(current: number, total: number): (number | 'ellipsis')[] {
+  const totalVisible = SIBLING_COUNT * 2 + 5
+
+  if (total <= totalVisible) {
+    return Array.from({ length: total }, (_, i) => i + 1)
+  }
+
+  const left = Math.max(current - SIBLING_COUNT, 2)
+  const right = Math.min(current + SIBLING_COUNT, total - 1)
+
+  const showLeftEllipsis = left > 2
+  const showRightEllipsis = right < total - 1
+
+  const pages: (number | 'ellipsis')[] = [1]
+
+  if (showLeftEllipsis) {
+    pages.push('ellipsis')
+  } else {
+    for (let p = 2; p < left; p++) pages.push(p)
+  }
+
+  for (let p = left; p <= right; p++) pages.push(p)
+
+  if (showRightEllipsis) {
+    pages.push('ellipsis')
+  } else {
+    for (let p = right + 1; p < total; p++) pages.push(p)
+  }
+
+  pages.push(total)
+
+  return pages
 }
 
 export function MoviesPagination({
@@ -60,24 +99,28 @@ export function MoviesPagination({
 
   if (totalPages <= 1) return null
 
+  const pages = getPageWindow(page, totalPages)
+
   return (
-    <Pagination>
+    <Pagination className="mt-8">
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious onClick={() => goToPage(Math.max(1, page - 1))} />
         </PaginationItem>
 
-        {Array.from({ length: totalPages }).map((_, i) => {
-          const pageNumber = i + 1
-
-          return (
-            <PaginationItem key={pageNumber}>
-              <PaginationLink isActive={page === pageNumber} onClick={() => goToPage(pageNumber)}>
-                {pageNumber}
+        {pages.map((p, index) =>
+          p === 'ellipsis' ? (
+            <PaginationItem key={`ellipsis-${index}`}>
+              <PaginationEllipsis />
+            </PaginationItem>
+          ) : (
+            <PaginationItem key={p}>
+              <PaginationLink isActive={page === p} onClick={() => goToPage(p)}>
+                {p}
               </PaginationLink>
             </PaginationItem>
-          )
-        })}
+          ),
+        )}
 
         <PaginationItem>
           <PaginationNext onClick={() => goToPage(Math.min(totalPages, page + 1))} />

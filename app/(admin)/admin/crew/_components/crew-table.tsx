@@ -87,7 +87,7 @@ export function CrewTable({ crewMembers }: Props) {
         <TableBody>
           {paginatedCrew.map((cm, index) => (
             <TableRow key={cm.id}>
-              <TableCell className="font-medium">{index + 1}</TableCell>
+              <TableCell className="font-medium">{start + index + 1}</TableCell>
               <TableCell>{cm.name}</TableCell>
 
               <TableCell className="text-right">

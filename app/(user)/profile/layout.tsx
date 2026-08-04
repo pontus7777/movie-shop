@@ -13,7 +13,7 @@ export default async function UserPagesLayout({ children }: { children: React.Re
         <Header />
 
         {/* Page content */}
-        <div className="flex-1 px-6 py-8 overflow-x-hidden">{children}</div>
+        <div className="flex-1 overflow-x-hidden">{children}</div>
       </main>
     </div>
   )

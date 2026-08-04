@@ -24,6 +24,8 @@ import {
 } from '@/components/ui/table'
 import { OrderActions } from './order-actions-component'
 import { OrdersWithRelations } from '../_types/order'
+import { orderStatusStyles, formatOrderStatus } from '@/lib/order-status'
+import { convertToEuro } from '@/lib/priceUtils'
 
 type Props = {
   orders: OrdersWithRelations[]
@@ -70,17 +72,19 @@ export function OrdersTable({
 
                   <TableCell>{order.user.name}</TableCell>
 
-                  <TableCell> ${(order.total / 100).toFixed(2)}</TableCell>
+                  <TableCell>€{convertToEuro(order.total).toFixed(2)}</TableCell>
 
                   <TableCell>
-                    <span className="rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-700">
-                      {order.status}
+                    <span
+                      className={`rounded-full px-2 py-1 text-xs font-medium ${orderStatusStyles[order.status] ?? 'bg-muted text-muted-foreground'}`}
+                    >
+                      {formatOrderStatus(order.status)}
                     </span>
                   </TableCell>
 
                   <TableCell className="hidden md:table-cell">{order.paymentMethod}</TableCell>
 
-                  <TableCell className="hidden lg:table-cell"> {new Date(order.createdAt).toLocaleDateString('SE-sv')}</TableCell>
+                  <TableCell className="hidden lg:table-cell"> {new Date(order.createdAt).toLocaleDateString('sv-SE')}</TableCell>
 
                   <TableCell className="text-right">
                     <OrderActions order={order} />

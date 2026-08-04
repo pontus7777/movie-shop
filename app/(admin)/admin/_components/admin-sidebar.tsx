@@ -12,6 +12,7 @@ import {
   Loader2,
   LogOut,
   User,
+  Home,
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -34,7 +35,6 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
@@ -117,6 +117,19 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
 
       <SidebarContent>
         <SidebarGroup>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <Link href="/">
+                  <Home />
+                  <span>Back to Store</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
+
+        <SidebarGroup>
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
 
           <SidebarMenu>
@@ -151,10 +164,6 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
                   <span>Add Movie</span>
                 </Link>
               </SidebarMenuButton>
-
-              <SidebarMenuBadge>
-                <Plus />
-              </SidebarMenuBadge>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>

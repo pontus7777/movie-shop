@@ -42,20 +42,30 @@ export function UserWishlist({ items }: Props) {
     function handleAddToCart(movieId: string) {
         setPendingMovieId(movieId)
         startTransition(async () => {
-            await addToCart(movieId)
-            updateCartCount(1)
-            toast.success('Added to cart')
-            setPendingMovieId(null)
+            try {
+                await addToCart(movieId)
+                updateCartCount(1)
+                toast.success('Added to cart')
+            } catch {
+                toast.error('Could not add movie')
+            } finally {
+                setPendingMovieId(null)
+            }
         })
     }
 
     function handleRemove(movieId: string) {
         setPendingMovieId(movieId)
         startTransition(async () => {
-            await removeFromWishlist(movieId)
-            setLocalItems((prev) => prev.filter((i) => i.movie.id !== movieId))
-            toast.success('Removed from wishlist')
-            setPendingMovieId(null)
+            try {
+                await removeFromWishlist(movieId)
+                setLocalItems((prev) => prev.filter((i) => i.movie.id !== movieId))
+                toast.success('Removed from wishlist')
+            } catch {
+                toast.error('Could not remove movie')
+            } finally {
+                setPendingMovieId(null)
+            }
         })
     }
 

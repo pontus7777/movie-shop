@@ -2,10 +2,11 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Menu, X, Film } from 'lucide-react'
+import { Menu, Film } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { ThemeModeToggle } from '@/components/theme-mode-toggle'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 
 import { CartButton } from './cart-button'
 import { SearchButton } from './search-button'
@@ -15,12 +16,6 @@ import Logo from '../logo'
 import { WishlistHeaderButton } from './wishlist-button'
 import { authClient } from '@/lib/auth-client'
 
-type Props = {
-  userName?: string | null
-  userImage?: string | null
-}
-
-// export default function Header({ userName, userImage }: Props) {
 export default function Header() {
 
   const { data: session } = authClient.useSession()
@@ -79,22 +74,29 @@ export default function Header() {
         <div className="flex items-center gap-1 md:hidden">
           <CartButton />
 
-          {/* <WishlistHeaderButton userName={userName} /> */}
-
           <ThemeModeToggle />
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            onClick={() => setMobileOpen((v) => !v)}
-          >
-            {mobileOpen ? <X /> : <Menu />}
-          </Button>
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="rounded-full" aria-label="Open menu">
+                <Menu />
+              </Button>
+            </SheetTrigger>
+
+            <SheetContent side="right">
+              <SheetHeader className="border-b">
+                <SheetTitle>Menu</SheetTitle>
+              </SheetHeader>
+
+              <MobileMenu
+                userName={userName}
+                userImage={userImage}
+                onNavigate={() => setMobileOpen(false)}
+              />
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
-
-      {mobileOpen && <MobileMenu userName={userName} userImage={userImage} />}
     </header>
   )
 }

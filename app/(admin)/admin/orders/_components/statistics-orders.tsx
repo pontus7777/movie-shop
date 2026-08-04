@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { CircleDollarSign, Clock3, Package, Truck } from 'lucide-react'
+import { Euro, Clock3, Package, Truck } from 'lucide-react'
 
 type Props = {
   totalOrders: number
@@ -47,11 +47,11 @@ export function StatisticsOrder({ totalOrders, pendingOrders, paidOrders, revenu
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Revenue</CardTitle>
-          <CircleDollarSign className="size-5 text-primary" />
+          <Euro className="size-5 text-primary" />
         </CardHeader>
 
         <CardContent>
-          <p className="text-3xl font-bold">${(revenue / 100).toFixed(2)}</p>
+          <p className="text-3xl font-bold">€{(revenue / 100).toFixed(2)}</p>
         </CardContent>
       </Card>
     </div>

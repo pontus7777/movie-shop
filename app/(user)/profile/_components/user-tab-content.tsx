@@ -7,7 +7,6 @@ import { UserProfile } from './user-profile'
 import { UserOrderList } from './user-order-list'
 import { DeleteUserAccountButton } from './delete-account-button'
 import { Button } from '@/components/ui/button'
-import { toast } from 'sonner'
 import ChangeEmailModal from './change-email-modal'
 import ChangePasswordModal from './change-password-modal'
 import Link from 'next/link'
@@ -15,9 +14,21 @@ import { AuthSession } from '@/lib/session-validation'
 import { UserMovieLibrary } from './user-movie-library'
 import { UserAddress } from './user-address'
 import { UserPhoneNumber } from './user-phone-number'
-import { Address } from './address-manager'
 import { UserWishlist } from './user-wishlist'
-import { LayoutDashboard } from 'lucide-react'
+import {
+  LayoutDashboard,
+  Camera,
+  Trash2,
+  Pencil,
+  User,
+  ShoppingBag,
+  PlayCircle,
+  Heart,
+  Settings,
+} from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 type OrderWithItems = Prisma.OrderGetPayload<{
   include: {
@@ -35,6 +46,18 @@ type Props = {
   orders: OrderWithItems[]
   wishlistItems: WishlistItemType[]
 }
+
+const editTriggerClass =
+  'flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors'
+
+const accountNavItems = [
+  { tab: 'profile', label: 'Profile', icon: User },
+  { tab: 'orders', label: 'Orders', icon: ShoppingBag },
+  { tab: 'library', label: 'My Library', icon: PlayCircle },
+  { tab: 'wishlist', label: 'My Wishlist', icon: Heart },
+  { tab: 'settings', label: 'Settings', icon: Settings },
+] as const
+
 /* -------------------------------------------------------
    MAIN TAB CONTENT
 ------------------------------------------------------- */
@@ -58,21 +81,6 @@ export default function TabContent({ session, orders, wishlistItems }: Props) {
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [showPasswordModal, setShowPasswordModal] = useState(false)
 
-  // Convert shippingAddress into usable UI addresses
-  const initialAddresses = orders
-    .map((o) => o.shippingAddress)
-    .filter(Boolean)
-    .map((addr) => ({
-      id: addr!.id,
-      firstName: addr!.firstName,
-      lastName: addr!.lastName,
-      street: addr!.street,
-      postalCode: addr!.postalCode,
-      city: addr!.city,
-      country: addr!.country,
-      orderId: addr!.orderId,
-    }))
-
   const purchasedMovies = Array.from(
     new Map(
       orders
@@ -81,50 +89,6 @@ export default function TabContent({ session, orders, wishlistItems }: Props) {
         .map((item) => [item.movie.id, item.movie]),
     ).values(),
   )
-
-  const [addresses, setAddresses] = useState<Address[]>(initialAddresses)
-  const [newAddress, setNewAddress] = useState({
-    firstName: '',
-    lastName: '',
-    street: '',
-    postalCode: '',
-    city: '',
-    country: '',
-  })
-
-  function addAddress() {
-    if (!newAddress.street.trim() || !newAddress.firstName.trim()) {
-      toast.error('Please fill in at least first name and street')
-      return
-    }
-
-    const newAddr: Address = {
-      id: crypto.randomUUID(),
-      firstName: newAddress.firstName,
-      lastName: newAddress.lastName,
-      street: newAddress.street,
-      postalCode: newAddress.postalCode,
-      city: newAddress.city,
-      country: newAddress.country,
-      orderId: crypto.randomUUID(),
-    }
-
-    setAddresses((prev) => [...prev, newAddr])
-    setNewAddress({
-      firstName: '',
-      lastName: '',
-      street: '',
-      postalCode: '',
-      city: '',
-      country: '',
-    })
-    toast.success('Address added')
-  }
-
-  function deleteAddress(id: string) {
-    setAddresses((prev) => prev.filter((a) => a.id !== id))
-    toast.success('Address deleted')
-  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -150,73 +114,41 @@ export default function TabContent({ session, orders, wishlistItems }: Props) {
         <div className="flex flex-col md:flex-row min-h-225">
 
           {/* SIDEBAR */}
-          <aside className="w-full md:w-52 border-b md:border-b-0 md:border-r py-3 md:py-5 px-3 flex flex-row md:flex-col gap-2 md:gap-3 overflow-x-auto">
+          <aside className="w-full shrink-0 bg-card md:w-56 border-b md:border-b-0 md:border-r py-3 md:py-5 px-3 flex flex-row md:flex-col gap-1 overflow-x-auto">
+            <p className="hidden md:block px-3 mb-1 text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
+              Account
+            </p>
+
+            {accountNavItems.map(({ tab: itemTab, label, icon: Icon }) => (
+              <button
+                key={itemTab}
+                type="button"
+                onClick={() => setTab(itemTab)}
+                className={`flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm whitespace-nowrap transition-colors ${tab === itemTab
+                  ? 'bg-primary/20 text-primary font-medium'
+                  : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+                  }`}
+              >
+                <Icon className="h-4 w-4 shrink-0" />
+                <span className="truncate">{label}</span>
+              </button>
+            ))}
+
             {session.user.role === 'admin' && (
               <>
-                <div className="hidden md:block my-2 border-t" />
+                <div className="my-2 border-t hidden md:block" />
+                <p className="hidden md:block px-3 mb-1 text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
+                  Admin
+                </p>
                 <Link
                   href="/admin"
-                  className="flex shrink-0 items-center gap-2 px-3 py-2 rounded-lg text-muted-foreground hover:bg-muted/50"
+                  className="flex shrink-0 items-center gap-2 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:bg-muted/50 hover:text-foreground whitespace-nowrap"
                 >
                   <LayoutDashboard className="h-4 w-4 shrink-0" />
                   <span className="truncate">Dashboard</span>
                 </Link>
               </>
             )}
-
-            <p className="hidden md:block px-2 mb-2 text-[15px] uppercase tracking-widest text-muted-foreground">
-              Account
-            </p>
-
-            <div
-              onClick={() => setTab('profile')}
-              className={`shrink-0 px-3 py-2 rounded-lg cursor-pointer whitespace-nowrap ${tab === 'profile'
-                ? 'bg-primary/20 text-primary'
-                : 'text-muted-foreground hover:bg-muted/50'
-                }`}
-            >
-              Profile
-            </div>
-
-            <div
-              onClick={() => setTab('orders')}
-              className={`shrink-0 px-3 py-2 rounded-lg cursor-pointer whitespace-nowrap ${tab === 'orders'
-                ? 'bg-primary/20 text-primary'
-                : 'text-muted-foreground hover:bg-muted/50'
-                }`}
-            >
-              Orders
-            </div>
-
-            <div
-              onClick={() => setTab('library')}
-              className={`shrink-0 px-3 py-2 rounded-lg cursor-pointer whitespace-nowrap ${tab === 'library'
-                ? 'bg-primary/20 text-primary'
-                : 'text-muted-foreground hover:bg-muted/50'
-                }`}
-            >
-              My Library
-            </div>
-
-            <div
-              onClick={() => setTab('wishlist')}
-              className={`shrink-0 px-3 py-2 rounded-lg cursor-pointer whitespace-nowrap ${tab === 'wishlist'
-                ? 'bg-primary/20 text-primary'
-                : 'text-muted-foreground hover:bg-muted/50'
-                }`}
-            >
-              My Wishlist
-            </div>
-
-            <div
-              onClick={() => setTab('settings')}
-              className={`shrink-0 px-3 py-2 rounded-lg cursor-pointer whitespace-nowrap ${tab === 'settings'
-                ? 'bg-primary/20 text-primary'
-                : 'text-muted-foreground hover:bg-muted/50'
-                }`}
-            >
-              Settings
-            </div>
           </aside>
 
           {/* RIGHT CONTENT */}
@@ -232,44 +164,77 @@ export default function TabContent({ session, orders, wishlistItems }: Props) {
 
             {/* PROFILE */}
             {tab === 'profile' && (
-              <div className="max-w-xl space-y-6">
-                {/* Profile Picture */}
-                <div className="flex items-center gap-4">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-2xl font-semibold text-white">
-                    {session.user.name?.charAt(0).toUpperCase() ?? '?'}
+              <Card className="max-w-2xl">
+                <CardContent className="space-y-6">
+                  {/* Profile Picture */}
+                  <div className="flex items-center gap-4">
+                    <Avatar className="h-16 w-16">
+                      <AvatarFallback className="bg-primary text-2xl font-semibold text-white">
+                        {session.user.name?.charAt(0).toUpperCase() ?? '?'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex gap-2">
+                      <button className={editTriggerClass}>
+                        <Camera className="h-3.5 w-3.5" />
+                        Change Picture
+                      </button>
+                      <button className={editTriggerClass}>
+                        <Trash2 className="h-3.5 w-3.5" />
+                        Remove Picture
+                      </button>
+                    </div>
                   </div>
-                </div>
 
-                {/* Edit Name */}
-                <UserProfile user={session.user} />
+                  <Separator />
 
-                {/* Email */}
-                <div>
-                  <p className="text-sm text-muted-foreground">Email</p>
-                  <p className="font-normal">{session.user.email}</p>
-                  <button
-                    className="text-sm text-red-400 hover:text-red-300 mt-1"
-                    onClick={() => setShowEmailModal(true)}
-                  >
-                    Change Email
-                  </button>
-                </div>
+                  {/* Name */}
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Name</p>
+                      <p className="font-medium">{session.user.name}</p>
+                    </div>
+                    <UserProfile user={session.user} />
+                  </div>
 
-                {/* Phone */}
-                <div>
-                  <p className="text-sm text-muted-foreground">Phone Number</p>
-                  <p className="font-normal">{session.user.mobileNumber ?? 'Not added'}</p>
-                  <UserPhoneNumber user={session.user} />
-                </div>
+                  <Separator />
 
-                {/* Address Book */}
-                {/* Address */}
-                <div>
-                  <p className="text-sm text-muted-foreground">Address</p>
-                  <p className="font-normal whitespace-pre-line">{session.user.address ?? 'Not added'}</p>
-                  <UserAddress user={session.user} />
-                </div>
-              </div>
+                  {/* Email */}
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Email</p>
+                      <p className="font-medium">{session.user.email}</p>
+                    </div>
+                    <button className={editTriggerClass} onClick={() => setShowEmailModal(true)}>
+                      <Pencil className="h-3.5 w-3.5" />
+                      Change Email
+                    </button>
+                  </div>
+
+                  <Separator />
+
+                  {/* Phone */}
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Phone Number</p>
+                      <p className="font-medium">{session.user.mobileNumber ?? 'Not added'}</p>
+                    </div>
+                    <UserPhoneNumber user={session.user} />
+                  </div>
+
+                  <Separator />
+
+                  {/* Address */}
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Address</p>
+                      <p className="font-medium whitespace-pre-line">
+                        {session.user.address ?? 'Not added'}
+                      </p>
+                    </div>
+                    <UserAddress user={session.user} />
+                  </div>
+                </CardContent>
+              </Card>
             )}
 
 

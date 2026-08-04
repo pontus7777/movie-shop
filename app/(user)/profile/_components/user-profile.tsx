@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { User } from 'better-auth'
 import { Pencil, Check, X } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
@@ -11,6 +12,7 @@ type Props = {
 }
 
 export function UserProfile({ user }: Props) {
+  const router = useRouter()
   const [isEditing, setIsEditing] = useState(false)
   const [name, setName] = useState(user.name || '')
   const [saving, setSaving] = useState(false)
@@ -22,6 +24,7 @@ export function UserProfile({ user }: Props) {
       await authClient.updateUser({ name: name.trim() })
       toast.success('Name updated')
       setIsEditing(false)
+      router.refresh()
     } catch {
       toast.error('Failed to update name')
     } finally {
