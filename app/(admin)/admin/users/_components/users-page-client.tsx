@@ -44,6 +44,8 @@ export function UsersPageClient({ stats, usersData }: Props) {
         totalUsers={usersData.totalUsers}
         currentPage={usersData.currentPage}
         totalPages={usersData.totalPages}
+        currentAdminId={usersData.currentAdminId}
+        isCurrentUserSuperAdmin={usersData.isCurrentUserSuperAdmin}
       />
 
       {/* Dialog */}

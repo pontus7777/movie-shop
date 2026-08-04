@@ -1,5 +1,6 @@
 'use server'
 
+import { isSuperAdmin } from '@/lib/constants'
 import prisma from '@/lib/prisma'
 import { checkAdminAccess } from '@/lib/session-validation'
 import { deleteUserSchema, type DeleteUserInput } from '@/lib/validations/user'
@@ -15,6 +16,25 @@ export async function deleteUser(data: DeleteUserInput) {
 
   if (!parsed.success) {
     return { success: false, error: 'Invalid data' }
+  }
+  // Prevent an admin from deactivating their own account
+  if (parsed.data.id === access.session.user.id) {
+    return { success: false, error: 'You cannot deactivate your own account.' }
+  }
+
+  const targetUser = await prisma.user.findUnique({
+    where: { id: parsed.data.id },
+    select: { role: true },
+  })
+
+  if (!targetUser) {
+    return { success: false, error: 'User not found.' }
+  }
+
+  // Only the super admin can deactivate other admins
+  const currentIsSuperAdmin = isSuperAdmin(access.session.user.email)
+  if (targetUser.role === 'admin' && !currentIsSuperAdmin) {
+    return { success: false, error: 'Only the super admin can deactivate an admin account.' }
   }
 
   try {
