@@ -13,9 +13,10 @@ import { useRouter } from 'next/navigation'
 type Props = {
   userName?: string | null
   userImage?: string | null
+  expanded?: boolean
 }
 
-export function UserActions({ userName, userImage }: Props) {
+export function UserActions({ userName, userImage, expanded = false }: Props) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
@@ -77,7 +78,9 @@ export function UserActions({ userName, userImage }: Props) {
           </div>
         )}
 
-        <span className="hidden text-sm font-medium lg:block">{userName}</span>
+        <span className={expanded ? 'text-sm font-medium' : 'hidden text-sm font-medium lg:block'}>
+          {userName}
+        </span>
       </Link>
 
       <Button variant="ghost" onClick={signOut} disabled={loading} className="gap-2">
@@ -89,7 +92,7 @@ export function UserActions({ userName, userImage }: Props) {
         ) : (
           <>
             <LogOut className="h-4 w-4" />
-            {/* Sign out */}
+            {expanded && 'Sign out'}
           </>
         )}
       </Button>

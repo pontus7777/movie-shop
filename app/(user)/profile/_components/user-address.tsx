@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { User } from 'better-auth'
 import { Pencil, Check, X } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
@@ -11,6 +12,7 @@ type Props = {
 }
 
 export function UserAddress({ user }: Props) {
+    const router = useRouter()
     const [isEditing, setIsEditing] = useState(false)
     const [address, setAddress] = useState(user.address || '')
     const [saving, setSaving] = useState(false)
@@ -21,6 +23,7 @@ export function UserAddress({ user }: Props) {
             await authClient.updateUser({ address: address.trim() })
             toast.success('Address updated')
             setIsEditing(false)
+            router.refresh()
         } catch {
             toast.error('Failed to update address')
         } finally {
@@ -69,7 +72,7 @@ export function UserAddress({ user }: Props) {
     return (
         <button
             onClick={() => setIsEditing(true)}
-            className="flex items-center gap-1.5 text-sm text-red-400 hover:text-red-300 mt-1"
+            className="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
             <Pencil className="h-3.5 w-3.5" />
             {user.address ? 'Edit' : 'Add'} Address

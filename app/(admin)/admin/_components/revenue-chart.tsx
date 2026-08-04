@@ -51,7 +51,7 @@ export function RevenueChart({ data }: Props) {
           axisLine={false}
           tickMargin={8}
           domain={[0, 'auto']}
-          tickFormatter={(value) => `$${value}`}
+          tickFormatter={(value) => `€${value}`}
         />
 
         <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />

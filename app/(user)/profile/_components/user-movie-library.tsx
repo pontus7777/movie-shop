@@ -3,7 +3,7 @@ import { Movie } from '@/generated/prisma/client'
 import Image from 'next/image'
 import { PlayCircle, X } from 'lucide-react'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 type Props = {
     movies: Movie[]
@@ -31,23 +31,11 @@ export function UserMovieLibrary({ movies, autoPlayMovieId }: Props) {
                 <PlayCircle className="h-10 w-10 text-muted-foreground mb-3" />
                 <p className="font-medium text-foreground">No movies yet</p>
                 <p className="text-sm text-muted-foreground mt-1 mb-4">
-                    Movies you`ve purchased will appear here.
+                    Movies you&apos;ve purchased will appear here.
                 </p>
             </div>
         )
     }
-
-  if (movies.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-16 text-center">
-        <PlayCircle className="h-10 w-10 text-muted-foreground mb-3" />
-        <p className="font-medium text-foreground">No movies yet</p>
-        <p className="text-sm text-muted-foreground mt-1 mb-4">
-          Movies you`ve purchased will appear here.
-        </p>
-      </div>
-    )
-  }
 
   return (
     <>

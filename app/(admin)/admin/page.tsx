@@ -1,5 +1,5 @@
 import { requireAdmin } from '@/lib/session-validation'
-import { BarChart3, DollarSign, Film, PieChart, ShoppingCart, Users } from 'lucide-react'
+import { BarChart3, Euro, Film, PieChart, ShoppingCart, Users } from 'lucide-react'
 
 import {
   getMonthlyRevenue,
@@ -58,9 +58,9 @@ export default async function AdminPage() {
       title: 'Revenue',
       value: new Intl.NumberFormat('en-US', {
         style: 'currency',
-        currency: 'USD',
+        currency: 'EUR',
       }).format(totalRevenue),
-      icon: DollarSign,
+      icon: Euro,
       iconClassName: 'text-primary',
     },
   ]

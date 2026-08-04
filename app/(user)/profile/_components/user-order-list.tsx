@@ -1,6 +1,7 @@
 import { Prisma } from '@/generated/prisma/client'
 import Link from 'next/link'
 import { ShoppingBag, ChevronRight } from 'lucide-react'
+import { orderStatusStyles, formatOrderStatus } from '@/lib/order-status'
 
 type OrderWithItems = Prisma.OrderGetPayload<{
   include: {
@@ -13,12 +14,6 @@ type OrderWithItems = Prisma.OrderGetPayload<{
 
 type Props = {
   orders: OrderWithItems[]
-}
-
-const statusStyles: Record<string, string> = {
-  PAID: 'bg-green-500/10 text-green-400',
-  PENDING: 'bg-yellow-500/10 text-yellow-400',
-  CANCELLED: 'bg-red-500/10 text-red-400',
 }
 
 export function UserOrderList({ orders }: Props) {
@@ -74,9 +69,9 @@ export function UserOrderList({ orders }: Props) {
               €{(order.total / 100).toFixed(2)}
             </span>
             <span
-              className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${statusStyles[order.status] ?? 'bg-muted text-muted-foreground'}`}
+              className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${orderStatusStyles[order.status] ?? 'bg-muted text-muted-foreground'}`}
             >
-              {order.status.charAt(0) + order.status.slice(1).toLowerCase()}
+              {formatOrderStatus(order.status)}
             </span>
           </div>
 

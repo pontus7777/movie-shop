@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { convertToEuro } from '@/lib/priceUtils'
 
 type Props = {
   items: {
@@ -40,9 +41,9 @@ export function OrderItemsTable({ items }: Props) {
 
             <TableCell>{item.quantity}</TableCell>
 
-            <TableCell>${(item.priceInCents / 100).toFixed(2)}</TableCell>
+            <TableCell>€{convertToEuro(item.priceInCents).toFixed(2)}</TableCell>
 
-            <TableCell>${((item.quantity * item.priceInCents) / 100).toFixed(2)}</TableCell>
+            <TableCell>€{convertToEuro(item.quantity * item.priceInCents).toFixed(2)}</TableCell>
           </TableRow>
         ))}
       </TableBody>
