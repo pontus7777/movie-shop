@@ -164,7 +164,7 @@ export default function TabContent({ session, orders, wishlistItems }: Props) {
               </>
             )}
 
-            <p className="hidden md:block px-2 mb-2 text-[11px] uppercase tracking-widest text-muted-foreground">
+            <p className="hidden md:block px-2 mb-2 text-[15px] uppercase tracking-widest text-muted-foreground">
               Account
             </p>
 
@@ -237,14 +237,6 @@ export default function TabContent({ session, orders, wishlistItems }: Props) {
                 <div className="flex items-center gap-4">
                   <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-2xl font-semibold text-white">
                     {session.user.name?.charAt(0).toUpperCase() ?? '?'}
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <button className="text-sm text-red-400 hover:text-red-300">
-                      Change Picture
-                    </button>
-                    <button className="text-sm text-red-400 hover:text-red-300">
-                      Remove Picture
-                    </button>
                   </div>
                 </div>
 
