@@ -53,9 +53,10 @@ export type UserTableProps = {
   currentPage: number
   totalPages: number
   currentAdminId: string
+  isCurrentUserSuperAdmin: boolean
 }
 
-export function UserTable({ users, totalUsers, currentPage, totalPages, currentAdminId }: UserTableProps) {
+export function UserTable({ users, totalUsers, currentPage, totalPages, currentAdminId, isCurrentUserSuperAdmin }: UserTableProps) {
   const router = useRouter()
 
   const [selectedUser, setSelectedUser] = useState<UserWithRelations | null>(null)
@@ -122,6 +123,12 @@ export function UserTable({ users, totalUsers, currentPage, totalPages, currentA
 
           <TableBody>
             {users.map((user) => {
+
+              const isSelf = user.id === currentAdminId
+              const isProtectedAdmin = user.role === 'admin' && !isCurrentUserSuperAdmin
+              const canModifyStatus = !isSelf && !isProtectedAdmin
+
+
               return (
                 <TableRow key={user.id}>
                   <TableCell>
@@ -190,22 +197,24 @@ export function UserTable({ users, totalUsers, currentPage, totalPages, currentA
                           Edit
                         </DropdownMenuItem>
 
-                        {user.id === currentAdminId ? null : user.isDeactivated ? (
-                          <DropdownMenuItem
-                            disabled={isPending && pendingId === user.id}
-                            onClick={() => handleReactivate(user.id)}>
-                            Reactivate
-                          </DropdownMenuItem>
-                        ) : (
-                          <DropdownMenuItem
-                            className="text-red-600"
-                            onClick={() => {
-                              setSelectedUser(user);
-                              setDeleteOpen(true)
-                            }}
-                          >
-                            Deactivate
-                          </DropdownMenuItem>
+                        {canModifyStatus && (
+                          user.isDeactivated ? (
+                            <DropdownMenuItem
+                              disabled={isPending && pendingId === user.id}
+                              onClick={() => handleReactivate(user.id)}>
+                              Reactivate
+                            </DropdownMenuItem>
+                          ) : (
+                            <DropdownMenuItem
+                              className="text-red-600"
+                              onClick={() => {
+                                setSelectedUser(user);
+                                setDeleteOpen(true)
+                              }}
+                            >
+                              Deactivate
+                            </DropdownMenuItem>
+                          )
                         )}
 
 
