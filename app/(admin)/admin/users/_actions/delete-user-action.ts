@@ -16,6 +16,10 @@ export async function deleteUser(data: DeleteUserInput) {
   if (!parsed.success) {
     return { success: false, error: 'Invalid data' }
   }
+  // Prevent an admin from deactivating their own account
+  if (parsed.data.id === access.session.user.id) {
+    return { success: false, error: 'You cannot deactivate your own account.' }
+  }
 
   try {
     await prisma.$transaction([
