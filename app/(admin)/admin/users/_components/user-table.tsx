@@ -39,6 +39,7 @@ import { updateUserVerification } from '../_actions/update-user-verification-act
 import { toast } from 'sonner'
 import { Switch } from '@/components/ui/switch'
 import { useRouter } from 'next/navigation'
+import { reactivateUser } from '../_actions/reactivate-user-action'
 
 type UserWithRelations = Prisma.UserGetPayload<{
   include: {
@@ -51,9 +52,11 @@ export type UserTableProps = {
   totalUsers: number
   currentPage: number
   totalPages: number
+  currentAdminId: string
+  isCurrentUserSuperAdmin: boolean
 }
 
-export function UserTable({ users, totalUsers, currentPage, totalPages }: UserTableProps) {
+export function UserTable({ users, totalUsers, currentPage, totalPages, currentAdminId, isCurrentUserSuperAdmin }: UserTableProps) {
   const router = useRouter()
 
   const [selectedUser, setSelectedUser] = useState<UserWithRelations | null>(null)
@@ -80,6 +83,21 @@ export function UserTable({ users, totalUsers, currentPage, totalPages }: UserTa
     })
   }
 
+  function handleReactivate(userId: string) {
+    setPendingId(userId)
+    startTransition(async () => {
+      const result = await reactivateUser({ id: userId })
+
+      if (!result.success) {
+        toast.error(result.error)
+      } else {
+        toast.success('User reactivated')
+        router.refresh()
+      }
+      setPendingId(null)
+    })
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -95,7 +113,8 @@ export function UserTable({ users, totalUsers, currentPage, totalPages }: UserTa
             <TableRow>
               <TableHead>User</TableHead>
               <TableHead>Role</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Active</TableHead>
               <TableHead>Orders</TableHead>
               <TableHead>Joined</TableHead>
               <TableHead className="w-15" />
@@ -104,6 +123,12 @@ export function UserTable({ users, totalUsers, currentPage, totalPages }: UserTa
 
           <TableBody>
             {users.map((user) => {
+
+              const isSelf = user.id === currentAdminId
+              const isProtectedAdmin = user.role === 'admin' && !isCurrentUserSuperAdmin
+              const canModifyStatus = !isSelf && !isProtectedAdmin
+
+
               return (
                 <TableRow key={user.id}>
                   <TableCell>
@@ -134,6 +159,20 @@ export function UserTable({ users, totalUsers, currentPage, totalPages }: UserTa
                     </div>
                   </TableCell>
 
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`h-2.5 w-2.5 rounded-full ${user.isDeactivated
+                          ? 'bg-red-500 shadow-[0_0_6px_2px_rgba(239,68,68,0.5)]'
+                          : 'bg-green-500 shadow-[0_0_6px_2px_rgba(34,197,94,0.5)]'
+                          }`}
+                      />
+                      <span className="text-sm text-muted-foreground">
+                        {user.isDeactivated ? 'Inactive' : 'Active'}
+                      </span>
+                    </div>
+                  </TableCell>
+
                   <TableCell>{user.orders.length}</TableCell>
 
                   <TableCell>
@@ -158,6 +197,28 @@ export function UserTable({ users, totalUsers, currentPage, totalPages }: UserTa
                           Edit
                         </DropdownMenuItem>
 
+                        {canModifyStatus && (
+                          user.isDeactivated ? (
+                            <DropdownMenuItem
+                              disabled={isPending && pendingId === user.id}
+                              onClick={() => handleReactivate(user.id)}>
+                              Reactivate
+                            </DropdownMenuItem>
+                          ) : (
+                            <DropdownMenuItem
+                              className="text-red-600"
+                              onClick={() => {
+                                setSelectedUser(user);
+                                setDeleteOpen(true)
+                              }}
+                            >
+                              Deactivate
+                            </DropdownMenuItem>
+                          )
+                        )}
+
+
+                        {/* 
                         <DropdownMenuItem
                           className="text-red-600"
                           onClick={() => {
@@ -166,7 +227,9 @@ export function UserTable({ users, totalUsers, currentPage, totalPages }: UserTa
                           }}
                         >
                           Delete
-                        </DropdownMenuItem>
+                        </DropdownMenuItem> */}
+
+
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
