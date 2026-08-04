@@ -112,7 +112,7 @@ export function UserTable({ users, totalUsers, currentPage, totalPages, currentA
             <TableRow>
               <TableHead>User</TableHead>
               <TableHead>Role</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>Email</TableHead>
               <TableHead>Active</TableHead>
               <TableHead>Orders</TableHead>
               <TableHead>Joined</TableHead>
