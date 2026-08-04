@@ -12,7 +12,7 @@ type Props = {
 }
 
 export default async function UsersPage({ searchParams }: Props) {
-  await requireAdmin()
+  const session = await requireAdmin()
   const { page, search, role, status } = await searchParams
 
   const currentPage = Number(page) || 1
@@ -27,5 +27,5 @@ export default async function UsersPage({ searchParams }: Props) {
     }),
   ])
 
-  return <UsersPageClient stats={stats} usersData={usersData} />
+  return (<UsersPageClient stats={stats} usersData={{ ...usersData, currentAdminId: session.user.id }} />)
 }
