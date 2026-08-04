@@ -26,3 +26,4 @@ export function DeleteUserAccountButton({ ...buttonProps }: Props) {
     </Button>
   )
 }
+
