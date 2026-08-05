@@ -8,8 +8,8 @@ export default async function AdminDiscountsPage() {
   const tiers = await prisma.bulkDiscountTier.findMany({ orderBy: { minQuantity: 'asc' } })
 
   return (
-    <div className="bg-card rounded-xl border p-6 shadow-sm">
-      <div className="mb-6 flex items-center justify-between">
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Bulk Discounts</h2>
           <p className="text-muted-foreground">

@@ -4,6 +4,7 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   PaginationState,
   useReactTable,
@@ -38,32 +39,47 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  search: string
 }
 
-export function GenresDataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function GenresDataTable<TData, TValue>({
+  columns,
+  data,
+  search,
+}: DataTableProps<TData, TValue>) {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   })
+
+  const [prevSearch, setPrevSearch] = useState(search)
+  if (search !== prevSearch) {
+    setPrevSearch(search)
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+  }
+
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
+    globalFilterFn: 'includesString',
     state: {
       pagination,
+      globalFilter: search,
     },
   })
 
   return (
     <div>
-      <div className="overflow-hidden rounded-md border">
+      <div className="bg-card overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="bg-muted/30 hover:bg-muted/30">
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>

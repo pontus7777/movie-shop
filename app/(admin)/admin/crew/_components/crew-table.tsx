@@ -22,7 +22,6 @@ import {
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -53,9 +52,10 @@ import {
 
 type Props = {
   crewMembers: Crew[]
+  search: string
 }
 
-export function CrewTable({ crewMembers }: Props) {
+export function CrewTable({ crewMembers, search }: Props) {
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [editId, setEditId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -63,93 +63,106 @@ export function CrewTable({ crewMembers }: Props) {
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState('10')
 
+  const [prevSearch, setPrevSearch] = useState(search)
+  if (search !== prevSearch) {
+    setPrevSearch(search)
+    setPage(1)
+  }
+
+  const filteredCrew = crewMembers.filter((cm) =>
+    cm.name.toLowerCase().includes(search.trim().toLowerCase()),
+  )
+
   const size = Number(pageSize)
-  const totalPages = Math.max(1, Math.ceil(crewMembers.length / size))
+  const totalPages = Math.max(1, Math.ceil(filteredCrew.length / size))
   const currentPage = Math.min(page, totalPages)
   const start = (currentPage - 1) * size
-  const paginatedCrew = crewMembers.slice(start, start + size)
+  const paginatedCrew = filteredCrew.slice(start, start + size)
 
   const isFirstPage = currentPage === 1
   const isLastPage = currentPage === totalPages
 
   return (
     <div>
-      <Table>
-        <TableCaption>A list of all available crews.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-25">Index</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-
-        <TableBody>
-          {paginatedCrew.map((cm, index) => (
-            <TableRow key={cm.id}>
-              <TableCell className="font-medium">{start + index + 1}</TableCell>
-              <TableCell>{cm.name}</TableCell>
-
-              <TableCell className="text-right">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="size-8">
-                      <MoreHorizontalIcon />
-                    </Button>
-                  </DropdownMenuTrigger>
-
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setEditId(cm.id)}>Edit</DropdownMenuItem>
-
-                    <DropdownMenuSeparator />
-
-                    <DropdownMenuItem variant="destructive" onClick={() => setDeleteId(cm.id)}>
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-                {/* Delete dialog */}
-                <AlertDialog open={deleteId === cm.id} onOpenChange={() => setDeleteId(null)}>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Delete crew?</AlertDialogTitle>
-                      <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
-                    </AlertDialogHeader>
-
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-
-                      <AlertDialogAction
-                        variant="destructive"
-                        onClick={async () => {
-                          try {
-                            setLoading(true)
-                            await deleteCrew(cm.id)
-                            toast.success('Crew deleted')
-                          } catch {
-                            toast.error('Failed to delete crew')
-                          } finally {
-                            setLoading(false)
-                            setDeleteId(null)
-                          }
-                        }}
-                      >
-                        {loading ? <Spinner /> : 'Delete'}
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-
-                {/* Edit dialog */}
-                {editId === cm.id && (
-                  <EditCrewDialog crew={cm} open onOpenChange={() => setEditId(null)} />
-                )}
-              </TableCell>
+      <div className="bg-card overflow-hidden rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-muted/30 hover:bg-muted/30">
+              <TableHead className="w-25">Index</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+
+          <TableBody>
+            {paginatedCrew.map((cm, index) => (
+              <TableRow key={cm.id}>
+                <TableCell className="font-medium">{start + index + 1}</TableCell>
+                <TableCell>{cm.name}</TableCell>
+
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="size-8">
+                        <MoreHorizontalIcon />
+                      </Button>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => setEditId(cm.id)}>Edit</DropdownMenuItem>
+
+                      <DropdownMenuSeparator />
+
+                      <DropdownMenuItem variant="destructive" onClick={() => setDeleteId(cm.id)}>
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  {/* Delete dialog */}
+                  <AlertDialog open={deleteId === cm.id} onOpenChange={() => setDeleteId(null)}>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Delete crew?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+                        <AlertDialogAction
+                          variant="destructive"
+                          onClick={async () => {
+                            try {
+                              setLoading(true)
+                              await deleteCrew(cm.id)
+                              toast.success('Crew deleted')
+                            } catch {
+                              toast.error('Failed to delete crew')
+                            } finally {
+                              setLoading(false)
+                              setDeleteId(null)
+                            }
+                          }}
+                        >
+                          {loading ? <Spinner /> : 'Delete'}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+
+                  {/* Edit dialog */}
+                  {editId === cm.id && (
+                    <EditCrewDialog crew={cm} open onOpenChange={() => setEditId(null)} />
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
 
       {/* Pagination controls */}
       <div className="mt-4 flex items-center justify-between gap-4">

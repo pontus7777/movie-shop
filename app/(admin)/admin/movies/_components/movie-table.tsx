@@ -7,11 +7,12 @@ import Link from 'next/link'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 
-import { MoveRight } from 'lucide-react'
+import { ArrowRight, ArrowUp, ArrowDown, ArrowUpDown, Star } from 'lucide-react'
 import placeHolder from '@/public/file.svg'
 import { getMovieImageSrc } from '@/lib/image-utils'
 import { convertToEuro } from '@/lib/priceUtils'
 import { getEffectivePriceInCents, isMovieOnSale } from '@/lib/pricing'
+import type { MovieSortKey } from '../page'
 
 import {
   TableHeader,
@@ -55,6 +56,8 @@ type Props = {
   currentPage: number
   totalPages: number
   currentPageSize: number
+  currentSort: MovieSortKey
+  currentOrder: Prisma.SortOrder
 }
 
 const SIBLING_COUNT = 1
@@ -95,7 +98,49 @@ function getPageWindow(current: number, total: number): (number | 'ellipsis')[] 
   return pages
 }
 
-function MovieTable({ movies, currentPage, totalPages, currentPageSize }: Props) {
+const SORT_LABELS: Record<MovieSortKey, string> = {
+  title: 'Title',
+  releaseYear: 'Release Year',
+  price: 'Price',
+  rating: 'Rating',
+}
+
+function SortableHead({
+  sortKey,
+  currentSort,
+  currentOrder,
+  onSort,
+}: {
+  sortKey: MovieSortKey
+  currentSort: MovieSortKey
+  currentOrder: Prisma.SortOrder
+  onSort: (key: MovieSortKey) => void
+}) {
+  const isActive = currentSort === sortKey
+  const Icon = isActive ? (currentOrder === 'asc' ? ArrowUp : ArrowDown) : ArrowUpDown
+
+  return (
+    <TableHead>
+      <button
+        type="button"
+        onClick={() => onSort(sortKey)}
+        className="hover:text-foreground flex items-center gap-1 font-medium"
+      >
+        {SORT_LABELS[sortKey]}
+        <Icon className={`size-3.5 ${isActive ? '' : 'text-muted-foreground'}`} />
+      </button>
+    </TableHead>
+  )
+}
+
+function MovieTable({
+  movies,
+  currentPage,
+  totalPages,
+  currentPageSize,
+  currentSort,
+  currentOrder,
+}: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -106,99 +151,130 @@ function MovieTable({ movies, currentPage, totalPages, currentPageSize }: Props)
     return `?${params.toString()}`
   }
 
+  function buildSortHref(key: MovieSortKey) {
+    const params = new URLSearchParams(searchParams.toString())
+    const nextOrder = currentSort === key && currentOrder === 'asc' ? 'desc' : 'asc'
+    params.set('sort', key)
+    params.set('order', nextOrder)
+    params.set('page', '1')
+    return `?${params.toString()}`
+  }
+
   function handlePageSizeChange(value: string) {
     // Reset to page 1 whenever page size changes, so we don't land on an out-of-range page
     router.push(buildHref(1, Number(value)))
   }
+
+  function handleSort(key: MovieSortKey) {
+    router.push(buildSortHref(key), { scroll: false })
+  }
+
   return (
-    <div className="bg-card rounded-xl p-6 shadow-sm">
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">Movie</h2>
-          <p className="text-muted-foreground">Manage movies!</p>
-        </div>
-        <Button
-          asChild
-          className="bg-orange-600 border-orange-500 text-white hover:bg-orange-700 hover:text-orange-50"
-        >
-          <Link href="/admin/movies/create">Add Movie</Link>
-        </Button>
-      </div>
+    <div>
+      <div className="bg-card overflow-hidden rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-muted/30 hover:bg-muted/30">
+              <TableHead></TableHead>
+              <SortableHead
+                sortKey="title"
+                currentSort={currentSort}
+                currentOrder={currentOrder}
+                onSort={handleSort}
+              />
+              <TableHead>Genre</TableHead>
+              <SortableHead
+                sortKey="price"
+                currentSort={currentSort}
+                currentOrder={currentOrder}
+                onSort={handleSort}
+              />
+              <SortableHead
+                sortKey="releaseYear"
+                currentSort={currentSort}
+                currentOrder={currentOrder}
+                onSort={handleSort}
+              />
+              <SortableHead
+                sortKey="rating"
+                currentSort={currentSort}
+                currentOrder={currentOrder}
+                onSort={handleSort}
+              />
+              <TableHead className="text-right">Details</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {movies.map((movie) => {
+              const imageSrc = getMovieImageSrc(movie.imageUrl)
+              const onSale = isMovieOnSale(movie)
+              const effectivePrice = getEffectivePriceInCents(movie)
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead></TableHead>
-            <TableHead>Title</TableHead>
-            <TableHead>Genre</TableHead>
-            <TableHead>Price</TableHead>
-            <TableHead>Release Year</TableHead>
-            <TableHead className="text-right">Details</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {movies.map((movie) => {
-            const imageSrc = getMovieImageSrc(movie.imageUrl)
-            const onSale = isMovieOnSale(movie)
-            const effectivePrice = getEffectivePriceInCents(movie)
+              return (
+                <TableRow key={movie.id}>
+                  <TableCell>
+                    <Avatar className="ring-border ring-1">
+                      <AvatarImage
+                        src={imageSrc || placeHolder.src}
+                        alt={movie.title}
+                        className="grayscale"
+                      />
+                    </Avatar>
+                  </TableCell>
 
-            return (
-              <TableRow key={movie.id}>
-                <TableCell>
-                  <Avatar>
-                    <AvatarImage
-                      src={imageSrc || placeHolder.src}
-                      alt={movie.title}
-                      className="grayscale"
-                    />
-                  </Avatar>
-                </TableCell>
-
-                <TableCell className="font-medium">
-                  <div className="flex items-center gap-2">
-                    {movie.title}
-                    {onSale && (
-                      <Badge className="bg-red-600 text-white hover:bg-red-600">Sale</Badge>
-                    )}
-                  </div>
-                </TableCell>
-
-                <TableCell>
-                  {movie.genres.length > 0
-                    ? movie.genres.map((g) => g.name).join(', ')
-                    : 'No genre'}
-                </TableCell>
-
-                <TableCell>
-                  {onSale ? (
-                    <div className="flex items-baseline gap-1.5">
-                      <span className="font-medium text-red-600">
-                        €{convertToEuro(effectivePrice)}
-                      </span>
-                      <span className="text-muted-foreground text-xs line-through">
-                        €{convertToEuro(movie.priceInCents)}
-                      </span>
+                  <TableCell className="font-medium">
+                    <div className="flex items-center gap-2">
+                      {movie.title}
+                      {onSale && (
+                        <Badge className="bg-red-600 text-white hover:bg-red-600">Sale</Badge>
+                      )}
                     </div>
-                  ) : (
-                    <span>€{convertToEuro(movie.priceInCents)}</span>
-                  )}
-                </TableCell>
+                  </TableCell>
 
-                <TableCell>{movie.releaseYear}</TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {movie.genres.length > 0
+                      ? movie.genres.map((g) => g.name).join(', ')
+                      : 'No genre'}
+                  </TableCell>
 
-                <TableCell className="text-right">
-                  <Button asChild variant="secondary">
-                    <Link href={`/admin/movies/${movie.id}`}>
-                      View
-                      <MoveRight />
-                    </Link>
-                  </Button>
-                </TableCell>
-              </TableRow>
-            )
-          })}
-        </TableBody>
-      </Table>
+                  <TableCell>
+                    {onSale ? (
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="font-medium text-red-600">
+                          €{convertToEuro(effectivePrice)}
+                        </span>
+                        <span className="text-muted-foreground text-xs line-through">
+                          €{convertToEuro(movie.priceInCents)}
+                        </span>
+                      </div>
+                    ) : (
+                      <span>€{convertToEuro(movie.priceInCents)}</span>
+                    )}
+                  </TableCell>
+
+                  <TableCell className="text-muted-foreground">{movie.releaseYear}</TableCell>
+
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      <Star className="size-3.5 fill-yellow-400 text-yellow-400" />
+                      {movie.imdbRating ? movie.imdbRating.toFixed(1) : '—'}
+                    </div>
+                  </TableCell>
+
+                  <TableCell className="text-right">
+                    <Button asChild variant="secondary" size="sm">
+                      <Link href={`/admin/movies/${movie.id}`}>
+                        View
+                        <ArrowRight />
+                      </Link>
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
+      </div>
 
       <div className="mt-4 flex items-center justify-between gap-4">
         <Field orientation="horizontal" className="w-fit">

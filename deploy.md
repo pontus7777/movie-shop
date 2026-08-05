@@ -1,1 +1,1 @@
-deploy vercel
+deploy

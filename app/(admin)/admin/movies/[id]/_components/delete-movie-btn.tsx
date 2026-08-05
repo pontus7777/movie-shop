@@ -45,12 +45,7 @@ function DeleteMovieBtn({ action }: Props) {
     <>
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button
-            variant="destructive"
-            className="border-red-500 bg-red-100 text-red-900 hover:bg-red-700 hover:text-white"
-          >
-            Delete
-          </Button>
+          <Button variant="destructive">Delete</Button>
         </AlertDialogTrigger>
 
         <AlertDialogContent>

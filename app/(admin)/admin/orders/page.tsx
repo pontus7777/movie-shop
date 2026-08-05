@@ -20,11 +20,6 @@ export default async function OrdersPage({ searchParams }: Props) {
   const params = await searchParams
   const { page, ...restParams } = params
 
-  // const cleanParams = Object.fromEntries(
-  //   Object.entries(restParams).filter(([, v]) => v !== undefined)
-  // ) as Record<string, string>
-
-
   const [data, statistics] = await Promise.all([
     getOrders({
       page: Number(params.page ?? 1),
@@ -64,9 +59,6 @@ export default async function OrdersPage({ searchParams }: Props) {
         currentPage={data.currentPage}
         totalPages={data.totalPages}
         searchParams={new URLSearchParams(restParams as Record<string, string>).toString()}
-      // searchParams={new URLSearchParams(cleanParams).toString()}
-
-
       />
     </div>
   )
