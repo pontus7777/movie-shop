@@ -143,7 +143,9 @@ export default async function MovieDetailsPage(props: PageProps<'/admin/movies/[
 
                 <div>
                   <dt className="text-muted-foreground">Runtime</dt>
-                  <dd className="font-medium">{movie.runtime} minutes</dd>
+                  <dd className="font-medium">
+                    {movie.runtime > 0 ? `${movie.runtime} minutes` : 'TBA'}
+                  </dd>
                 </div>
 
                 <div>

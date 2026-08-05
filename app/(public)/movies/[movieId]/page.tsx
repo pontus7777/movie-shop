@@ -173,7 +173,7 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
             <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">{movie.title}</h1>
 
             <p className="text-muted-foreground mt-1 text-sm">
-              {movie.releaseYear} &middot; {movie.runtime} min
+              {movie.releaseYear} &middot; {movie.runtime > 0 ? `${movie.runtime} min` : 'TBA'}
               {directors.length > 0 && (
                 <>
                   {' '}
@@ -184,7 +184,7 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
             </p>
           </div>
 
-          {movie.imdbRating != null && (
+          {movie.imdbRating != null && movie.imdbRating > 0 && (
             <div className="mx-auto flex shrink-0 flex-col items-center sm:mx-0 sm:pb-1">
               <div className="flex size-14 items-center justify-center rounded-full border-2 border-primary bg-primary text-base font-bold text-white">
                 {movie.imdbRating.toFixed(1)}
