@@ -75,6 +75,10 @@ export interface TMDBKeywordResponse {
   keywords: TMDBKeyword[]
 }
 
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 async function tmdb<T>(path: string, params: Record<string, unknown> = {}): Promise<T> {
   const url = new URL(BASE + path)
 
@@ -85,12 +89,25 @@ async function tmdb<T>(path: string, params: Record<string, unknown> = {}): Prom
     url.searchParams.set(key, String(value))
   }
 
-  const res = await fetch(url)
-  if (!res.ok) {
-    throw new Error(`TMDB error ${res.status}: ${await res.text()}`)
+  const maxRetries = 6
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const res = await fetch(url)
+
+    if (res.status === 429) {
+      const retryAfter = Number(res.headers.get('retry-after'))
+      const delayMs = retryAfter > 0 ? retryAfter * 1000 : 1000 * 2 ** attempt
+      await sleep(delayMs)
+      continue
+    }
+
+    if (!res.ok) {
+      throw new Error(`TMDB error ${res.status}: ${await res.text()}`)
+    }
+
+    return res.json() as Promise<T>
   }
 
-  return res.json() as Promise<T>
+  throw new Error(`TMDB error 429: exceeded retries for ${path}`)
 }
 
 export function fetchPopularMovies(page = 1) {

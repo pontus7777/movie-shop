@@ -14,6 +14,34 @@ const prisma = new PrismaClient({
   }),
 })
 
+const PG_INT_MAX = 2147483647
+
+function clampInt(value: number | null): number | null {
+  if (value === null) return null
+  return Math.min(value, PG_INT_MAX)
+}
+
+const CONCURRENCY = 10
+
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  limit: number,
+  fn: (item: T, index: number) => Promise<R>,
+): Promise<R[]> {
+  const results: R[] = new Array(items.length)
+  let next = 0
+
+  async function worker() {
+    while (next < items.length) {
+      const index = next++
+      results[index] = await fn(items[index], index)
+    }
+  }
+
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker))
+  return results
+}
+
 interface SeedMovie {
   id: string
   title: string
@@ -34,7 +62,6 @@ interface SeedMovie {
   budget: number | null
   revenue: number | null
   genres: number[]
-  keywords: { id: number; name: string }[]
   credits: {
     id: string
     name: string
@@ -50,6 +77,8 @@ async function seed() {
   }
 
   console.log('Resetting database')
+  await prisma.orderItem.deleteMany()
+  await prisma.order.deleteMany()
   await prisma.movie.deleteMany()
   await prisma.crew.deleteMany()
   await prisma.genre.deleteMany()
@@ -70,61 +99,32 @@ async function seed() {
   }
 
   console.log('Seeding genres...')
-  for (const g of data.genres) {
-    await prisma.genre.upsert({
-      where: { id: g.id },
-      update: {},
-      create: {
-        id: g.id,
-        name: g.name,
-        description: `${g.name} movies`,
-      },
-    })
-  }
-
-  console.log('Seeding keywords...')
-  const keywordMap = new Map<number, string>()
-  for (const movie of data.movies) {
-    for (const k of movie.keywords) {
-      if (!keywordMap.has(k.id)) {
-        keywordMap.set(k.id, k.name)
-        await prisma.movieKeyword.upsert({
-          where: { id: k.id },
-          update: {},
-          create: {
-            id: k.id,
-            name: k.name,
-          },
-        })
-      }
-    }
-  }
+  await prisma.genre.createMany({
+    data: data.genres.map((g) => ({
+      id: g.id,
+      name: g.name,
+      description: `${g.name} movies`,
+    })),
+    skipDuplicates: true,
+  })
 
   console.log('Seeding crew...')
   const crewMap = new Map<string, { id: string; name: string }>()
-
   for (const movie of data.movies) {
     for (const c of movie.credits) {
-      if (!crewMap.has(c.id)) {
-        crewMap.set(c.id, c)
-        await prisma.crew.upsert({
-          where: { id: c.id },
-          update: {},
-          create: {
-            id: c.id,
-            name: c.name,
-          },
-        })
-      }
+      crewMap.set(c.id, { id: c.id, name: c.name })
     }
   }
+  await prisma.crew.createMany({
+    data: [...crewMap.values()],
+    skipDuplicates: true,
+  })
 
   console.log('Seeding movies...')
-  for (const m of data.movies) {
-    await prisma.movie.upsert({
-      where: { id: m.id },
-      update: {},
-      create: {
+  let completed = 0
+  await mapWithConcurrency(data.movies, CONCURRENCY, async (m) => {
+    await prisma.movie.create({
+      data: {
         id: m.id,
         title: m.title,
         originalTitle: m.originalTitle,
@@ -141,15 +141,11 @@ async function seed() {
         runtime: m.runtime,
         imdbRating: m.imdbRating,
         popularity: m.popularity,
-        budget: m.budget,
-        revenue: m.revenue,
+        budget: clampInt(m.budget),
+        revenue: clampInt(m.revenue),
 
         genres: {
           connect: m.genres.map((id) => ({ id })),
-        },
-
-        keywords: {
-          connect: m.keywords.map((k) => ({ id: k.id })),
         },
 
         credits: {
@@ -160,7 +156,12 @@ async function seed() {
         },
       },
     })
-  }
+
+    completed++
+    if (completed % 100 === 0 || completed === data.movies.length) {
+      console.log(`  ${completed}/${data.movies.length} movies seeded`)
+    }
+  })
 
   console.log('Seed complete!')
 }

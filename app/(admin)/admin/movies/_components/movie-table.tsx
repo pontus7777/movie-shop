@@ -24,6 +24,7 @@ import {
 import {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -54,6 +55,44 @@ type Props = {
   currentPage: number
   totalPages: number
   currentPageSize: number
+}
+
+const SIBLING_COUNT = 1
+
+/** Always shows first/last page, the current page, and one sibling on
+ * each side, collapsing the rest into a single ellipsis per side. */
+function getPageWindow(current: number, total: number): (number | 'ellipsis')[] {
+  const totalVisible = SIBLING_COUNT * 2 + 5
+
+  if (total <= totalVisible) {
+    return Array.from({ length: total }, (_, i) => i + 1)
+  }
+
+  const left = Math.max(current - SIBLING_COUNT, 2)
+  const right = Math.min(current + SIBLING_COUNT, total - 1)
+
+  const showLeftEllipsis = left > 2
+  const showRightEllipsis = right < total - 1
+
+  const pages: (number | 'ellipsis')[] = [1]
+
+  if (showLeftEllipsis) {
+    pages.push('ellipsis')
+  } else {
+    for (let p = 2; p < left; p++) pages.push(p)
+  }
+
+  for (let p = left; p <= right; p++) pages.push(p)
+
+  if (showRightEllipsis) {
+    pages.push('ellipsis')
+  } else {
+    for (let p = right + 1; p < total; p++) pages.push(p)
+  }
+
+  pages.push(total)
+
+  return pages
 }
 
 function MovieTable({ movies, currentPage, totalPages, currentPageSize }: Props) {
@@ -193,20 +232,26 @@ function MovieTable({ movies, currentPage, totalPages, currentPageSize }: Props)
               />
             </PaginationItem>
 
-            {Array.from({ length: totalPages }).map((_, index) => (
-              <PaginationItem key={index}>
-                <PaginationLink
-                  href={buildHref(index + 1)}
-                  isActive={currentPage === index + 1}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    router.push(buildHref(index + 1), { scroll: false })
-                  }}
-                >
-                  {index + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
+            {getPageWindow(currentPage, totalPages).map((p, index) =>
+              p === 'ellipsis' ? (
+                <PaginationItem key={`ellipsis-${index}`}>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              ) : (
+                <PaginationItem key={p}>
+                  <PaginationLink
+                    href={buildHref(p)}
+                    isActive={currentPage === p}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      router.push(buildHref(p), { scroll: false })
+                    }}
+                  >
+                    {p}
+                  </PaginationLink>
+                </PaginationItem>
+              ),
+            )}
 
             <PaginationItem>
               <PaginationNext

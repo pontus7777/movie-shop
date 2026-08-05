@@ -14,7 +14,7 @@ export default function AdminMoviesLoading() {
 
       {/* Mobile: stacked movie cards */}
       <div className="grid grid-cols-1 gap-4 md:hidden">
-        {Array.from({ length: 5 }).map((_, i) => (
+        {Array.from({ length: 10 }).map((_, i) => (
           <Skeleton key={i} className="aspect-2/3 w-full max-w-40" />
         ))}
       </div>
@@ -30,7 +30,7 @@ export default function AdminMoviesLoading() {
         </div>
 
         <div className="space-y-2">
-          {Array.from({ length: 8 }).map((_, i) => (
+          {Array.from({ length: 10 }).map((_, i) => (
             <Skeleton key={i} className="h-12 w-full" />
           ))}
         </div>

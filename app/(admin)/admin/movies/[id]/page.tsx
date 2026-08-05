@@ -34,7 +34,7 @@ export default async function MovieDetailsPage(props: PageProps<'/admin/movies/[
           crew: true,
         },
       },
-      keywords: true,
+      // keywords: true,
       orderItems: true,
       cartItems: true,
     },

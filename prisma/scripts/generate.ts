@@ -1,6 +1,7 @@
 // prisma/scripts/generate.ts
 import dotenv from 'dotenv'
 import { writeFileSync } from 'fs'
+import path from 'path'
 import {
   fetchPopularMovies,
   fetchMovieDetails,
@@ -16,31 +17,60 @@ import {
 
 dotenv.config()
 
+const TARGET_MOVIE_COUNT = 1000
+const MOVIES_PER_PAGE = 20
+const PAGE_COUNT = Math.ceil(TARGET_MOVIE_COUNT / MOVIES_PER_PAGE)
+const CONCURRENCY = 6
+
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  limit: number,
+  fn: (item: T, index: number) => Promise<R>,
+): Promise<R[]> {
+  const results: R[] = new Array(items.length)
+  let next = 0
+
+  async function worker() {
+    while (next < items.length) {
+      const index = next++
+      results[index] = await fn(items[index], index)
+    }
+  }
+
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker))
+  return results
+}
+
 async function generate() {
   console.log('Fetching genres...')
   const genreResponse = await fetchGenres()
   const genres = genreResponse.genres
 
-  console.log('Fetching movies (5 pages = ~100 movies)...')
-  const pages = await Promise.all([
-    fetchPopularMovies(1),
-    fetchPopularMovies(2),
-    fetchPopularMovies(3),
-    fetchPopularMovies(4),
-    fetchPopularMovies(5),
-  ])
+  console.log(`Fetching movies (${PAGE_COUNT} pages = ~${PAGE_COUNT * MOVIES_PER_PAGE} movies)...`)
+  const pageNumbers = Array.from({ length: PAGE_COUNT }, (_, i) => i + 1)
+  const pages = await mapWithConcurrency(pageNumbers, CONCURRENCY, (page) => fetchPopularMovies(page))
 
-  const movies: TMDBMovie[] = pages.flatMap((p) => p.results)
-  const selectedMovies = movies.slice(0, 100)
+  const seen = new Set<number>()
+  const movies: TMDBMovie[] = pages
+    .flatMap((p) => p.results)
+    .filter((m) => {
+      if (seen.has(m.id)) return false
+      seen.add(m.id)
+      return true
+    })
 
-  const fullMovies = []
+  const selectedMovies = movies.slice(0, TARGET_MOVIE_COUNT)
 
-  for (const m of selectedMovies) {
-    const details = await fetchMovieDetails(m.id)
-    const credits = await fetchMovieCredits(m.id)
-    const videos = await fetchMovieVideos(m.id)
+  let completed = 0
+  const fullMovies = await mapWithConcurrency(selectedMovies, CONCURRENCY, async (m) => {
+    const [details, credits, videos, keywordResponse] = await Promise.all([
+      fetchMovieDetails(m.id),
+      fetchMovieCredits(m.id),
+      fetchMovieVideos(m.id),
+      fetchMovieKeywords(m.id),
+    ])
+
     const releaseYear = Number(details.release_date?.slice(0, 4) ?? 2000)
-
     const movieGenres = details.genres?.map((g: TMDBGenre) => g.id) ?? []
 
     const castCredits = credits.cast.slice(0, 5).map((c: TMDBCastMember) => ({
@@ -58,7 +88,6 @@ async function generate() {
         role: 'DIRECTOR' as const,
       }))
 
-    // Trailer (YouTube official trailer)
     const trailer =
       videos.results.find(
         (v) =>
@@ -69,13 +98,9 @@ async function generate() {
 
     const trailerUrl = trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : null
 
-    // Backdrop
     const backdropUrl = details.backdrop_path
       ? `https://image.tmdb.org/t/p/original${details.backdrop_path}`
       : null
-
-    // Keywords
-    const keywordResponse = await fetchMovieKeywords(m.id)
 
     const keywords = Array.isArray(keywordResponse.keywords)
       ? keywordResponse.keywords.map((k) => ({
@@ -84,7 +109,12 @@ async function generate() {
         }))
       : []
 
-    fullMovies.push({
+    completed++
+    if (completed % 50 === 0 || completed === selectedMovies.length) {
+      console.log(`  ${completed}/${selectedMovies.length} movies processed`)
+    }
+
+    return {
       id: m.id.toString(),
       title: m.title,
       originalTitle: details.original_title ?? null,
@@ -110,12 +140,13 @@ async function generate() {
       genres: movieGenres,
       credits: [...castCredits, ...directorCredits],
       keywords,
-    })
-  }
+    }
+  })
 
-  writeFileSync('tmdb-data.json', JSON.stringify({ genres, movies: fullMovies }, null, 2))
+  const outPath = path.join(__dirname, '..', 'tmdb-data.json')
+  writeFileSync(outPath, JSON.stringify({ genres, movies: fullMovies }, null, 2))
 
-  console.log('Generated tmdb-data.json with 50 movies')
+  console.log(`Generated ${outPath} with ${fullMovies.length} movies`)
 }
 
 generate()

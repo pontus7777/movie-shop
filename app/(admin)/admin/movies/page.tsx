@@ -24,7 +24,7 @@ export default async function Page({
   const movies = await prisma.movie.findMany({
     include: {
       genres: true,
-      keywords: true,
+      // keywords: true,
       credits: {
         include: { crew: true },
       },
