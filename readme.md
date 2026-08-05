@@ -120,7 +120,7 @@ The email preview server will run on:
 ```
 http://localhost:3001
 ```
-
+##https://ethereal.email/login
 ---
 
 ## Development
