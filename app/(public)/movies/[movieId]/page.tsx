@@ -13,7 +13,7 @@ import { WishlistButton } from '../../wishlist/_components/wishlist-button'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { isMovieInWishlist } from '@/lib/wishlist'
-import { isMovieOnSale } from '@/lib/pricing'
+import { getEffectivePriceInCents, isMovieOnSale } from '@/lib/pricing'
 import { ReviewSection } from './_components/review-section'
 import { isMoviePurchased } from '@/lib/purchases'
 import { Button } from '@/components/ui/button'
@@ -94,7 +94,10 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
   })
 
   const onSale = isMovieOnSale(movie)
-  const displayPrice = convertToEuro(movie.priceInCents)
+  // const displayPrice = convertToEuro(movie.priceInCents)
+  const effectivePrice = getEffectivePriceInCents(movie)
+  const displayPrice = convertToEuro(effectivePrice)
+  const originalPrice = convertToEuro(movie.priceInCents)
   const posterSrc = getMovieImageSrc(movie.imageUrl)
   const trailerEmbedUrl = getYoutubeEmbedUrl(movie.trailerUrl)
 
@@ -228,7 +231,24 @@ export default async function MovieDetailsPage(props: PageProps<'/movies/[movieI
 
           <div className="mx-auto flex w-fit items-center gap-3 rounded-xl border border-white/10 bg-white/3 p-3 sm:mx-0">
             {!hasPurchased && (
-              <span className="text-1.5xl font-bold text-primary">€{displayPrice}</span>
+              // <span className="text-1.5xl font-bold text-primary">€{displayPrice}</span> ???????????????????????????????????????????????????
+              <div className="flex items-center gap-2">
+                {onSale ? (
+                  <>
+                    <span className="text-muted-foreground text-lg line-through">
+                      €{originalPrice}
+                    </span>
+
+                    <span className="text-2xl font-bold text-red-600">
+                      €{displayPrice}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-2xl font-bold text-primary">
+                    €{displayPrice}
+                  </span>
+                )}
+              </div>
             )}
 
             {hasPurchased ? (
