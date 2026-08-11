@@ -1,8 +1,8 @@
 import { StatisticsOrder } from './_components/statistics-orders'
 import { FiltersOrder } from './_components/filters-orders'
 import { OrdersTable } from './_components/orders-table'
-import { getOrders } from './_actions/get-orders-action'
-import { getOrderStatistics } from './_actions/get-order-statistics-action'
+import { getOrders } from './_lib/get-orders'
+import { getOrderStatistics } from './_lib/get-order-statistics'
 import { requireAdmin } from '@/lib/session-validation'
 
 type Props = {
@@ -22,7 +22,7 @@ export default async function OrdersPage({ searchParams }: Props) {
 
   const [data, statistics] = await Promise.all([
     getOrders({
-      page: Number(params.page ?? 1),
+      page: params.page,
       search: params.search,
       status: params.status,
       payment: params.payment,

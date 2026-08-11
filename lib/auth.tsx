@@ -15,7 +15,6 @@ import { APIError, createAuthMiddleware } from 'better-auth/api'
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: 'postgresql' }),
 
-
   //Add hooks to deactivate users and block sign-in attempts by deactivated users
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
@@ -45,30 +44,21 @@ export const auth = betterAuth({
     process.env['BETTER_AUTH_URL'],
     process.env['LAN_ORIGIN'],
     process.env.VERCEL_ENV === 'preview' ? `https://${process.env.VERCEL_URL}` : null,
-  ].filter(
-    Boolean,
-  ) as string[],
+  ].filter(Boolean) as string[],
 
   emailAndPassword: {
     enabled: true,
 
     async sendResetPassword(data) {
-      console.log('Passwaor Reset:', data.url)
-
-      /**
-       * =================================================
-       *    SendEmail rest the password: nodeMailer
-       * =================================================
-       */
       await sendEmail(
         data.user.email,
         'Password Reset',
         `Hello ${data.user.name}!
-        Password resret requested. Click the link to reset your password.
+        Password reset requested. Click the link to reset your password.
         ${data.url}`,
 
         `<h1> Hello ${data.user.name}!</h1>
-        <p>Password resret requested. Click the link to reset your password.</p>
+        <p>Password reset requested. Click the link to reset your password.</p>
         <a href="${data.url}"> Reset password </a>`,
       )
     },
@@ -77,8 +67,6 @@ export const auth = betterAuth({
     sendOnSignIn: true,
     sendOnSignUp: true,
     async sendVerificationEmail(data) {
-      console.log('Email  Verification:', data.url)
-
       // react email
       const html = await render(<EmailVerfication url={data.url} />)
       const text = toPlainText(html)

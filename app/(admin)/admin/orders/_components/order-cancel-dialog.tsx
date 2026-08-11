@@ -11,7 +11,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { cancelOrder } from '../_actions/get-orders-action'
+import { cancelOrder } from '../_actions/cancel-order-action'
 
 type Props = {
     orderId: string
