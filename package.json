@@ -12,6 +12,8 @@
     "seed": "tsx prisma/seed.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "test": "vitest",
+    "test:run": "vitest run",
     "email:dev": "email dev --port 3001 --dir ./components/email/templates"
   },
   "prisma": {
@@ -71,6 +73,7 @@
     "prisma": "^7.9.1",
     "tailwindcss": "^4",
     "tsx": "^4.22.4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   }
 }
