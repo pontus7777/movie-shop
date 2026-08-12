@@ -46,11 +46,12 @@ export type CartTotalsInCents = {
 // calculateCartTotals below, which uses floating point and is display-only.
 export async function calculateCartTotalsInCents(
   items: CartItemForPricing[],
+  now: Date = new Date(),
 ): Promise<CartTotalsInCents> {
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0)
 
   const subtotalInCents = items.reduce(
-    (sum, item) => sum + getEffectivePriceInCents(item.movie) * item.quantity,
+    (sum, item) => sum + getEffectivePriceInCents(item.movie, now) * item.quantity,
     0,
   )
 

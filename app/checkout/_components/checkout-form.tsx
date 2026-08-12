@@ -27,12 +27,6 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
       postalCode: '',
       city: '',
       country: '',
-
-      paymentMethod: 'CARD' as 'CARD' | 'PAYPAL' | 'SWISH',
-
-      cardNumber: '',
-      expiry: '',
-      cvv: '',
     },
 
     validators: {
@@ -65,7 +59,7 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
       <CardHeader>
         <CardTitle>Checkout</CardTitle>
         <CardDescription>
-          Enter your shipping and payment information to complete your order.
+          Enter your shipping address. Payment is handled securely by Stripe on the next step.
         </CardDescription>
       </CardHeader>
       <Separator />
@@ -102,150 +96,15 @@ function CheckoutForm({ isCartEmpty }: checkoutFormProps) {
                 }}
               </form.Field>
             ))}
-            <Separator className="my-2" />
-            <h3>
-              <span className="text-lg font-medium">Payment Information</span>
-            </h3>
-            <form.Field name="paymentMethod">
-              {(field) => {
-                const isInvalid = !field.state.meta.isValid
-
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Payment Method</FieldLabel>
-
-                    <select
-                      id={field.name}
-                      className="h-10 w-full rounded-md border bg-background px-3 text-sm"
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) =>
-                        field.handleChange(e.target.value as 'CARD' | 'PAYPAL' | 'SWISH')
-                      }
-                      aria-invalid={isInvalid}
-                    >
-                      <option value="CARD">Credit Card</option>
-
-                      <option value="PAYPAL">PayPal</option>
-
-                      <option value="SWISH">Swish</option>
-                    </select>
-
-                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                  </Field>
-                )
-              }}
-            </form.Field>
-
-            <form.Subscribe selector={(state) => state.values.paymentMethod}>
-              {(paymentMethod) =>
-                paymentMethod === 'CARD' && (
-                  <>
-                    <form.Field name="cardNumber">
-                      {(field) => {
-                        const isInvalid = !field.state.meta.isValid
-
-                        return (
-                          <Field data-invalid={isInvalid}>
-                            <FieldLabel htmlFor={field.name}>Card Number</FieldLabel>
-
-                            <Input
-                              id={field.name}
-                              placeholder="1234 5678 9012 3456"
-                              value={field.state.value}
-                              onBlur={field.handleBlur}
-                              onChange={(e) => {
-                                const value = e.target.value
-                                  .replace(/\D/g, '')
-                                  .slice(0, 16)
-                                  .replace(/(.{4})/g, '$1 ')
-                                  .trim()
-
-                                field.handleChange(value)
-                              }}
-                              inputMode="numeric"
-                              maxLength={19}
-                              autoComplete="cc-number"
-                              aria-invalid={isInvalid}
-                            />
-
-                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                          </Field>
-                        )
-                      }}
-                    </form.Field>
-
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                      <form.Field name="expiry">
-                        {(field) => {
-                          const isInvalid = !field.state.meta.isValid
-
-                          return (
-                            <Field data-invalid={isInvalid}>
-                              <FieldLabel htmlFor={field.name}>Expiry</FieldLabel>
-
-                              <Input
-                                id={field.name}
-                                placeholder="MM/YY"
-                                value={field.state.value}
-                                onBlur={field.handleBlur}
-                                onChange={(e) => {
-                                  let value = e.target.value.replace(/\D/g, '').slice(0, 4)
-
-                                  if (value.length > 2) {
-                                    value = `${value.slice(0, 2)}/${value.slice(2)}`
-                                  }
-
-                                  field.handleChange(value)
-                                }}
-                                inputMode="numeric"
-                                maxLength={5}
-                                autoComplete="cc-exp"
-                                aria-invalid={isInvalid}
-                              />
-
-                              {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                            </Field>
-                          )
-                        }}
-                      </form.Field>
-
-                      <form.Field name="cvv">
-                        {(field) => {
-                          const isInvalid = !field.state.meta.isValid
-                          return (
-                            <Field data-invalid={isInvalid}>
-                              <FieldLabel htmlFor={field.name}>CVV</FieldLabel>
-
-                              <Input
-                                id={field.name}
-                                placeholder="123"
-                                value={field.state.value}
-                                onBlur={field.handleBlur}
-                                onChange={(e) => {
-                                  field.handleChange(e.target.value.replace(/\D/g, '').slice(0, 3))
-                                }}
-                                inputMode="numeric"
-                                maxLength={3}
-                                autoComplete="cc-csc"
-                                aria-invalid={isInvalid}
-                              />
-                              {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                            </Field>
-                          )
-                        }}
-                      </form.Field>
-                    </div>
-                  </>
-                )
-              }
-            </form.Subscribe>
 
             <form.Subscribe selector={(state) => state.isSubmitting}>
               {(isSubmitting) => (
                 <Button type="submit" disabled={isSubmitting || isCartEmpty} className="w-full">
-                  {/* {isSubmitting ? 'Processing...' : 'Place Order'} */}
-                  {isCartEmpty ? 'Cart is empty' : isSubmitting ? 'Processing...' : 'Place Order'}
+                  {isCartEmpty
+                    ? 'Cart is empty'
+                    : isSubmitting
+                      ? 'Redirecting…'
+                      : 'Continue to Payment'}
                 </Button>
               )}
             </form.Subscribe>

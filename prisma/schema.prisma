@@ -195,8 +195,11 @@ model Order {
   user      User        @relation(fields: [userId], references: [id])
 
   status OrderStatus @default(PENDING)
+  // Stripe
+  stripeSessionId String? @unique
 
-  paymentMethod   PaymentMethod
+  // Unknown until Stripe reports what the customer actually paid with.
+  paymentMethod   PaymentMethod?
   shippingAddress ShippingAddress?
 
   @@index([userId, status])

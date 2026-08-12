@@ -130,7 +130,11 @@ export default async function UserOrderDetailsPage(props: PageProps<'/profile/[o
             <CardContent className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Method</span>
-                <span>{paymentLabels[order.paymentMethod] ?? order.paymentMethod}</span>
+                <span>
+                  {order.paymentMethod
+                    ? (paymentLabels[order.paymentMethod] ?? order.paymentMethod)
+                    : 'Awaiting payment'}
+                </span>
               </div>
               <div className="flex justify-between font-medium">
                 <span>Total</span>

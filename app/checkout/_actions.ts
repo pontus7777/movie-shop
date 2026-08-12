@@ -2,17 +2,16 @@
 
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-
 import { auth } from '@/lib/auth'
 import prisma from '@/lib/prisma'
-
 import { checkoutSchema, type CheckoutInput } from '@/lib/validations/checkout'
-import { removeMoviesFromWishlist } from '@/lib/wishlist'
 import { calculateCartTotalsInCents } from '@/lib/discount'
 import { getEffectivePriceInCents } from '@/lib/pricing'
+import { stripe } from '@/lib/stripe'
+import { buildLineItems } from '@/lib/stripe-line-items'
+import { createBulkDiscountCoupon } from '@/lib/stripe-discount'
 
 export async function checkout(input: CheckoutInput) {
-  // Validate input on the server as well
   const parsed = checkoutSchema.safeParse(input)
 
   if (!parsed.success) {
@@ -21,19 +20,17 @@ export async function checkout(input: CheckoutInput) {
 
   const data = parsed.data
 
-  // Get current session
-  const session = await auth.api.getSession({
+  const authSession = await auth.api.getSession({
     headers: await headers(),
   })
 
-  if (!session) {
+  if (!authSession) {
     throw new Error('You must be signed in.')
   }
 
-  // Load user's cart
   const cart = await prisma.cart.findUnique({
     where: {
-      userId: session.user.id,
+      userId: authSession.user.id,
     },
     include: {
       items: {
@@ -48,31 +45,34 @@ export async function checkout(input: CheckoutInput) {
     throw new Error('Your cart is empty.')
   }
 
-  // Calculate order total — same sale price + bulk discount logic the
-  // checkout page shows the customer, kept in integer cents to avoid
-  // floating point drift in stored prices.
-  const { totalInCents } = await calculateCartTotalsInCents(cart.items)
+  // One clock read for the whole checkout. Sale windows can expire mid-request,
+  // so the order total, the OrderItem rows and what Stripe charges all price
+  // against the same instant — otherwise they can disagree.
+  const now = new Date()
 
-  // Fake payment delay
-  // await new Promise((resolve) => setTimeout(resolve, 1500))
+  // Effective (sale) price at purchase time, not the movie's list price, so
+  // order history reflects what was charged.
+  const pricedItems = cart.items.map((item) => ({
+    movieId: item.movieId,
+    title: item.movie.title,
+    quantity: item.quantity,
+    priceInCents: getEffectivePriceInCents(item.movie, now),
+  }))
 
-  if (process.env.SIMULATE_PAYMENT_DELAY === 'true') {
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-  }
+  // Kept in integer cents to avoid floating point drift in stored prices.
+  const { totalInCents, discountAmountInCents, discountPercentage } =
+    await calculateCartTotalsInCents(cart.items, now)
 
   // Everything below succeeds or everything rolls back
   const order = await prisma.$transaction(async (tx) => {
-    // Create order
     const createdOrder = await tx.order.create({
       data: {
-        userId: session.user.id,
+        userId: authSession.user.id,
         total: totalInCents,
-        status: 'PAID',
-        paymentMethod: data.paymentMethod,
+        status: 'PENDING',
       },
     })
 
-    // Create shipping address
     await tx.shippingAddress.create({
       data: {
         orderId: createdOrder.id,
@@ -87,29 +87,42 @@ export async function checkout(input: CheckoutInput) {
       },
     })
 
-    // Create order items — store the effective (sale) price at purchase time,
-    // not the movie's list price, so order history reflects what was charged.
     await tx.orderItem.createMany({
-      data: cart.items.map((item) => ({
+      data: pricedItems.map((item) => ({
         orderId: createdOrder.id,
         movieId: item.movieId,
         quantity: item.quantity,
-        priceInCents: getEffectivePriceInCents(item.movie),
+        priceInCents: item.priceInCents,
       })),
-    })
-
-    // Empty cart
-    await tx.cartItem.deleteMany({
-      where: {
-        cartId: cart.id,
-      },
     })
 
     return createdOrder
   })
 
-  const purchasedMovieIds = cart.items.map((item) => item.movieId)
-  await removeMoviesFromWishlist(session.user.id, purchasedMovieIds)
+  const discounts =
+    discountAmountInCents > 0
+      ? [{ coupon: await createBulkDiscountCoupon(discountAmountInCents, discountPercentage) }]
+      : undefined
 
-  redirect(`/checkout/success?orderId=${order.id}`)
+  const session = await stripe.checkout.sessions.create({
+    mode: 'payment',
+    line_items: buildLineItems(pricedItems),
+    discounts,
+    customer_email: authSession.user.email,
+    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?orderId=${order.id}`,
+    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/cart`,
+    metadata: { orderId: order.id },
+  })
+
+  await prisma.order.update({
+    where: { id: order.id },
+    data: { stripeSessionId: session.id },
+  })
+
+  // Only populated for hosted checkout; null in embedded mode.
+  if (!session.url) {
+    throw new Error('Stripe did not return a checkout URL.')
+  }
+
+  redirect(session.url)
 }
